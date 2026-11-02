@@ -2119,3 +2119,5 @@ pre {
 .spectrum-band { position: relative; height: 18px; border-radius: 3px; background: linear-gradient(to right,#6656ba,#4379df,#38b6bd,#76b75c,#e4d66d,#dc8a53,#b54e47); }
 .spectrum-band > span { position: absolute; top: -5px; height: 28px; border-left: 2px solid #050b10; box-shadow: -2px 0 #fff; }
 .spectrum-labels { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 12px; color: #b9c8d4; flex-wrap: wrap; }
+.atomic-result-status { position: absolute; z-index: 3; left: 24px; right: 24px; top: 176px; padding: 10px 14px; border: 1px solid #8c775c; border-radius: 5px; background: #261f17; color: #f4dbc1; font-size: 12px; pointer-events: none; }
+@media (max-width:760px) { .atomic-result-status { left: 14px; right: 14px; top: 260px; } }

@@ -32,6 +32,7 @@ export class OrbitalViewer {
   private onVisibility = () => { if (!document.hidden) this.invalidate(); };
   private intersectionObserver: IntersectionObserver;
   private displayExtent = 1;
+  private structureFrame?: {center:THREE.Vector3;scale:number};
   private raycaster = new THREE.Raycaster();
   private resizeObserver: ResizeObserver;
   private dragStart = { x: 0, y: 0 };
@@ -350,6 +351,38 @@ export class OrbitalViewer {
     }
     this.invalidate();
   }
+  /** A fixed frame lets mode playback update existing meshes only. */
+  showNuclearGeometry(centers:number[][],numbers:number[],bonds:{a:number;b:number;order:number}[],reference?:number[][]){
+    this.clear(this.orbitals);this.clear(this.nodes);this.clear(this.nucleus);
+    const center=centers.reduce((v,p)=>v.add(new THREE.Vector3(...p as [number,number,number])),new THREE.Vector3()).divideScalar(centers.length);
+    const extent=Math.max(...[...centers,...(reference??[])].map(p=>new THREE.Vector3(...p as [number,number,number]).distanceTo(center)))+1.5;
+    this.structureFrame={center,scale:4/extent};
+    const colors:Record<number,number>={1:0xe8e8e4,3:0xb1a1de,5:0xd6a99a,6:0x7c8b95,7:0x629cde,8:0xe57469,9:0x91c99e};
+    const add=(xyz:number[][],ghost:boolean)=>{
+      const target=ghost?this.nodes:this.nucleus;
+      xyz.forEach((p,i)=>{
+        const marker=new THREE.Mesh(new THREE.SphereGeometry(numbers[i]===1?.16:.25,22,16),new THREE.MeshStandardMaterial({color:ghost?0x59c8e8:colors[numbers[i]]??0xaaaaaa,transparent:ghost,opacity:ghost?.25:1,depthWrite:!ghost}));
+        marker.position.copy(new THREE.Vector3(...p as [number,number,number]).sub(center).multiplyScalar(4/extent));marker.userData={atomIndex:i,type:`atom ${i+1}`};target.add(marker);
+      });
+      bonds.forEach(b=>{
+        const stick=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,1,12),new THREE.MeshStandardMaterial({color:ghost?0x59c8e8:0xefad79,transparent:ghost,opacity:ghost?.25:1,depthWrite:!ghost}));
+        stick.userData.bond=b;(ghost?this.nodes:this.orbitals).add(stick);this.placeStick(stick,xyz);
+      });
+    };
+    if(reference)add(reference,true);add(centers,false);this.invalidate();
+  }
+  private placeStick(stick:THREE.Mesh,centers:number[][]){
+    const {center,scale}=this.structureFrame!;const {a,b}=stick.userData.bond;
+    const start=new THREE.Vector3(...centers[a] as [number,number,number]).sub(center).multiplyScalar(scale);
+    const end=new THREE.Vector3(...centers[b] as [number,number,number]).sub(center).multiplyScalar(scale);
+    const direction=end.clone().sub(start);stick.position.copy(start).add(end).multiplyScalar(.5);stick.scale.y=direction.length();
+    if(direction.length()>1e-12)stick.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction.normalize());
+  }
+  updateNuclearGeometry(centers:number[][]){
+    if(!this.structureFrame)return;const {center,scale}=this.structureFrame;
+    this.nucleus.children.forEach(marker=>{const p=centers[marker.userData.atomIndex];if(p)marker.position.set(p[0],p[1],p[2]).sub(center).multiplyScalar(scale);});
+    this.orbitals.children.forEach(stick=>{if(stick.userData.bond)this.placeStick(stick as THREE.Mesh,centers);});this.invalidate();
+  }
   showMolecule(data: {extent:number;points:number[][];phases:number[];surfaces:MeshData[];centers_a0:number[][]}) {
     this.displayExtent = data.extent;
     this.phase = true; this.complex = false;
@@ -444,7 +477,7 @@ export class OrbitalViewer {
     this.renderer.render(this.scene, this.camera);
     if (changed || this.controls.autoRotate) this.invalidate();
   };
-  screenshot(model = "Quantum Atom Lab", units = "Lengths in a₀; nucleus schematic") {
+  screenshot(model = "Quantum Atom Lab", units = "Lengths in a₀; nucleus schematic", legend?:string) {
     this.renderer.render(this.scene, this.camera);
     const source = this.renderer.domElement;
     const canvas = document.createElement("canvas");
@@ -456,7 +489,7 @@ export class OrbitalViewer {
     ctx.fillText(model, 20, 32, canvas.width - 40);
     ctx.fillStyle = "#a5b6c5"; ctx.font = "14px sans-serif";
     ctx.fillText(units, 20, 62, canvas.width - 40);
-    ctx.fillText(this.phase ? "Cyan: +ψ; amber: −ψ in real phase view. Complex view: cyclic phase hue." : "Density view: nonnegative density, without phase coloring.", 20, 84, canvas.width - 40);
+    ctx.fillText(legend ?? (this.phase ? "Cyan: +ψ; amber: −ψ in real phase view. Complex view: cyclic phase hue." : "Density view: nonnegative density, without phase coloring."), 20, 84, canvas.width - 40);
     return canvas.toDataURL("image/png");
   }
   dispose() {

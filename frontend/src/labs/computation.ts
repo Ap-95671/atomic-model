@@ -1,3 +1,4 @@
+import { mountComputedMolecules } from "./computed-molecules";
 import { mountPySCF } from "./pyscf";
 import { LabSession, numberField, assumptions } from './session';
 import { esc } from '../components/dom';
@@ -25,10 +26,10 @@ function mountHartreeFock(host:HTMLElement){
 }
 
 export function mountComputation(host:HTMLElement){
-  host.innerHTML='<nav class="experiment-nav" aria-label="Computational methods"><button data-method="foundation" aria-pressed="true">RHF foundation</button><button data-method="pyscf" aria-pressed="false">Optional HF / DFT</button></nav><div data-computation-host></div>';
+  host.innerHTML='<nav class="experiment-nav" aria-label="Computational methods"><button data-method="foundation" aria-pressed="true">RHF foundation</button><button data-method="pyscf" aria-pressed="false">Optional HF / DFT</button><button data-method="spin-aware" aria-pressed="false">Spin-aware / all orbitals</button></nav><div data-computation-host></div>';
   const target=host.querySelector<HTMLElement>('[data-computation-host]')!;let cleanup=mountHartreeFock(target);
   host.querySelectorAll<HTMLButtonElement>('[data-method]').forEach(b=>b.onclick=()=>{
     cleanup();host.querySelectorAll('[data-method]').forEach(button=>button.setAttribute('aria-pressed',String(button===b)));
-    cleanup=b.dataset.method==='foundation'?mountHartreeFock(target):mountPySCF(target);
+    cleanup=b.dataset.method==='foundation'?mountHartreeFock(target):b.dataset.method==='spin-aware'?mountComputedMolecules(target):mountPySCF(target);
   });return()=>cleanup();
 }

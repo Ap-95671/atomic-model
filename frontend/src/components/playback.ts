@@ -8,8 +8,8 @@ export class Playback {
   private onVisibility=()=>{if(document.hidden)this.pause();};
   readonly slider: HTMLInputElement;
   private button: HTMLButtonElement;
-  constructor(private host: HTMLElement, private max:number, private perSecond:number, private draw:(time:number)=>void){
-    host.innerHTML=`<div class="playback"><button type="button" data-play>Play</button><button type="button" data-rewind>Rewind</button><label>Time / atomic units<input data-time type="range" min="0" max="${max}" step="${max/1000}" value="0"><output data-time-value>0.000</output></label><label>Playback speed<select data-speed><option value=".25">¼×</option><option value=".5">½×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label></div>`;
+  constructor(private host: HTMLElement, private max:number, private perSecond:number, private draw:(time:number)=>void, label="Time / atomic units"){
+    host.innerHTML=`<div class="playback"><button type="button" data-play>Play</button><button type="button" data-rewind>Rewind</button><label>${label}<input data-time type="range" min="0" max="${max}" step="${max/1000}" value="0"><output data-time-value>0.000</output></label><label>Playback speed<select data-speed><option value=".25">¼×</option><option value=".5">½×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label></div>`;
     this.slider=host.querySelector('[data-time]')!;this.button=host.querySelector('[data-play]')!;
     this.button.onclick=()=>{if(this.playing)this.pause();else{if(this.time>=this.max)this.seek(0);this.playing=true;this.button.textContent='Pause';this.last=performance.now();this.frame=requestAnimationFrame(this.tick);}};
     host.querySelector<HTMLButtonElement>('[data-rewind]')!.onclick=()=>{this.pause();this.seek(0);};
