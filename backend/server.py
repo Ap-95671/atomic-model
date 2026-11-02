@@ -13,6 +13,8 @@ from quantum_engine.atomic_structure import species
 from quantum_engine.electron_configuration import ELEMENTS
 from quantum_engine.energy_levels import energy_ev, transition
 from .geometry import orbital_payload
+from .jobs import JobManager
+from quantum_engine.chemistry import catalog
 from .api.experiments import calculate
 from .optional_computation import compute as optional_compute
 from quantum_engine.molecular.structures import structure
@@ -21,6 +23,7 @@ from .molecular_geometry import molecule_payload, hartree_fock_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPUTE = threading.BoundedSemaphore(2)
+JOBS = JobManager(COMPUTE)
 
 
 def integer(q, key, default):
@@ -91,10 +94,57 @@ class Handler(BaseHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError):
             pass
 
+    def local_mutation_allowed(self):
+        origin = self.headers.get("Origin")
+        if origin and urlsplit(origin).hostname not in ("127.0.0.1", "localhost", "::1"):
+            self.send_data(403, {"error": "Scientific job changes require a local origin"})
+            return False
+        return True
+
+    def do_POST(self):
+        if not self.local_mutation_allowed():
+            return
+        if urlsplit(self.path).path != "/api/jobs":
+            return self.send_data(404, {"error": "Unknown job endpoint"})
+        try:
+            if self.headers.get_content_type() != "application/json":
+                return self.send_data(415, {"error": "Use application/json"})
+            length = int(self.headers.get("Content-Length", "0"))
+            if not 0 < length <= 32768:
+                return self.send_data(413, {"error": "JSON request must be 1…32768 bytes"})
+            def invalid_constant(value):
+                raise ValueError("Nonfinite JSON numbers are not accepted")
+            body = json.loads(self.rfile.read(length), parse_constant=invalid_constant)
+            return self.send_data(202, JOBS.submit(body))
+        except KeyError as exc:
+            return self.send_data(410, {"error": str(exc)})
+        except (ValueError, TypeError, OverflowError) as exc:
+            return self.send_data(400, {"error": str(exc)})
+        except RuntimeError as exc:
+            return self.send_data(503, {"error": str(exc)})
+
+    def do_DELETE(self):
+        if not self.local_mutation_allowed():
+            return
+        path = urlsplit(self.path).path
+        if not path.startswith("/api/jobs/"):
+            return self.send_data(404, {"error": "Unknown job endpoint"})
+        try:
+            return self.send_data(200, JOBS.cancel(path.removeprefix("/api/jobs/")))
+        except KeyError as exc:
+            return self.send_data(404, {"error": str(exc)})
+
     def do_GET(self):
         url = urlsplit(self.path)
         q = parse_qs(url.query)
         try:
+            if url.path == "/api/chemistry/catalog":
+                return self.send_data(200, catalog())
+            if url.path.startswith("/api/jobs/"):
+                try:
+                    return self.send_data(200, JOBS.get(url.path.removeprefix("/api/jobs/")))
+                except KeyError as exc:
+                    return self.send_data(404, {"error": str(exc)})
             if url.path == "/api/health":
                 return self.send_data(200, {"status": "ok", "engine": "Schrödinger hydrogenic", "elements": len(ELEMENTS)})
             if url.path == "/api/elements":
@@ -144,7 +194,7 @@ class Handler(BaseHTTPRequestHandler):
                 if not COMPUTE.acquire(blocking=False):
                     return self.send_data(503, {"error": "Two scientific calculations are running; retry shortly."})
                 try:
-                    payload = molecule_payload(floating(q,"distance",2.),q.get("orbital",["bonding"])[0],floating(q,"threshold",.12))
+                    payload = molecule_payload(floating(q,"distance",2.),q.get("orbital",["bonding"])[0],floating(q,"threshold",.12),floating(q,"exponent",1.),q.get("optimize",["false"])[0]=="true",q.get("quality",["balanced"])[0])
                 finally:
                     COMPUTE.release()
                 return self.send_data(200,payload)
@@ -195,6 +245,7 @@ def serve():
     except KeyboardInterrupt:
         pass
     finally:
+        JOBS.close()
         server.server_close()
 
 

@@ -75,3 +75,10 @@ must name actual tests and changed behavior; later phases remain missing until
 implemented end to end. No placeholder laboratory pages will be added for them.
 
 - A0: branch/PR/history checked; 80 Python + 51 browser tests and build rerun.
+- A1 implementation: computed molecule selection now includes requested
+  diatomics, explicit open-shell O2, spin-resolved arbitrary MO browsing and
+  field-only reevaluation; H2+ exponent optimization/mesh diagnostics; true
+  backend job cancellation/progress; accumulating/clearable measurements; stale
+  atomic-result labels. Existing restricted/reference models remain labeled.
+  Detailed evidence and final test totals: `QUANTUM_LAB_3_VALIDATION.md`.
+  This does not complete the missing advanced laboratories listed above.

@@ -61,6 +61,7 @@ let subshellChoices = new Set<string>();
 let subshellKey = "";
 
 let energyRevision = 0;
+let renderedAtomicLabel = "No successful calculation yet";
 
 const atomIcon = `<svg width="27" height="27" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="2.2" fill="currentColor"/><ellipse cx="16" cy="16" rx="14" ry="5.5" stroke="currentColor"/><ellipse cx="16" cy="16" rx="14" ry="5.5" stroke="currentColor" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" stroke="currentColor" transform="rotate(120 16 16)"/></svg>`;
 $("app").innerHTML = `
@@ -96,7 +97,7 @@ $("app").innerHTML = `
 <div class="viewport" id="viewport"><div class="viewport-heading"><div><div class="eyebrow">WAVEFUNCTION EXPLORER</div><h2><span id="orbital-title">1s</span> <span class="title-divider">/</span> <span id="viewport-element">Hydrogen</span></h2><p id="state-subtitle">n = 1 · l = 0 · real basis</p></div><span class="model-badge" id="model-badge">ONE-ELECTRON MODEL</span></div>
 <div class="view-toolbar"><div class="segmented" role="group" aria-label="Rendering mode"><button id="cloud" class="selected">⋮ Electron cloud</button><button id="surface">◇ Isosurface</button></div><div class="segmented" role="group" aria-label="Color view"><button id="phase" class="selected">Phase</button><button id="density">Density</button></div></div>
 <div class="view-actions"><button class="icon-button" id="reset" title="Reset camera (R)" aria-label="Reset camera">⟲</button><button class="icon-button" id="export" title="Save viewport image" aria-label="Save viewport image">↓</button></div>
-<div id="loading" class="loading" role="status"><span class="spinner"></span><span>Computing wavefunction…</span></div>
+<div id="atomic-result-status" class="atomic-result-status" role="status" hidden></div><div id="loading" class="loading" role="status"><span class="spinner"></span><span>Computing wavefunction…</span></div>
 <div class="viewport-bottom"><div class="legend" id="legend"><span><i class="positive"></i>+ψ</span><span><i class="negative"></i>−ψ</span><small>Wavefunction sign</small></div><div class="scale-readout" id="scale-readout"></div></div>
 <div class="mouse-help">DRAG TO ROTATE <span>·</span> SCROLL TO ZOOM <span>·</span> RIGHT-DRAG TO PAN</div>
 <div class="viewport-caption" id="viewport-caption">Points are possible position measurements, not electrons following paths.</div>
@@ -206,6 +207,8 @@ async function selectSpecies(z: number, a?: number, q = charge) {
   ++requestId;
   controller?.abort();
   $("loading").hidden = false;
+  $("atomic-result-status").hidden=false;
+  $("atomic-result-status").textContent=`Calculating current inputs. Displayed state: ${renderedAtomicLabel}.`;
   $<HTMLButtonElement>("export").disabled = true;
   try {
     const result = await api<Species>(
@@ -222,6 +225,8 @@ async function selectSpecies(z: number, a?: number, q = charge) {
     if (id === speciesId) {
       $("loading").hidden = true;
       notify((error as Error).message);
+      $("atomic-result-status").hidden=false;
+      $("atomic-result-status").textContent=`Species request failed. Displayed state: ${renderedAtomicLabel}.`;
       if (atom) showSpecies();
     }
   }
@@ -250,6 +255,8 @@ async function loadOrbital() {
   controller?.abort();
   controller = new AbortController();
   $("loading").hidden = false;
+  $("atomic-result-status").hidden=false;
+  $("atomic-result-status").textContent=`Calculating current inputs. Displayed state: ${renderedAtomicLabel}.`;
   $<HTMLButtonElement>("export").disabled = true;
   try {
     const data = await api<OrbitalData>(
@@ -258,15 +265,21 @@ async function loadOrbital() {
     );
     if (id !== requestId) return;
     orbital = data;
+    renderedAtomicLabel=`${atom.symbol}-${atom.a}, charge ${atom.charge}, ${data.label}, ${mode}`;
     $<HTMLButtonElement>("export").disabled = false;
     viewer?.show(data, atom, phase, basis === "complex");
     if (viewer) viewer.nodes.visible = showNodes;
     updateInspector();
     renderAnalysis();
     if (viewer && overlayMode !== "single") await loadOverlay(id, controller.signal);
+    if(id===requestId)$("atomic-result-status").hidden=true;
   } catch (error) {
-    if ((error as Error).name !== "AbortError" && id === requestId)
+    if ((error as Error).name !== "AbortError" && id === requestId) {
       notify((error as Error).message);
+      $("atomic-result-status").hidden=false;
+      $("atomic-result-status").textContent=`Requested result failed or is incomplete. Displayed state: ${renderedAtomicLabel}.`;
+      $<HTMLButtonElement>("export").disabled=true;
+    }
   } finally {
     if (id === requestId) $("loading").hidden = true;
   }
