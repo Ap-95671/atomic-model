@@ -84,3 +84,22 @@ test('water has three calculated modes with stable canvas during playback',async
  await page.getByRole('button',{name:'Pause',exact:true}).click();await expect(page.locator('[data-mode-info]')).toContainText('Mode 2');
  await page.getByRole('button',{name:'Rewind',exact:true}).click();await expect(page.locator('[data-time-value]')).toHaveText('0.000');
 });
+test('correlation methods calculate energies and bounded active-space errors',async({page})=>{
+ await page.getByRole('button',{name:'Computational Chemistry',exact:true}).click();await page.getByRole('button',{name:'Electron correlation',exact:true}).click();
+ await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');await expect(page.locator('.result-metrics')).toContainText('-1.1372759436');
+ await page.locator('[name="method"]').selectOption('casci');await page.getByRole('button',{name:'Calculate',exact:true}).click();await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');
+ await expect(page.locator('.lab-results')).toContainText('active_natural_occupations');
+ await page.locator('[name="active_electrons"]').fill('4');await page.getByRole('button',{name:'Calculate',exact:true}).click();await expect(page.locator('.lab-status')).toContainText('Active space incompatible');
+});
+test('electronic response has oscillator strengths, NTOs and downloadable spectra',async({page})=>{
+ await page.getByRole('button',{name:'Computational Chemistry',exact:true}).click();await page.getByRole('button',{name:'Excited states',exact:true}).click();
+ await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');await expect(page.locator('.lab-results')).toContainText('25.304470');
+ await expect(page.locator('.lab-results')).toContainText('0.8854791');await page.getByText('State 1: orbital contributions and natural transition pairs',{exact:true}).click();
+ await expect(page.locator('.lab-results')).toContainText('2(X†X−Y†Y)=1.00000000');
+ const file=page.waitForEvent('download');await page.getByRole('button',{name:'Export spectrum / curve PNG'}).click();expect(await(await file).failure()).toBeNull();
+ await page.locator('[name="reference"]').selectOption('b3lyp');await page.getByRole('button',{name:'Calculate',exact:true}).click();await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');await expect(page.locator('.lab-results h2')).toHaveText('TDDFT singlet excitations');
+});
+test('bond stretching compares computed RHF UHF MP2 and FCI',async({page})=>{
+ await page.getByRole('button',{name:'Computational Chemistry',exact:true}).click();await page.getByRole('button',{name:'Correlated H₂ curve',exact:true}).click();
+ await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');await expect(page.locator('.lab-results table tbody tr')).toHaveCount(6);await expect(page.locator('.lab-results')).toContainText('spin contamination');
+});
