@@ -32,6 +32,7 @@ export class OrbitalViewer {
   private onVisibility = () => { if (!document.hidden) this.invalidate(); };
   private intersectionObserver: IntersectionObserver;
   private displayExtent = 1;
+  private blochArrow?:THREE.ArrowHelper;
   private structureFrame?: {center:THREE.Vector3;scale:number};
   private raycaster = new THREE.Raycaster();
   private resizeObserver: ResizeObserver;
@@ -352,6 +353,27 @@ export class OrbitalViewer {
     this.invalidate();
   }
   /** A fixed frame lets mode playback update existing meshes only. */
+  showBloch(vector:number[]){
+    this.clear(this.orbitals);this.clear(this.nodes);this.clear(this.nucleus);
+    const sphere=new THREE.Mesh(new THREE.SphereGeometry(3.2,24,16),new THREE.MeshBasicMaterial({color:0x6b91aa,wireframe:true,transparent:true,opacity:.16}));this.nodes.add(sphere);
+    this.blochArrow=new THREE.ArrowHelper(new THREE.Vector3(0,0,1),new THREE.Vector3(),3.2,0x59c8e8,.3,.16);this.orbitals.add(this.blochArrow);this.updateBloch(vector);
+  }
+  updateBloch(vector:number[]){
+    if(!this.blochArrow)return;const v=new THREE.Vector3(...vector as [number,number,number]),length=v.length();this.blochArrow.visible=length>1e-10;
+    if(length>1e-10){this.blochArrow.setDirection(v.normalize());this.blochArrow.setLength(3.2*length,Math.min(.3,length),Math.min(.16,length));}this.invalidate();
+  }
+  showWeightedCloud(points:number[][],extent:number){
+    this.clear(this.orbitals);this.clear(this.nodes);this.clear(this.nucleus);this.displayExtent=extent;this.phase=true;this.complex=true;
+    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(points.flat().map(v=>v*4/extent),3));
+    geometry.setAttribute('color',new THREE.Float32BufferAttribute(new Float32Array(points.length*3),3));geometry.setAttribute('weight',new THREE.Float32BufferAttribute(new Float32Array(points.length),1));
+    const material=new THREE.ShaderMaterial({vertexShader:'attribute vec3 color; attribute float weight; varying vec3 tint; varying float alpha; void main(){tint=color;alpha=weight;vec4 p=modelViewMatrix*vec4(position,1.);gl_Position=projectionMatrix*p;gl_PointSize=clamp(40./(-p.z),2.,5.);}',fragmentShader:'varying vec3 tint; varying float alpha; void main(){float r=length(gl_PointCoord-.5)*2.;if(r>1.)discard;gl_FragColor=vec4(tint,alpha*.8*exp(-2.*r*r));}',transparent:true,depthWrite:false});
+    this.orbitals.add(new THREE.Points(geometry,material));const marker=new THREE.Mesh(new THREE.SphereGeometry(.05,16,12),new THREE.MeshStandardMaterial({color:0xe57969}));marker.userData.type='proton';this.nucleus.add(marker);this.invalidate();
+  }
+  updateWeightedCloud(weights:number[],phases:number[]){
+    const cloud=this.orbitals.children[0] as THREE.Points;if(!cloud)return;
+    const weight=cloud.geometry.getAttribute('weight') as THREE.BufferAttribute,color=cloud.geometry.getAttribute('color') as THREE.BufferAttribute;
+    weight.set(weights);weight.needsUpdate=true;color.set(this.colors(phases));color.needsUpdate=true;this.invalidate();
+  }
   showNuclearGeometry(centers:number[][],numbers:number[],bonds:{a:number;b:number;order:number}[],reference?:number[][]){
     this.clear(this.orbitals);this.clear(this.nodes);this.clear(this.nucleus);
     const center=centers.reduce((v,p)=>v.add(new THREE.Vector3(...p as [number,number,number])),new THREE.Vector3()).divideScalar(centers.length);
