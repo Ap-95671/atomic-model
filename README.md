@@ -1,27 +1,40 @@
-# Quantum Atom Lab 2.0
+# Quantum Atom Lab 3.0 alpha · validated milestones
 
 A local scientific workspace for atomic orbitals, molecular bonding, spectroscopy,
 quantum dynamics and small-system computational chemistry. Python calculates the
 states and surfaces; TypeScript and Three.js provide the interface. The original
 Pygame simulator and Git history are preserved.
 
-![Calculated H₂⁺ molecular orbital](docs/quantum-lab-2-molecular.png)
+![Calculated triplet O₂ molecular orbital](docs/quantum-lab-3-molecular.png)
+
+Incremental development on unmerged 2.0 PR #2. This alpha implements tested
+chemistry, dynamics and quantum-model milestones; it does **not** complete every
+item in the 3.0 specification. The [current audit](docs/FEATURE_COMPLETENESS_AUDIT.md)
+and [3.0 validation report](docs/QUANTUM_LAB_3_VALIDATION.md) distinguish working
+calculations from remaining work. Project licensing awaits owner approval.
 
 ## Working laboratories
 
 | Laboratory | Implemented calculation | Scope |
 | --- | --- | --- |
 | **Atomic Explorer** | Hydrogenic s/p/d/f clouds, surfaces, nodes, real/complex harmonics, radial/angular plots, overlays, isotopes/ions, all 118 elements | Analytic one-electron model; multi-electron Z_eff shapes remain illustrative |
-| **Molecular Lab** | H₂⁺ generalized LCAO eigenproblem, bonding/antibonding and original atomic orbitals, overlap/matrices, total-energy curve and minimum | Two normalized fixed-exponent 1s functions; nuclear repulsion included |
+| **Molecular Lab** | H₂⁺ generalized LCAO eigenproblem, bonding/antibonding and original atomic orbitals, overlap/matrices, total-energy curve and minimum | Shared fixed/optimized Slater exponent, measured mesh convergence; nuclear repulsion included |
 | **MO diagrams** | H₂⁺, H₂, He₂, Li₂, B₂, C₂, N₂, O₂, F₂, Ne₂ occupations, spin, frontier levels, bond order and magnetism | Reference-based ordinal diagrams; no calculated many-electron energies or shapes |
 | **3D structures** | H₂O, NH₃, CH₄, CO₂, CO, benzene; atoms, connectivity, coordinates, derived bond lengths/angles | Source-preserved PubChem3D conformers; schematic ball sizes, no equilibrium-optimization claim |
-| **Quantum Dynamics** | Normalized complex two-state superpositions, exact time phases, playback, density/amplitude and position-expectation plots | 1D infinite square well, not time-dependent hydrogen |
+| **Quantum Dynamics** | Original two-state and 1–8-state well evolution; n≤2 3D hydrogenic superpositions, weighted clouds, phase and position means | Exact finite-eigenbasis evolution; no general spatial TDSE/laser solver |
 | **Spectroscopy** | Initial/final n,l,m,spin; emission/absorption; E1 polarization/selection rules; calculated dipole strengths; Lyman/Balmer/Paschen series | Reduced-mass hydrogenic, unresolved nonrelativistic vacuum wavelengths |
-| **Measurement** | Independent seeded Born-rule samples, theory/histogram comparison, analytical moments, Cartesian position/momentum uncertainties | Repeated preparations; no electron paths or simultaneous exact observables |
+| **Measurement** | Independent seeded and accumulating Born-rule batches, actual reset, theory/histograms, analytical moments and uncertainties | Repeated preparations; no electron paths or simultaneous exact observables |
 | **Tunneling** | Gaussian packet, finite barrier, unitary split-operator FFT, finite-time probability partition, analytical packet reference | 1D bounded grids with boundary and convergence diagnostics |
 | **Fields & Spin** | n=2 hydrogen Stark state mixing, weak Zeeman/ Landé splitting, angular momentum addition, Dirac fine structure | Separate first-order experiments; no combined fields, hyperfine or QED |
 | **Computational Chemistry** | In-house He/H₂ restricted Hartree–Fock, analytic Gaussian integrals, SCF matrices/history, density/HOMO/LUMO, H₂ energy curve | STO-3G or its uncontracted primitives; no correlation; restricted dissociation is inaccurate |
-| **Optional HF / DFT** | Actual PySCF HF, PBE and B3LYP; STO-3G/6-31G; energies, orbitals/density, convergence and same-geometry HF comparison | Closed-shell H₂/He and the six reference molecules; fixed geometry |
+| **Calculated molecules** | RHF/UHF/ROHF, spin-aware PBE/B3LYP; STO-3G/6-31G/cc-pVDZ; every α/β MO, density/spin density, SCF diagnostics | Explicit O₂ triplet, selected spin is input; reference diagrams remain separate |
+| **Geometry & vibrations** | Analytic-gradient BFGS, initial/final overlay, force history, distances/angles; analytic mass-weighted Hessian, frequencies and mode playback | 2–5 atoms, closed-shell RHF/RKS, ≤50 AOs; harmonic, no IR/Raman intensities |
+| **Correlation** | MP2, CCSD, CCSD(T), CISD, FCI, contiguous-frontier CASCI/CASSCF; actual H₂ RHF/UHF/MP2/FCI stretching comparison | Closed-shell, ≤30 AOs, bounded CI space; single-reference/active-space limitations explicit |
+| **Electronic excitations** | TDHF/TDDFT/TDA-CIS vertical singlets, oscillator strengths, transition dipoles, NTO pair data, absorption plot | ≤5 states; arbitrary Gaussian broadening, reference HOMO in viewport |
+| **Open systems** | Constant-generator Lindblad matrix evolution, density matrices, Bloch sphere, purity, entropy, relaxation/dephasing | Markovian ideal qubit, chosen time units; trace/Hermiticity/positivity checked |
+| **Quantum computing** | 1–5 qubit circuits and measurements; actual H₂/STO-3G Jordan–Wigner ideal VQE against same-sector diagonalization | No hardware/noise claim; two-determinant H₂-specific doubles ansatz |
+| **Materials** | Chain/square/honeycomb nearest-neighbor tight-binding bands, reciprocal cells, lattice patches, DOS | Illustrative user parameters; no real-material dataset/periodic DFT claim |
+| **Adaptive baseline** | Measured HF/MP2/CCSD accuracy/latency lookup with exact-condition matching and explicit abstention | Six generated finite-basis FCI-reference cases; no ML/generalization/uncertainty guarantee |
 
 Every advanced result includes its model, units and assumptions. Eigenstate
 probability density remains stationary; changing global phase does not animate
@@ -115,8 +128,9 @@ atomic units with explicit presentation conversions.
 The server binds only to loopback. It bounds handler threads (16), simultaneous
 scientific jobs (2), state/grid sizes, caches and native-worker timeouts. Client
 abort/revision checks prevent obsolete results from overwriting new selections.
-An active core computation finishes independently; optional workers terminate
-at 12 seconds. The application exposes no user-supplied shell/code execution,
+Short core computations finish independently. New chemistry jobs expose progress
+and actual process cancellation, with a 90-second timeout; the preserved legacy
+HF/DFT GET worker retains its 12-second timeout. The application exposes no user-supplied shell/code execution,
 filesystem writes or remote-execution API.
 
 | Documentation | Contents |
@@ -131,18 +145,47 @@ filesystem writes or remote-execution API.
 | [Limitations](docs/LIMITATIONS.md) | Supported approximations and remaining work |
 | [Data sources](data/SOURCES.md) | NIST/PubChem/basis snapshots and provenance |
 
+## Python SDK and reproducibility
+
+```sh
+.venv/bin/python -m pip install . --no-build-isolation
+.venv/bin/python examples/sdk_basics.py
+# Optional, using the existing computation environment:
+.venv/bin/python examples/sdk_chemistry.py
+.venv/bin/python scripts/benchmark3.py
+.venv/bin/python scripts/benchmark_adaptive.py
+```
+
+```python
+from quantum_atom_lab import HydrogenicOrbital
+orbital = HydrogenicOrbital(n=2, l=1, m=0)
+print(orbital.probability_density(x=0., y=0., z=1.))
+```
+
+The versioned experimental SDK includes its required reference data and runs
+without the HTTP/frontend packages. A standalone wheel is built and tested
+outside the checkout; no PyPI publication is performed. See the [public API](docs/PYTHON_SDK.md),
+[research baseline](docs/ADAPTIVE_ENGINE.md), [contribution guide](CONTRIBUTING.md),
+[changelog](CHANGELOG.md) and [license/dependency review](docs/LICENSE_REVIEW.md).
+GitHub Actions defines core-only Python 3.14 and optional-chemistry/Chrome jobs;
+local validation and observed hosted-CI results are reported separately.
+
 ## Limits and next work
 
-The supported models are intentionally narrow. Dynamics/tunneling are 1D;
-H₂⁺ uses a small variational basis; multi-electron reference diagrams are not
-computed orbitals. RHF excludes correlation and has incorrect dissociation;
-optional DFT uses a finite integration grid. Atomic Explorer's many-electron
-Z_eff is illustrative. No time-dependent 3D atomic superposition, unrestricted
-open-shell SCF, geometry optimization, electrostatic-potential surface, correlated
-wavefunction, combined field solver, hyperfine or QED model is provided.
+Remaining work includes general spatial 3D TDSE/laser propagation, nuclear MD,
+validated reaction/transition-state pathways, broader combined external fields,
+IR/Raman derivative intensities, dedicated NTO surfaces, geometry import and
+open-shell geometry/post-HF workflows; real materials reference datasets and
+periodic DFT; a generalizable accuracy-aware research router with independent
+large benchmarks and calibrated uncertainty. Current exact-condition benchmark
+lookup is a transparent baseline, not a learned or general-purpose predictor.
 
-Finite meshes can miss small lobes and tight core density. Structures are
-PubChem3D conformers, not experimental equilibrium geometries. Unknown ion
-configurations and unverified isotopes remain labeled. Tests validate stated
-models, not unsupported physical systems. See the detailed limitations before
-using results quantitatively.
+Named portable workspaces, every camera/overlay/GPU/device combination and a
+full controller refactor are also incomplete. Finite meshes may omit small
+lobes and under-resolve tight cores. Many-electron Atomic Explorer Z_eff remains
+illustrative; source structures remain PubChem conformers unless separately
+optimized. See [limits](docs/LIMITATIONS.md) and the audit for the detailed scope.
+
+The app is **local only**. It is not exposed as a public production service;
+[public-demo architecture](docs/PUBLIC_DEMO.md) documents the remaining hosting
+work. License approval, PyPI publication and a stable 3.0 release remain pending.

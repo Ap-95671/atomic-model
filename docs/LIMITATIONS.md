@@ -1,45 +1,72 @@
-# Scope and remaining work
+# Supported scope and remaining work · 3.0 alpha
 
-Implemented features are operating calculations or explicitly labeled source
-models. No unavailable engine is presented as a simulated success.
+Every implemented screen calculates its stated model or explicitly shows source
+reference data. No missing engine is represented by successful fake output.
+See `QUANTUM_LAB_3_VALIDATION.md` for actual test/reference evidence.
 
-- Atomic Explorer retains the nonrelativistic hydrogenic model; illustrative
-  many-electron Z_eff is not self-consistent screening. Neutral/ion references,
-  superheavy uncertainty and isotope-existence limitations are preserved.
-- Exact dynamics is a two-state **1D well**, not a 3D time-dependent atom. More
-  basis terms, atomic superpositions and 3D expectation plots remain future work.
-- Tunneling is a finite periodic 1D grid. dt/dx convergence and boundary warnings
-  matter. Left-region probability includes incident amplitude until separated.
-- H₂⁺ LCAO has fixed unit-exponent 1s functions; its ~2.493 a₀ minimum differs
-  from a high-accuracy result. The basis is not a many-electron N₂/O₂ solver.
-- Ten diatomic MO diagrams use reference ordinal ordering; no numeric energies
-  or calculated spatial fields are claimed. Open-shell frontier levels require
-  spin-dependent interpretation beyond the simple spatial labels.
-- In-house RHF supports only He/H₂, s primitives and two basis choices. It lacks
-  correlation, unrestricted spin and reliable H₂ dissociation. Expanding STO-3G
-  primitives is not a systematic complete-basis study.
-- Optional PySCF supports closed-shell HF/PBE/B3LYP and STO-3G/6-31G at fixed
-  reference coordinates. DFT grid level 1, SCF tolerance, timeout and finite
-  display mesh are explicit. Geometry optimization, solvent, vibrations,
-  electrostatic-potential surfaces, correlated methods and open-shell O₂ SCF
-  are not implemented. The core app works with PySCF uninstalled.
-- The six PubChem3D structures are theoretical conformers. Their bond data are
-  derived coordinates, not new measured equilibrium values. Ball sizes and
-  nuclear positions/markers are schematic wherever stated.
-- Fields are separate n=2 hydrogen approximations, with B≤0.05 T and |F|≤1e-5
-  atomic field. No combined Stark–Zeeman or intermediate-field solver is supplied.
-  Fine structure uses infinite-mass point-Coulomb Dirac energies; Lamb/QED,
-  finite nucleus and hyperfine effects remain excluded.
-- Finite amplitude/density thresholds are not enclosed probabilities. High-n
-  atomic lobes and tight molecular core density can be under-resolved. Plots,
-  basis/grid convergence and explicit model metadata are essential context.
-- Core abort cancels stale display/network work, not an active NumPy operation.
-  Jobs and handlers are bounded; optional worker timeout kills its subprocess.
-  This loopback server is not a public multi-user deployment architecture.
-- Automated checks cover stated Chrome widths and default/representative
-  workflows. They do not establish formal WCAG conformance or prove the absence
-  of every browser/GPU leak. Scientific uncertainty is not eliminated by tests.
-
-Further work should deepen model accuracy and coverage before adding new
-laboratory screens: 3D atomic dynamics, grid/basis studies, optimized structures,
-open-shell methods and correlated dissociation are the main scientific gaps.
+- Atomic Explorer remains nonrelativistic hydrogenic; many-electron Z_eff is
+  illustrative. Ion/isotope uncertainty and schematic nuclei remain explicit.
+  No self-consistent general atom, QED, finite nucleus or hyperfine model.
+- Dynamics supports the preserved two-state well, arbitrary 1–8-state well and
+  exact n≤2 3D hydrogenic spectral mixtures. No general spatial 3D TDSE,
+  continuum wave packet, time-dependent external potential or laser driving.
+  Atomic cloud points are fixed importance samples, not trajectories.
+- Tunneling remains a finite periodic 1D split-operator grid, with dt/dx/boundary
+  diagnostics. Regional left probability includes incident amplitude until
+  outgoing packets separate. Browser abort does not interrupt active core NumPy.
+- H2+ has two normalized Slater 1s functions with fixed or bonding-optimized
+  common exponent. This improves the basis but is not exact, polarized or a
+  many-electron solution. The physical isolated-H reference and fixed-basis
+  dissociation asymptote are distinct when zeta differs from one.
+- Reference MO diagrams retain ordinal energies. Calculated HF/DFT orbitals
+  now support alpha/beta spin and additional systems/bases; O2 uses an explicit
+  chosen triplet, not a proof of its global ground state. UHF/UKS can be spin
+  contaminated; orbital energies are not electronic excitation energies.
+- New SCF/geometry/correlation/response/VQE workflows are optional PySCF with
+  two shared worker slots and a 90-second wall limit; legacy fixed-geometry
+  HF/DFT GET retains its 12-second bound. `max_memory=384` MiB is a PySCF
+  workspace hint, not a hard OS memory cap. Input/basis/CI limits remain essential.
+- Geometry/vibrations: closed-shell RHF/PBE/B3LYP only, 2–5 atoms, ≤50 AOs,
+  analytic-gradient local BFGS; no import, open-shell optimization, global minimum
+  or transition-state guarantee. Harmonic modes project rigid motion, use average
+  atomic masses and are unscaled. No isotope controls or IR/Raman intensities.
+  Imaginary frequencies indicate instability, not negative-energy absorption.
+- Post-HF: restricted reference, ≤5 atoms / ≤30 AOs; finite CI/active spaces.
+  MP2/CCSD(T) are nonvariational and can fail near degeneracy. CASCI/CASSCF use
+  user-sized contiguous frontier orbitals, not chemically automatic selection.
+  FCI is exact only within the chosen finite basis. UHF does not solve correlation.
+- Electronic response: up to five vertical singlets; TDHF/TDDFT/TDA-CIS,
+  length-gauge dipoles/strengths and NTO pair/AO data. No dedicated NTO surfaces,
+  excited-geometry relaxation or general double-excitation treatment. Spectrum
+  linewidth is arbitrary, not a measured lifetime. HOMO viewport is the reference.
+- Lindblad model is a constant, Markovian ideal qubit with amplitude relaxation
+  and pure dephasing; no finite-temperature excitation or non-Markovian memory.
+  Pure/mixed-state entropy/purity are computed, not inferred from animations.
+- Circuits are ideal 1–5 qubit pure state vectors, ≤32 gates, final independent
+  computational-basis shots; no mid-circuit conditionals, hardware or noise.
+  Molecular VQE is H2/STO-3G only; the H2-specific doubles ansatz is sufficient
+  in that parity sector, with no general-molecule/quantum-advantage implication.
+- Materials are analytic nearest-neighbor chain/square/honeycomb models with
+  illustrative inputs; no real-material data integration, experimental band-gap
+  prediction, periodic DFT or interacting solid-state calculation. DOS is a
+  finite BZ histogram per cell/spin, with grid/binning artifacts.
+- Adaptive selection is a transparent measured lookup on exact benchmark
+  conditions. It abstains on held-out/new molecules. No generalizable predictor,
+  ML, calibrated uncertainty, unseen-molecule regret or publication claim.
+- Nuclear MD and verified reaction/transition-state pathways remain unimplemented.
+  They need a validated force/time-integration/trajectory workflow and Hessian-
+  supported stationary-point/path validation; no interpolated proxy is shipped.
+- Fields remain separate weak n=2 hydrogen Stark/Zeeman and Dirac experiments.
+  More general combined-field manifolds and driven 3D views are incomplete.
+- Finite meshes may miss small lobes/tight cores. Thresholds are fractions of
+  sampled amplitude/density peaks, not enclosed probabilities. Source PubChem
+  conformers are not optimized unless that separate calculation succeeds.
+- Single local presets do not yet provide named portable workspaces or full
+  atomic/camera state serialization. Further atomic-controller decomposition,
+  chunk splitting and all-device/GPU-state audits remain incomplete.
+- Browser checks and actual screenshots cover representative Chrome workflows,
+  not formal WCAG certification or proof of leak absence across drivers. No
+  total concurrent/GPU memory ceiling or every expensive worst case is measured.
+- SDK is an experimental local alpha with bundled data, not a stable release or
+  published PyPI package. Owner license approval remains pending. No merges,
+  force pushes or public production deployment are included in this work.

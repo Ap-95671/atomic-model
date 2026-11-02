@@ -104,3 +104,44 @@ implemented end to end. No placeholder laboratory pages will be added for them.
   five additional browser workflows. Real materials reference integration and
   periodic DFT remain missing; illustrative model parameters are not attributed
   to experimental datasets. Noise/hardware/general-molecule VQE are unsupported.
+- F1/G1: standalone experimental SDK, bundled data, defined CI, generated
+  benchmarks and a transparent evidence-limited routing baseline are connected.
+  Local final totals: 126 Python / 85 Chromium tests pass; missing-PySCF simulation
+  passes 105 with 21 skips. Manual screenshots and measured resource records
+  supplement automated checks. A general research predictor, release/license
+  approval and public deployment remain incomplete.
+
+## Current implemented status after these milestones
+
+This table supersedes the starting-state matrix where changed. Limitations in
+`LIMITATIONS.md` and the evidence log above remain part of every status.
+
+| Feature | Current classification / actual scope | Evidence / source | Remaining requirement / priority |
+| --- | --- | --- | --- |
+| Original Pygame/atomic physics | Validated, original seven modules unchanged | Git exact comparison; preserved 80 tests | General many-electron atoms unsupported; P0 preservation |
+| Atomic stale failures | Corrected/validated, retained state labeled and exports disabled | `main.ts`, atomic failure e2e | All device/error combinations not proven; P1 |
+| H2+ basis/surfaces | Limited/validated, variational exponent and 41³/65³/97³ residuals | molecular engine; independent quadrature/convergence tests | Higher polarization basis absent; P2 |
+| Calculated molecule selector | Limited/validated, 18 catalog systems, real HF/DFT fields | chemistry package + 3.0 browser workflows | Fixed-source nuclei except separate optimizer; P1 |
+| Open-shell O2 and all MOs | Limited/validated, chosen triplet, alpha/beta counts/S², every MO | O2 independent PySCF comparison and field-only tests | Selected spin is not global ground-state proof; P2 |
+| SCF/basis/DFT quality | Limited/validated, 3 bases, guesses/DIIS/energy checks/grid controls | `chemistry/scf.py`, `test_chemistry_jobs.py` | General convergence/functional accuracy not guaranteed; P2 |
+| Geometry optimization | Limited/validated, analytic closed-shell BFGS, forces/history/overlay/export | `chemistry/geometry.py`, 6 science tests, browser | Imports/open shell/global minima unsupported; P2 |
+| Normal modes | Limited/validated, analytic mass-weighted Hessian, rigid projection/playback | Hessian FD convergence, water 3 modes, browser | IR/Raman derivatives/isotope controls absent; P2 |
+| Post-HF/active spaces | Limited/validated, MP2/CCSD/(T)/CISD/FCI/CASCI/CASSCF | 6 independent/limiting tests + UI | Open shell/automatic chemical active-space selection absent; P2 |
+| H2 dissociation | Limited/validated, computed RHF/UHF/MP2/FCI same-basis scan | Fragment limit and spin checks | General correlated reaction scans absent; P2 |
+| Excited states | Limited/validated, singlet TDHF/TDDFT/TDA-CIS, strengths/dipoles/NTO data | Independent A/B matrix and dipole identity tests | Dedicated NTO surfaces/excited geometry absent; P2 |
+| General well dynamics | Limited/validated, up to 8 normalized complex basis states | Analytic expectations, spatial convergence/revival tests | Arbitrary-function projection not supplied; P2 |
+| 3D atomic spectral evolution | Limited/validated, n≤2 eigenfunctions, weighted density/phase | Independent dipole/quadrature/stationary tests | General spatial TDSE/laser propagation missing; P2 |
+| Measurement accumulation | Corrected/validated, compatible independent batches/reset/export | Python model + accumulation/reset browser tests | Full portable experiment workspace absent; P1 |
+| Fields/spectroscopy/tunneling | Limited/validated, preserved original methods/diagnostics | All original science/browser tests rerun | Broader combined-field solver absent; P2 |
+| Open systems | Limited/validated, constant qubit Lindblad, density/Bloch/purity/entropy | Analytic rates, independent ODE, invariants/browser | Non-Markovian/thermal bath models absent; P3 |
+| Ideal circuits | Limited/validated, ≤5 qubits / ≤32 gates / final measurements | Gates, Bell/rotations, norm/measurement tests | Hardware/noise/mid-circuit controls unsupported; P3 |
+| Molecular VQE | Limited/validated, actual H2/STO-3G JW Hamiltonian/doubles unitary | Anticommutation, Pauli reconstruction, 4-R FCI match | General molecules/ansatzes unsupported; P3 |
+| Tight binding | Limited/validated, chain/square/honeycomb bands/DOS/lattice | Dispersion/eigenvalue/reciprocal/moment/convergence tests | Real material provenance/periodic DFT missing; P3 |
+| Adaptive baseline | Partial/validated, exact-condition measured lookup and abstention | Generated six-case benchmark/disjoint policy tests | Generalization, regret, calibrated uncertainty, broad datasets missing; P3 |
+| SDK/packaging | Limited/validated experimental API, actual standalone wheel with data | `test_sdk3.py`, outside-checkout verification/examples | Stable release/API guarantees and owner license pending; P2 |
+| CI/contribution/release docs | Defined and locally exercised commands | workflow, CONTRIBUTING, changelog, SDK/method docs | Hosted CI status is separate; no release/tag/publication; P2 |
+| Cancellation/resource lifetimes | Corrected/validated, real kill/reap/progress/timeouts/caches | Real running-process cancellation/timeout/failure tests | Hard OS memory limit/public multi-tenancy absent; P2 |
+| UI/GPU behavior | Limited/validated representative workflows, 320–1920 px, a11y fixes | 85 browser tests, actual images and draw/buffer audit | Every device/camera/driver not certified; P1 |
+| Source conformers/diagrams | Limited/validated provenance/reference labels preserved | Original source/data/model tests | Not measured equilibrium data; P0 |
+| Reaction pathways / nuclear MD | Missing, no placeholder output | No solver/controller shipped | Validated forces/integration/path/TS workflows still required; P2 |
+| Public demo / licensing | Not deployed / pending owner decision | `PUBLIC_DEMO.md`, `LICENSE_REVIEW.md` | Isolation/hosting and explicit license approval; P3 |

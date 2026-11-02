@@ -1,5 +1,10 @@
 # Quantum Atom Lab 2.0 — implementation and release audit
 
+The original 2.0 record below is preserved. Current 3.0 alpha additions and
+independent numerical evidence are in [3.0 validation](QUANTUM_LAB_3_VALIDATION.md);
+[current limitations](LIMITATIONS.md) and the [feature audit](FEATURE_COMPLETENESS_AUDIT.md)
+supersede starting-state missing-feature descriptions.
+
 2 November 2026 · macOS arm64 · Python 3.14.7 · Node 24.13.0.
 Started from fetched `main` commit `ff99a54`, with a clean working tree.
 Development branch: `feature/quantum-lab-2`. Main and the seven Pygame files

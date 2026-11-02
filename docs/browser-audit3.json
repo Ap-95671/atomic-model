@@ -1,0 +1,17 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "load_to_atomic_ready_ms": 166.1959999999999,
+  "atomic_playback_1500ms": {
+    "draw_call_increase": 120,
+    "buffer_creation_increase": 0,
+    "buffer_deletion_increase": 0
+  },
+  "idle_400ms_draw_call_increase": 0,
+  "median_animation_frame_interval_ms": 16.699999999999818,
+  "mobile_document_width": 390,
+  "console_errors": [],
+  "measurement_note": "Single headless Chrome run, scheduling interval is not measured GPU execution/FPS. On-demand rendering and max 10 Hz data playback are intentional. Counts cover instrumented WebGL calls during this workload, not all driver allocations or total GPU memory."
+}
