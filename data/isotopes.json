@@ -1,0 +1,2716 @@
+{
+  "1": [
+    {
+      "a": 1,
+      "mass_u": 1.00782503223,
+      "abundance": 0.999885,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 2,
+      "mass_u": 2.01410177812,
+      "abundance": 0.000115,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 3,
+      "mass_u": 3.0160492779,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "2": [
+    {
+      "a": 3,
+      "mass_u": 3.0160293201,
+      "abundance": 1.34e-06,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 4,
+      "mass_u": 4.00260325413,
+      "abundance": 0.99999866,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "3": [
+    {
+      "a": 6,
+      "mass_u": 6.0151228874,
+      "abundance": 0.0759,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 7,
+      "mass_u": 7.0160034366,
+      "abundance": 0.9241,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "4": [
+    {
+      "a": 9,
+      "mass_u": 9.012183065,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "5": [
+    {
+      "a": 10,
+      "mass_u": 10.01293695,
+      "abundance": 0.199,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 11,
+      "mass_u": 11.00930536,
+      "abundance": 0.801,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "6": [
+    {
+      "a": 12,
+      "mass_u": 12.0,
+      "abundance": 0.9893,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 13,
+      "mass_u": 13.00335483507,
+      "abundance": 0.0107,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 14,
+      "mass_u": 14.0032419884,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "7": [
+    {
+      "a": 14,
+      "mass_u": 14.00307400443,
+      "abundance": 0.99636,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 15,
+      "mass_u": 15.00010889888,
+      "abundance": 0.00364,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "8": [
+    {
+      "a": 16,
+      "mass_u": 15.99491461957,
+      "abundance": 0.99757,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 17,
+      "mass_u": 16.9991317565,
+      "abundance": 0.00038,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 18,
+      "mass_u": 17.99915961286,
+      "abundance": 0.00205,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "9": [
+    {
+      "a": 19,
+      "mass_u": 18.99840316273,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "10": [
+    {
+      "a": 20,
+      "mass_u": 19.9924401762,
+      "abundance": 0.9048,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 21,
+      "mass_u": 20.993846685,
+      "abundance": 0.0027,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 22,
+      "mass_u": 21.991385114,
+      "abundance": 0.0925,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "11": [
+    {
+      "a": 23,
+      "mass_u": 22.989769282,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "12": [
+    {
+      "a": 24,
+      "mass_u": 23.985041697,
+      "abundance": 0.7899,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 25,
+      "mass_u": 24.985836976,
+      "abundance": 0.1,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 26,
+      "mass_u": 25.982592968,
+      "abundance": 0.1101,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "13": [
+    {
+      "a": 27,
+      "mass_u": 26.98153853,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "14": [
+    {
+      "a": 28,
+      "mass_u": 27.97692653465,
+      "abundance": 0.92223,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 29,
+      "mass_u": 28.9764946649,
+      "abundance": 0.04685,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 30,
+      "mass_u": 29.973770136,
+      "abundance": 0.03092,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "15": [
+    {
+      "a": 31,
+      "mass_u": 30.97376199842,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "16": [
+    {
+      "a": 32,
+      "mass_u": 31.9720711744,
+      "abundance": 0.9499,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 33,
+      "mass_u": 32.9714589098,
+      "abundance": 0.0075,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 34,
+      "mass_u": 33.967867004,
+      "abundance": 0.0425,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 36,
+      "mass_u": 35.96708071,
+      "abundance": 0.0001,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "17": [
+    {
+      "a": 35,
+      "mass_u": 34.968852682,
+      "abundance": 0.7576,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 37,
+      "mass_u": 36.965902602,
+      "abundance": 0.2424,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "18": [
+    {
+      "a": 36,
+      "mass_u": 35.967545105,
+      "abundance": 0.003336,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 38,
+      "mass_u": 37.96273211,
+      "abundance": 0.000629,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 40,
+      "mass_u": 39.9623831237,
+      "abundance": 0.996035,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "19": [
+    {
+      "a": 39,
+      "mass_u": 38.9637064864,
+      "abundance": 0.932581,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 40,
+      "mass_u": 39.963998166,
+      "abundance": 0.000117,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 41,
+      "mass_u": 40.9618252579,
+      "abundance": 0.067302,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "20": [
+    {
+      "a": 40,
+      "mass_u": 39.962590863,
+      "abundance": 0.96941,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 42,
+      "mass_u": 41.95861783,
+      "abundance": 0.00647,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 43,
+      "mass_u": 42.95876644,
+      "abundance": 0.00135,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 44,
+      "mass_u": 43.95548156,
+      "abundance": 0.02086,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 46,
+      "mass_u": 45.953689,
+      "abundance": 4e-05,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 48,
+      "mass_u": 47.95252276,
+      "abundance": 0.00187,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "21": [
+    {
+      "a": 45,
+      "mass_u": 44.95590828,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "22": [
+    {
+      "a": 46,
+      "mass_u": 45.95262772,
+      "abundance": 0.0825,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 47,
+      "mass_u": 46.95175879,
+      "abundance": 0.0744,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 48,
+      "mass_u": 47.94794198,
+      "abundance": 0.7372,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 49,
+      "mass_u": 48.94786568,
+      "abundance": 0.0541,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 50,
+      "mass_u": 49.94478689,
+      "abundance": 0.0518,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "23": [
+    {
+      "a": 50,
+      "mass_u": 49.94715601,
+      "abundance": 0.0025,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 51,
+      "mass_u": 50.94395704,
+      "abundance": 0.9975,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "24": [
+    {
+      "a": 50,
+      "mass_u": 49.94604183,
+      "abundance": 0.04345,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 52,
+      "mass_u": 51.94050623,
+      "abundance": 0.83789,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 53,
+      "mass_u": 52.94064815,
+      "abundance": 0.09501,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 54,
+      "mass_u": 53.93887916,
+      "abundance": 0.02365,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "25": [
+    {
+      "a": 55,
+      "mass_u": 54.93804391,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "26": [
+    {
+      "a": 54,
+      "mass_u": 53.93960899,
+      "abundance": 0.05845,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 56,
+      "mass_u": 55.93493633,
+      "abundance": 0.91754,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 57,
+      "mass_u": 56.93539284,
+      "abundance": 0.02119,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 58,
+      "mass_u": 57.93327443,
+      "abundance": 0.00282,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "27": [
+    {
+      "a": 59,
+      "mass_u": 58.93319429,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "28": [
+    {
+      "a": 58,
+      "mass_u": 57.93534241,
+      "abundance": 0.68077,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 60,
+      "mass_u": 59.93078588,
+      "abundance": 0.26223,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 61,
+      "mass_u": 60.93105557,
+      "abundance": 0.011399,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 62,
+      "mass_u": 61.92834537,
+      "abundance": 0.036346,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 64,
+      "mass_u": 63.92796682,
+      "abundance": 0.009255,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "29": [
+    {
+      "a": 63,
+      "mass_u": 62.92959772,
+      "abundance": 0.6915,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 65,
+      "mass_u": 64.9277897,
+      "abundance": 0.3085,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "30": [
+    {
+      "a": 64,
+      "mass_u": 63.92914201,
+      "abundance": 0.4917,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 66,
+      "mass_u": 65.92603381,
+      "abundance": 0.2773,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 67,
+      "mass_u": 66.92712775,
+      "abundance": 0.0404,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 68,
+      "mass_u": 67.92484455,
+      "abundance": 0.1845,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 70,
+      "mass_u": 69.9253192,
+      "abundance": 0.0061,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "31": [
+    {
+      "a": 69,
+      "mass_u": 68.9255735,
+      "abundance": 0.60108,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 71,
+      "mass_u": 70.92470258,
+      "abundance": 0.39892,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "32": [
+    {
+      "a": 70,
+      "mass_u": 69.92424875,
+      "abundance": 0.2057,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 72,
+      "mass_u": 71.922075826,
+      "abundance": 0.2745,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 73,
+      "mass_u": 72.923458956,
+      "abundance": 0.0775,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 74,
+      "mass_u": 73.921177761,
+      "abundance": 0.365,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 76,
+      "mass_u": 75.921402726,
+      "abundance": 0.0773,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "33": [
+    {
+      "a": 75,
+      "mass_u": 74.92159457,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "34": [
+    {
+      "a": 74,
+      "mass_u": 73.922475934,
+      "abundance": 0.0089,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 76,
+      "mass_u": 75.919213704,
+      "abundance": 0.0937,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 77,
+      "mass_u": 76.919914154,
+      "abundance": 0.0763,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 78,
+      "mass_u": 77.91730928,
+      "abundance": 0.2377,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 80,
+      "mass_u": 79.9165218,
+      "abundance": 0.4961,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 82,
+      "mass_u": 81.9166995,
+      "abundance": 0.0873,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "35": [
+    {
+      "a": 79,
+      "mass_u": 78.9183376,
+      "abundance": 0.5069,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 81,
+      "mass_u": 80.9162897,
+      "abundance": 0.4931,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "36": [
+    {
+      "a": 78,
+      "mass_u": 77.92036494,
+      "abundance": 0.00355,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 80,
+      "mass_u": 79.91637808,
+      "abundance": 0.02286,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 82,
+      "mass_u": 81.91348273,
+      "abundance": 0.11593,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 83,
+      "mass_u": 82.91412716,
+      "abundance": 0.115,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 84,
+      "mass_u": 83.9114977282,
+      "abundance": 0.56987,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 86,
+      "mass_u": 85.9106106269,
+      "abundance": 0.17279,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "37": [
+    {
+      "a": 85,
+      "mass_u": 84.9117897379,
+      "abundance": 0.7217,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 87,
+      "mass_u": 86.909180531,
+      "abundance": 0.2783,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "38": [
+    {
+      "a": 84,
+      "mass_u": 83.9134191,
+      "abundance": 0.0056,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 86,
+      "mass_u": 85.9092606,
+      "abundance": 0.0986,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 87,
+      "mass_u": 86.9088775,
+      "abundance": 0.07,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 88,
+      "mass_u": 87.9056125,
+      "abundance": 0.8258,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "39": [
+    {
+      "a": 89,
+      "mass_u": 88.9058403,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "40": [
+    {
+      "a": 90,
+      "mass_u": 89.9046977,
+      "abundance": 0.5145,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 91,
+      "mass_u": 90.9056396,
+      "abundance": 0.1122,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 92,
+      "mass_u": 91.9050347,
+      "abundance": 0.1715,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 94,
+      "mass_u": 93.9063108,
+      "abundance": 0.1738,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 96,
+      "mass_u": 95.9082714,
+      "abundance": 0.028,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "41": [
+    {
+      "a": 93,
+      "mass_u": 92.906373,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "42": [
+    {
+      "a": 92,
+      "mass_u": 91.90680796,
+      "abundance": 0.1453,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 94,
+      "mass_u": 93.9050849,
+      "abundance": 0.0915,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 95,
+      "mass_u": 94.90583877,
+      "abundance": 0.1584,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 96,
+      "mass_u": 95.90467612,
+      "abundance": 0.1667,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 97,
+      "mass_u": 96.90601812,
+      "abundance": 0.096,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 98,
+      "mass_u": 97.90540482,
+      "abundance": 0.2439,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 100,
+      "mass_u": 99.9074718,
+      "abundance": 0.0982,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "43": [
+    {
+      "a": 97,
+      "mass_u": 96.9063667,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 98,
+      "mass_u": 97.9072124,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 99,
+      "mass_u": 98.9062508,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "44": [
+    {
+      "a": 96,
+      "mass_u": 95.90759025,
+      "abundance": 0.0554,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 98,
+      "mass_u": 97.9052868,
+      "abundance": 0.0187,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 99,
+      "mass_u": 98.9059341,
+      "abundance": 0.1276,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 100,
+      "mass_u": 99.9042143,
+      "abundance": 0.126,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 101,
+      "mass_u": 100.9055769,
+      "abundance": 0.1706,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 102,
+      "mass_u": 101.9043441,
+      "abundance": 0.3155,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 104,
+      "mass_u": 103.9054275,
+      "abundance": 0.1862,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "45": [
+    {
+      "a": 103,
+      "mass_u": 102.905498,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "46": [
+    {
+      "a": 102,
+      "mass_u": 101.9056022,
+      "abundance": 0.0102,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 104,
+      "mass_u": 103.9040305,
+      "abundance": 0.1114,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 105,
+      "mass_u": 104.9050796,
+      "abundance": 0.2233,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 106,
+      "mass_u": 105.9034804,
+      "abundance": 0.2733,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 108,
+      "mass_u": 107.9038916,
+      "abundance": 0.2646,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 110,
+      "mass_u": 109.9051722,
+      "abundance": 0.1172,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "47": [
+    {
+      "a": 107,
+      "mass_u": 106.9050916,
+      "abundance": 0.51839,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 109,
+      "mass_u": 108.9047553,
+      "abundance": 0.48161,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "48": [
+    {
+      "a": 106,
+      "mass_u": 105.9064599,
+      "abundance": 0.0125,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 108,
+      "mass_u": 107.9041834,
+      "abundance": 0.0089,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 110,
+      "mass_u": 109.90300661,
+      "abundance": 0.1249,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 111,
+      "mass_u": 110.90418287,
+      "abundance": 0.128,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 112,
+      "mass_u": 111.90276287,
+      "abundance": 0.2413,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 113,
+      "mass_u": 112.90440813,
+      "abundance": 0.1222,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 114,
+      "mass_u": 113.90336509,
+      "abundance": 0.2873,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 116,
+      "mass_u": 115.90476315,
+      "abundance": 0.0749,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "49": [
+    {
+      "a": 113,
+      "mass_u": 112.90406184,
+      "abundance": 0.0429,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 115,
+      "mass_u": 114.903878776,
+      "abundance": 0.9571,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "50": [
+    {
+      "a": 112,
+      "mass_u": 111.90482387,
+      "abundance": 0.0097,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 114,
+      "mass_u": 113.9027827,
+      "abundance": 0.0066,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 115,
+      "mass_u": 114.903344699,
+      "abundance": 0.0034,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 116,
+      "mass_u": 115.9017428,
+      "abundance": 0.1454,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 117,
+      "mass_u": 116.90295398,
+      "abundance": 0.0768,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 118,
+      "mass_u": 117.90160657,
+      "abundance": 0.2422,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 119,
+      "mass_u": 118.90331117,
+      "abundance": 0.0859,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 120,
+      "mass_u": 119.90220163,
+      "abundance": 0.3258,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 122,
+      "mass_u": 121.9034438,
+      "abundance": 0.0463,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 124,
+      "mass_u": 123.9052766,
+      "abundance": 0.0579,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "51": [
+    {
+      "a": 121,
+      "mass_u": 120.903812,
+      "abundance": 0.5721,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 123,
+      "mass_u": 122.9042132,
+      "abundance": 0.4279,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "52": [
+    {
+      "a": 120,
+      "mass_u": 119.9040593,
+      "abundance": 0.0009,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 122,
+      "mass_u": 121.9030435,
+      "abundance": 0.0255,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 123,
+      "mass_u": 122.9042698,
+      "abundance": 0.0089,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 124,
+      "mass_u": 123.9028171,
+      "abundance": 0.0474,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 125,
+      "mass_u": 124.9044299,
+      "abundance": 0.0707,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 126,
+      "mass_u": 125.9033109,
+      "abundance": 0.1884,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 128,
+      "mass_u": 127.90446128,
+      "abundance": 0.3174,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 130,
+      "mass_u": 129.906222748,
+      "abundance": 0.3408,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "53": [
+    {
+      "a": 127,
+      "mass_u": 126.9044719,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "54": [
+    {
+      "a": 124,
+      "mass_u": 123.905892,
+      "abundance": 0.000952,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 126,
+      "mass_u": 125.9042983,
+      "abundance": 0.00089,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 128,
+      "mass_u": 127.903531,
+      "abundance": 0.019102,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 129,
+      "mass_u": 128.9047808611,
+      "abundance": 0.264006,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 130,
+      "mass_u": 129.903509349,
+      "abundance": 0.04071,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 131,
+      "mass_u": 130.90508406,
+      "abundance": 0.212324,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 132,
+      "mass_u": 131.9041550856,
+      "abundance": 0.269086,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 134,
+      "mass_u": 133.90539466,
+      "abundance": 0.104357,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 136,
+      "mass_u": 135.907214484,
+      "abundance": 0.088573,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "55": [
+    {
+      "a": 133,
+      "mass_u": 132.905451961,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "56": [
+    {
+      "a": 130,
+      "mass_u": 129.9063207,
+      "abundance": 0.00106,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 132,
+      "mass_u": 131.9050611,
+      "abundance": 0.00101,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 134,
+      "mass_u": 133.90450818,
+      "abundance": 0.02417,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 135,
+      "mass_u": 134.90568838,
+      "abundance": 0.06592,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 136,
+      "mass_u": 135.90457573,
+      "abundance": 0.07854,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 137,
+      "mass_u": 136.90582714,
+      "abundance": 0.11232,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 138,
+      "mass_u": 137.905247,
+      "abundance": 0.71698,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "57": [
+    {
+      "a": 138,
+      "mass_u": 137.9071149,
+      "abundance": 0.0008881,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 139,
+      "mass_u": 138.9063563,
+      "abundance": 0.9991119,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "58": [
+    {
+      "a": 136,
+      "mass_u": 135.90712921,
+      "abundance": 0.00185,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 138,
+      "mass_u": 137.905991,
+      "abundance": 0.00251,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 140,
+      "mass_u": 139.9054431,
+      "abundance": 0.8845,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 142,
+      "mass_u": 141.9092504,
+      "abundance": 0.11114,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "59": [
+    {
+      "a": 141,
+      "mass_u": 140.9076576,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "60": [
+    {
+      "a": 142,
+      "mass_u": 141.907729,
+      "abundance": 0.27152,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 143,
+      "mass_u": 142.90982,
+      "abundance": 0.12174,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 144,
+      "mass_u": 143.910093,
+      "abundance": 0.23798,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 145,
+      "mass_u": 144.9125793,
+      "abundance": 0.08293,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 146,
+      "mass_u": 145.9131226,
+      "abundance": 0.17189,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 148,
+      "mass_u": 147.9168993,
+      "abundance": 0.05756,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 150,
+      "mass_u": 149.9209022,
+      "abundance": 0.05638,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "61": [
+    {
+      "a": 145,
+      "mass_u": 144.9127559,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 147,
+      "mass_u": 146.915145,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "62": [
+    {
+      "a": 144,
+      "mass_u": 143.9120065,
+      "abundance": 0.0307,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 147,
+      "mass_u": 146.9149044,
+      "abundance": 0.1499,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 148,
+      "mass_u": 147.9148292,
+      "abundance": 0.1124,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 149,
+      "mass_u": 148.9171921,
+      "abundance": 0.1382,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 150,
+      "mass_u": 149.9172829,
+      "abundance": 0.0738,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 152,
+      "mass_u": 151.9197397,
+      "abundance": 0.2675,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 154,
+      "mass_u": 153.9222169,
+      "abundance": 0.2275,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "63": [
+    {
+      "a": 151,
+      "mass_u": 150.9198578,
+      "abundance": 0.4781,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 153,
+      "mass_u": 152.921238,
+      "abundance": 0.5219,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "64": [
+    {
+      "a": 152,
+      "mass_u": 151.9197995,
+      "abundance": 0.002,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 154,
+      "mass_u": 153.9208741,
+      "abundance": 0.0218,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 155,
+      "mass_u": 154.9226305,
+      "abundance": 0.148,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 156,
+      "mass_u": 155.9221312,
+      "abundance": 0.2047,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 157,
+      "mass_u": 156.9239686,
+      "abundance": 0.1565,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 158,
+      "mass_u": 157.9241123,
+      "abundance": 0.2484,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 160,
+      "mass_u": 159.9270624,
+      "abundance": 0.2186,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "65": [
+    {
+      "a": 159,
+      "mass_u": 158.9253547,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "66": [
+    {
+      "a": 156,
+      "mass_u": 155.9242847,
+      "abundance": 0.00056,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 158,
+      "mass_u": 157.9244159,
+      "abundance": 0.00095,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 160,
+      "mass_u": 159.9252046,
+      "abundance": 0.02329,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 161,
+      "mass_u": 160.9269405,
+      "abundance": 0.18889,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 162,
+      "mass_u": 161.9268056,
+      "abundance": 0.25475,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 163,
+      "mass_u": 162.9287383,
+      "abundance": 0.24896,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 164,
+      "mass_u": 163.9291819,
+      "abundance": 0.2826,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "67": [
+    {
+      "a": 165,
+      "mass_u": 164.9303288,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "68": [
+    {
+      "a": 162,
+      "mass_u": 161.9287884,
+      "abundance": 0.00139,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 164,
+      "mass_u": 163.9292088,
+      "abundance": 0.01601,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 166,
+      "mass_u": 165.9302995,
+      "abundance": 0.33503,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 167,
+      "mass_u": 166.9320546,
+      "abundance": 0.22869,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 168,
+      "mass_u": 167.9323767,
+      "abundance": 0.26978,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 170,
+      "mass_u": 169.9354702,
+      "abundance": 0.1491,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "69": [
+    {
+      "a": 169,
+      "mass_u": 168.9342179,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "70": [
+    {
+      "a": 168,
+      "mass_u": 167.9338896,
+      "abundance": 0.00123,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 170,
+      "mass_u": 169.9347664,
+      "abundance": 0.02982,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 171,
+      "mass_u": 170.9363302,
+      "abundance": 0.1409,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 172,
+      "mass_u": 171.9363859,
+      "abundance": 0.2168,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 173,
+      "mass_u": 172.9382151,
+      "abundance": 0.16103,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 174,
+      "mass_u": 173.9388664,
+      "abundance": 0.32026,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 176,
+      "mass_u": 175.9425764,
+      "abundance": 0.12996,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "71": [
+    {
+      "a": 175,
+      "mass_u": 174.9407752,
+      "abundance": 0.97401,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 176,
+      "mass_u": 175.9426897,
+      "abundance": 0.02599,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "72": [
+    {
+      "a": 174,
+      "mass_u": 173.9400461,
+      "abundance": 0.0016,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 176,
+      "mass_u": 175.9414076,
+      "abundance": 0.0526,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 177,
+      "mass_u": 176.9432277,
+      "abundance": 0.186,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 178,
+      "mass_u": 177.9437058,
+      "abundance": 0.2728,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 179,
+      "mass_u": 178.9458232,
+      "abundance": 0.1362,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 180,
+      "mass_u": 179.946557,
+      "abundance": 0.3508,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "73": [
+    {
+      "a": 180,
+      "mass_u": 179.9474648,
+      "abundance": 0.0001201,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 181,
+      "mass_u": 180.9479958,
+      "abundance": 0.9998799,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "74": [
+    {
+      "a": 180,
+      "mass_u": 179.9467108,
+      "abundance": 0.0012,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 182,
+      "mass_u": 181.94820394,
+      "abundance": 0.265,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 183,
+      "mass_u": 182.95022275,
+      "abundance": 0.1431,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 184,
+      "mass_u": 183.95093092,
+      "abundance": 0.3064,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 186,
+      "mass_u": 185.9543628,
+      "abundance": 0.2843,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "75": [
+    {
+      "a": 185,
+      "mass_u": 184.9529545,
+      "abundance": 0.374,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 187,
+      "mass_u": 186.9557501,
+      "abundance": 0.626,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "76": [
+    {
+      "a": 184,
+      "mass_u": 183.9524885,
+      "abundance": 0.0002,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 186,
+      "mass_u": 185.953835,
+      "abundance": 0.0159,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 187,
+      "mass_u": 186.9557474,
+      "abundance": 0.0196,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 188,
+      "mass_u": 187.9558352,
+      "abundance": 0.1324,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 189,
+      "mass_u": 188.9581442,
+      "abundance": 0.1615,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 190,
+      "mass_u": 189.9584437,
+      "abundance": 0.2626,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 192,
+      "mass_u": 191.961477,
+      "abundance": 0.4078,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "77": [
+    {
+      "a": 191,
+      "mass_u": 190.9605893,
+      "abundance": 0.373,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 193,
+      "mass_u": 192.9629216,
+      "abundance": 0.627,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "78": [
+    {
+      "a": 190,
+      "mass_u": 189.9599297,
+      "abundance": 0.00012,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 192,
+      "mass_u": 191.9610387,
+      "abundance": 0.00782,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 194,
+      "mass_u": 193.9626809,
+      "abundance": 0.3286,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 195,
+      "mass_u": 194.9647917,
+      "abundance": 0.3378,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 196,
+      "mass_u": 195.96495209,
+      "abundance": 0.2521,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 198,
+      "mass_u": 197.9678949,
+      "abundance": 0.07356,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "79": [
+    {
+      "a": 197,
+      "mass_u": 196.96656879,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "80": [
+    {
+      "a": 196,
+      "mass_u": 195.9658326,
+      "abundance": 0.0015,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 198,
+      "mass_u": 197.9667686,
+      "abundance": 0.0997,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 199,
+      "mass_u": 198.96828064,
+      "abundance": 0.1687,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 200,
+      "mass_u": 199.96832659,
+      "abundance": 0.231,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 201,
+      "mass_u": 200.97030284,
+      "abundance": 0.1318,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 202,
+      "mass_u": 201.9706434,
+      "abundance": 0.2986,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 204,
+      "mass_u": 203.97349398,
+      "abundance": 0.0687,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "81": [
+    {
+      "a": 203,
+      "mass_u": 202.9723446,
+      "abundance": 0.2952,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 205,
+      "mass_u": 204.9744278,
+      "abundance": 0.7048,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "82": [
+    {
+      "a": 204,
+      "mass_u": 203.973044,
+      "abundance": 0.014,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 206,
+      "mass_u": 205.9744657,
+      "abundance": 0.241,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 207,
+      "mass_u": 206.9758973,
+      "abundance": 0.221,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 208,
+      "mass_u": 207.9766525,
+      "abundance": 0.524,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "83": [
+    {
+      "a": 209,
+      "mass_u": 208.9803991,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "84": [
+    {
+      "a": 209,
+      "mass_u": 208.9824308,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 210,
+      "mass_u": 209.9828741,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "85": [
+    {
+      "a": 210,
+      "mass_u": 209.9871479,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 211,
+      "mass_u": 210.9874966,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "86": [
+    {
+      "a": 211,
+      "mass_u": 210.9906011,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 220,
+      "mass_u": 220.0113941,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 222,
+      "mass_u": 222.0175782,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "87": [
+    {
+      "a": 223,
+      "mass_u": 223.019736,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "88": [
+    {
+      "a": 223,
+      "mass_u": 223.0185023,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 224,
+      "mass_u": 224.020212,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 226,
+      "mass_u": 226.0254103,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 228,
+      "mass_u": 228.0310707,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "89": [
+    {
+      "a": 227,
+      "mass_u": 227.0277523,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "90": [
+    {
+      "a": 230,
+      "mass_u": 230.0331341,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 232,
+      "mass_u": 232.0380558,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "91": [
+    {
+      "a": 231,
+      "mass_u": 231.0358842,
+      "abundance": 1.0,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "92": [
+    {
+      "a": 233,
+      "mass_u": 233.0396355,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 234,
+      "mass_u": 234.0409523,
+      "abundance": 5.4e-05,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 235,
+      "mass_u": 235.0439301,
+      "abundance": 0.007204,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 236,
+      "mass_u": 236.0455682,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 238,
+      "mass_u": 238.0507884,
+      "abundance": 0.992742,
+      "label": "NIST tabulated isotope; natural abundance listed",
+      "verified": true
+    }
+  ],
+  "93": [
+    {
+      "a": 236,
+      "mass_u": 236.04657,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 237,
+      "mass_u": 237.0481736,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "94": [
+    {
+      "a": 238,
+      "mass_u": 238.0495601,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 239,
+      "mass_u": 239.0521636,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 240,
+      "mass_u": 240.0538138,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 241,
+      "mass_u": 241.0568517,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 242,
+      "mass_u": 242.0587428,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 244,
+      "mass_u": 244.0642053,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "95": [
+    {
+      "a": 241,
+      "mass_u": 241.0568293,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 243,
+      "mass_u": 243.0613813,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "96": [
+    {
+      "a": 243,
+      "mass_u": 243.0613893,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 244,
+      "mass_u": 244.0627528,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 245,
+      "mass_u": 245.0654915,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 246,
+      "mass_u": 246.0672238,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 247,
+      "mass_u": 247.0703541,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 248,
+      "mass_u": 248.0723499,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "97": [
+    {
+      "a": 247,
+      "mass_u": 247.0703073,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 249,
+      "mass_u": 249.0749877,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "98": [
+    {
+      "a": 249,
+      "mass_u": 249.0748539,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 250,
+      "mass_u": 250.0764062,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 251,
+      "mass_u": 251.0795886,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 252,
+      "mass_u": 252.0816272,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "99": [
+    {
+      "a": 252,
+      "mass_u": 252.08298,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "100": [
+    {
+      "a": 257,
+      "mass_u": 257.0951061,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "101": [
+    {
+      "a": 258,
+      "mass_u": 258.0984315,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    },
+    {
+      "a": 260,
+      "mass_u": 260.10365,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "102": [
+    {
+      "a": 259,
+      "mass_u": 259.10103,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "103": [
+    {
+      "a": 262,
+      "mass_u": 262.10961,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "104": [
+    {
+      "a": 267,
+      "mass_u": 267.12179,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "105": [
+    {
+      "a": 268,
+      "mass_u": 268.12567,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "106": [
+    {
+      "a": 271,
+      "mass_u": 271.13393,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "107": [
+    {
+      "a": 272,
+      "mass_u": 272.13826,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "108": [
+    {
+      "a": 270,
+      "mass_u": 270.13429,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "109": [
+    {
+      "a": 276,
+      "mass_u": 276.15159,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "110": [
+    {
+      "a": 281,
+      "mass_u": 281.16451,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "111": [
+    {
+      "a": 280,
+      "mass_u": 280.16514,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "112": [
+    {
+      "a": 285,
+      "mass_u": 285.17712,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "113": [
+    {
+      "a": 284,
+      "mass_u": 284.17873,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "114": [
+    {
+      "a": 289,
+      "mass_u": 289.19042,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "115": [
+    {
+      "a": 288,
+      "mass_u": 288.19274,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "116": [
+    {
+      "a": 293,
+      "mass_u": 293.20449,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "117": [
+    {
+      "a": 292,
+      "mass_u": 292.20746,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ],
+  "118": [
+    {
+      "a": 294,
+      "mass_u": 294.21392,
+      "abundance": null,
+      "label": "NIST tabulated isotope; no natural abundance listed",
+      "verified": true
+    }
+  ]
+}

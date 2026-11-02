@@ -3,3 +3,25 @@ __pycache__/
 *.pyc
 .DS_Store
 .vscode/
+# Local frontend build and dependency cache
+frontend/node_modules/
+frontend/dist/
+*.log
+.coverage
+.pytest_cache/
+
+# Alternate virtual environments and local configuration
+venv/
+env/
+.venv-*/
+.env
+.env.*
+!.env.example
+*.local
+.idea/
+.cache/
+.mypy_cache/
+.ruff_cache/
+*.tsbuildinfo
+build/
+dist/

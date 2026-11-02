@@ -1,0 +1,2 @@
+# Optional. Existing installation is preserved; the quantum app does not import pygame.
+pygame==2.6.1
