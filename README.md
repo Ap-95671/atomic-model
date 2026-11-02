@@ -10,7 +10,7 @@ Pygame simulator and Git history are preserved.
 Incremental development on unmerged 2.0 PR #2. This alpha implements tested
 chemistry, dynamics and quantum-model milestones; it does **not** complete every
 item in the 3.0 specification. The [current audit](docs/FEATURE_COMPLETENESS_AUDIT.md)
-and [3.0 validation report](docs/QUANTUM_LAB_3_VALIDATION.md) distinguish working
+and [implementation report](docs/QUANTUM_LAB_3_COMPLETION.md) distinguish working
 calculations from remaining work. Project licensing awaits owner approval.
 
 ## Working laboratories
