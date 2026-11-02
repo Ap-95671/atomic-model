@@ -67,3 +67,48 @@ scientific suite, within the 12-second worker bound.
 No browser GPU-memory, frame-time distribution under every overlay, or total
 multi-process memory ceiling was measured. Re-run the scripts on the target
 machine rather than treating these numbers as guarantees.
+
+## 3.0 alpha measurements (new checkpoint)
+
+Reproduce `scripts/benchmark3.py`; raw environment/records: `benchmark3.json`.
+Python 3.14.7, NumPy 2.5.4, SciPy 1.18.1, PySCF 2.14.0, macOS arm64. One cold
+isolated process per case; native libraries restricted to one thread.
+
+| Workload | Solver/field wall | CPU | Cold process wall | Process peak RSS |
+| --- | ---: | ---: | ---: | ---: |
+| O2 UHF / balanced field | .157 s | .113 s | .402 s | 107.7 MiB |
+| Water optimize + harmonic modes / preview | .270 s | .225 s | .608 s | 110.6 MiB |
+| Water CCSD / preview reference field | .147 s | .143 s | .414 s | 99.7 MiB |
+| Water 3 singlet TDHF states / preview field | .236 s | .220 s | .501 s | 112.3 MiB |
+| H2 ideal JW VQE / preview reference field | .109 s | .106 s | .368 s | 97.0 MiB |
+| General 4-state well | .31 ms | .31 ms | .235 s | 72.2 MiB |
+| 3D atomic spectral evolution / 6000 points | 7.10 ms | 7.10 ms | .254 s | 75.3 MiB |
+| Qubit Lindblad / 201 frames | 3.23 ms | 3.23 ms | .277 s | 72.1 MiB |
+| Bell circuit / 2000 shots | .17 ms | .18 ms | .244 s | 71.9 MiB |
+| Honeycomb 81×81 BZ/DOS | .84 ms | .84 ms | .238 s | 72.4 MiB |
+
+Core model timings exclude their module imports; cold-process timings include
+imports/startup. Worker solver/field resources are measured through computation,
+before final JSON serialization; the cold latency includes serialization. These
+are default small cases, not worst-case/high-basis/all-concurrent limits. PySCF
+workspace memory is a hint. No hard total-process or GPU memory ceiling is claimed.
+
+Original `scripts/benchmark.py` rerun unchanged after extraction into the SDK:
+balanced 1s .005 s / 76.7 MiB, high 4f_xyz .282 s / 235.2 MiB, seven high 4f
+surfaces 1.836 s / 269.8 MiB. Compare the historical .279 s / 233.6 MiB and
+1.801 s / 268.3 MiB above: similar behavior, no demonstrated speedup. The
+scientific geometry algorithm is unchanged; differences are uncontrolled runs.
+
+Actual Chrome audit: `scripts/browser_audit3.mjs`, `browser-audit3.json`.
+1440×1000 atomic-ready latency 166.2 ms (single warm/local run); 1.5 seconds
+of atomic weighted-cloud playback produced 120 draw calls and **zero buffer
+creation/deletion**; 400 ms paused/idle produced **zero draw calls**. Median
+animation-frame scheduling interval 16.7 ms is not measured GPU execution time
+or an application FPS guarantee. Data updates intentionally cap at 10 Hz.
+Console errors: zero. Captured mobile document width equals the 390 px viewport.
+
+Final alpha bundle JS 694.57 kB / 186.37 kB gzip, CSS 35.53 / 9.01 kB gzip,
+versus 2.0 JS 629.48 / 169.68 gzip. More working labs add bundle weight;
+code splitting remains a useful follow-up. The >500 kB Vite advisory remains
+visible, with no warning-threshold suppression. No all-overlay GPU-memory,
+frame-time distribution or adversarial concurrent load claim is made.

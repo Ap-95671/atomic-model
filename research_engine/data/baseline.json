@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "provenance": "Generated from local PySCF; FCI references in the identical finite basis/source geometry, no external training dataset.",
+  "environment": {
+    "python": "3.14.7",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "pyscf": "2.14.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "repeats": 3,
+  "cases": [
+    {
+      "id": "h2-equilibrium",
+      "system": "h2",
+      "basis": "sto-3g",
+      "distance": 1.4,
+      "spin": 0,
+      "split": "training",
+      "reference_energy_hartree": -1.1372759436170443,
+      "methods": [
+        {
+          "method": "hf",
+          "energy_hartree": -1.116714325062552,
+          "absolute_error_hartree": 0.020561618554492345,
+          "median_wall_seconds": 0.005721374996937811,
+          "median_cpu_seconds": 0.005720999999999976,
+          "wall_repetitions_seconds": [
+            0.005973874998744577,
+            0.005721374996937811,
+            0.005543250008486211
+          ],
+          "converged": true
+        },
+        {
+          "method": "mp2",
+          "energy_hartree": -1.1298721951151884,
+          "absolute_error_hartree": 0.007403748501855878,
+          "median_wall_seconds": 0.01134154200553894,
+          "median_cpu_seconds": 0.011340000000000017,
+          "wall_repetitions_seconds": [
+            0.011780874978285283,
+            0.01134154200553894,
+            0.011264165979810059
+          ],
+          "converged": true
+        },
+        {
+          "method": "ccsd",
+          "energy_hartree": -1.137275943619851,
+          "absolute_error_hartree": 2.8066438062523957e-12,
+          "median_wall_seconds": 0.02286687499145046,
+          "median_cpu_seconds": 0.02386200000000005,
+          "wall_repetitions_seconds": [
+            0.025025125010870397,
+            0.021861708955839276,
+            0.02286687499145046
+          ],
+          "converged": true
+        }
+      ],
+      "diagnostics": {
+        "electron_count": 2.0,
+        "basis_size": 2,
+        "hf_gap_hartree": 1.248470745786183,
+        "spin_squared": 0.0,
+        "note": "Closing RHF gaps and stretching can signal static correlation; no single diagnostic guarantees accuracy."
+      }
+    },
+    {
+      "id": "h2-stretched",
+      "system": "h2",
+      "basis": "sto-3g",
+      "distance": 3.0,
+      "spin": 0,
+      "split": "training",
+      "reference_energy_hartree": -0.9851568243679052,
+      "methods": [
+        {
+          "method": "hf",
+          "energy_hartree": -0.8852750001110472,
+          "absolute_error_hartree": 0.09988182425685799,
+          "median_wall_seconds": 0.0054872920154593885,
+          "median_cpu_seconds": 0.005485999999999991,
+          "wall_repetitions_seconds": [
+            0.0054872920154593885,
+            0.005608749983366579,
+            0.005445083021186292
+          ],
+          "converged": true
+        },
+        {
+          "method": "mp2",
+          "energy_hartree": -0.9368590480520604,
+          "absolute_error_hartree": 0.048297776315844754,
+          "median_wall_seconds": 0.01107591699110344,
+          "median_cpu_seconds": 0.011075999999999975,
+          "wall_repetitions_seconds": [
+            0.011280375008936971,
+            0.010861834045499563,
+            0.01107591699110344
+          ],
+          "converged": true
+        },
+        {
+          "method": "ccsd",
+          "energy_hartree": -0.9851568244040012,
+          "absolute_error_hartree": 3.609601506582294e-11,
+          "median_wall_seconds": 0.023888833995442837,
+          "median_cpu_seconds": 0.02507499999999996,
+          "wall_repetitions_seconds": [
+            0.024420041998382658,
+            0.023404583043884486,
+            0.023888833995442837
+          ],
+          "converged": true
+        }
+      ],
+      "diagnostics": {
+        "electron_count": 2.0,
+        "basis_size": 2,
+        "hf_gap_hartree": 0.5358264039343859,
+        "spin_squared": 0.0,
+        "note": "Closing RHF gaps and stretching can signal static correlation; no single diagnostic guarantees accuracy."
+      }
+    },
+    {
+      "id": "h2-dissociation",
+      "system": "h2",
+      "basis": "sto-3g",
+      "distance": 6.0,
+      "spin": 0,
+      "split": "training",
+      "reference_energy_hartree": -0.9334021769910893,
+      "methods": [
+        {
+          "method": "hf",
+          "energy_hartree": -0.6450767495106331,
+          "absolute_error_hartree": 0.2883254274804562,
+          "median_wall_seconds": 0.005664333002641797,
+          "median_cpu_seconds": 0.005663000000000085,
+          "wall_repetitions_seconds": [
+            0.005664333002641797,
+            0.005847583001013845,
+            0.005396292021032423
+          ],
+          "converged": true
+        },
+        {
+          "method": "mp2",
+          "energy_hartree": -0.8980809505741915,
+          "absolute_error_hartree": 0.03532122641689783,
+          "median_wall_seconds": 0.010987457993905991,
+          "median_cpu_seconds": 0.010987999999999998,
+          "wall_repetitions_seconds": [
+            0.010880374989937991,
+            0.010987457993905991,
+            0.011145583004690707
+          ],
+          "converged": true
+        },
+        {
+          "method": "ccsd",
+          "energy_hartree": -0.933402176619544,
+          "absolute_error_hartree": 3.7154523901961056e-10,
+          "median_wall_seconds": 0.026680917013436556,
+          "median_cpu_seconds": 0.027899000000000007,
+          "wall_repetitions_seconds": [
+            0.026680917013436556,
+            0.027173749986104667,
+            0.02639224997255951
+          ],
+          "converged": true
+        }
+      ],
+      "diagnostics": {
+        "electron_count": 1.9999999999999991,
+        "basis_size": 2,
+        "hf_gap_hartree": 0.18266074160000928,
+        "spin_squared": 0.0,
+        "note": "Closing RHF gaps and stretching can signal static correlation; no single diagnostic guarantees accuracy."
+      }
+    },
+    {
+      "id": "he-expanded",
+      "system": "he",
+      "basis": "6-31g",
+      "distance": 1.4,
+      "spin": 0,
+      "split": "calibration",
+      "reference_energy_hartree": -2.8701621389008207,
+      "methods": [
+        {
+          "method": "hf",
+          "energy_hartree": -2.8551604261544457,
+          "absolute_error_hartree": 0.015001712746375073,
+          "median_wall_seconds": 0.005901125026866794,
+          "median_cpu_seconds": 0.005900000000000016,
+          "wall_repetitions_seconds": [
+            0.005901125026866794,
+            0.005804958986118436,
+            0.006027124996762723
+          ],
+          "converged": true
+        },
+        {
+          "method": "mp2",
+          "energy_hartree": -2.8663605490643924,
+          "absolute_error_hartree": 0.0038015898364283096,
+          "median_wall_seconds": 0.0118152080103755,
+          "median_cpu_seconds": 0.011764000000000108,
+          "wall_repetitions_seconds": [
+            0.011621250014286488,
+            0.0118152080103755,
+            0.01187445898540318
+          ],
+          "converged": true
+        },
+        {
+          "method": "ccsd",
+          "energy_hartree": -2.8701621365796885,
+          "absolute_error_hartree": 2.3211321753535685e-09,
+          "median_wall_seconds": 0.020074000000022352,
+          "median_cpu_seconds": 0.020782999999999996,
+          "wall_repetitions_seconds": [
+            0.02066170802572742,
+            0.020074000000022352,
+            0.019841041008476168
+          ],
+          "converged": true
+        }
+      ],
+      "diagnostics": {
+        "electron_count": 1.999999999999999,
+        "basis_size": 2,
+        "hf_gap_hartree": 2.3139859638941296,
+        "spin_squared": 0.0,
+        "note": "Closing RHF gaps and stretching can signal static correlation; no single diagnostic guarantees accuracy."
+      }
+    },
+    {
+      "id": "lih-held-out",
+      "system": "lih",
+      "basis": "sto-3g",
+      "distance": 3.0,
+      "spin": 0,
+      "split": "evaluation",
+      "reference_energy_hartree": -7.882504329372313,
+      "methods": [
+        {
+          "method": "hf",
+          "energy_hartree": -7.86224631041032,
+          "absolute_error_hartree": 0.020258018961992974,
+          "median_wall_seconds": 0.011642917001154274,
+          "median_cpu_seconds": 0.011606000000000005,
+          "wall_repetitions_seconds": [
+            0.011660290998406708,
+            0.011642917001154274,
+            0.011582417006138712
+          ],
+          "converged": true
+        },
+        {
+          "method": "mp2",
+          "energy_hartree": -7.87505283135315,
+          "absolute_error_hartree": 0.007451498019163338,
+          "median_wall_seconds": 0.022967458004131913,
+          "median_cpu_seconds": 0.02291399999999999,
+          "wall_repetitions_seconds": [
+            0.02296962501714006,
+            0.022711790981702507,
+            0.022967458004131913
+          ],
+          "converged": true
+        },
+        {
+          "method": "ccsd",
+          "energy_hartree": -7.882493926037046,
+          "absolute_error_hartree": 1.0403335267028524e-05,
+          "median_wall_seconds": 0.03945475001819432,
+          "median_cpu_seconds": 0.04080100000000009,
+          "wall_repetitions_seconds": [
+            0.040070208022370934,
+            0.03945475001819432,
+            0.03903720801463351
+          ],
+          "converged": true
+        }
+      ],
+      "diagnostics": {
+        "electron_count": 4.000000000000001,
+        "basis_size": 6,
+        "hf_gap_hartree": 0.36465626044825594,
+        "spin_squared": 0.0,
+        "note": "Closing RHF gaps and stretching can signal static correlation; no single diagnostic guarantees accuracy."
+      }
+    },
+    {
+      "id": "water-held-out",
+      "system": "water",
+      "basis": "sto-3g",
+      "distance": 1.4,
+      "spin": 0,
+      "split": "evaluation",
+      "reference_energy_hartree": -75.01553018964161,
+      "methods": [
+        {
+          "method": "hf",
+          "energy_hartree": -74.96444758283,
+          "absolute_error_hartree": 0.05108260681160459,
+          "median_wall_seconds": 0.011848292022477835,
+          "median_cpu_seconds": 0.011847000000000163,
+          "wall_repetitions_seconds": [
+            0.011848292022477835,
+            0.011675834015477449,
+            0.011873457988258451
+          ],
+          "converged": true
+        },
+        {
+          "method": "mp2",
+          "energy_hartree": -75.00099824245225,
+          "absolute_error_hartree": 0.014531947189354355,
+          "median_wall_seconds": 0.02333358401665464,
+          "median_cpu_seconds": 0.023328999999999933,
+          "wall_repetitions_seconds": [
+            0.02333358401665464,
+            0.023309916025027633,
+            0.023529167054221034
+          ],
+          "converged": true
+        },
+        {
+          "method": "ccsd",
+          "energy_hartree": -75.01540899504711,
+          "absolute_error_hartree": 0.00012119459449877468,
+          "median_wall_seconds": 0.03918183298083022,
+          "median_cpu_seconds": 0.0404230000000001,
+          "wall_repetitions_seconds": [
+            0.03918183298083022,
+            0.038235625019297004,
+            0.03924662503413856
+          ],
+          "converged": true
+        }
+      ],
+      "diagnostics": {
+        "electron_count": 10.000000000000004,
+        "basis_size": 7,
+        "hf_gap_hartree": 0.9858764638693829,
+        "spin_squared": 0.0,
+        "note": "Closing RHF gaps and stretching can signal static correlation; no single diagnostic guarantees accuracy."
+      }
+    }
+  ],
+  "evaluation": {
+    "tolerance_hartree": 0.01,
+    "fixed_method_baselines": {
+      "hf": {
+        "successes": 0,
+        "cases": 6
+      },
+      "mp2": {
+        "successes": 3,
+        "cases": 6
+      },
+      "ccsd": {
+        "successes": 6,
+        "cases": 6
+      }
+    },
+    "latency_only_ablation_successes": 0,
+    "heldout_policy": "Abstention on LiH/water; no generalization claim. All H2 geometries stay in one molecule split.",
+    "selection_regret": "Not estimated on unseen molecules: lookup abstains. Within-domain reference-aware choice is a lookup oracle, not a learned predictor.",
+    "uncertainty_calibration": "Not performed; no probabilistic error bars returned."
+  }
+}

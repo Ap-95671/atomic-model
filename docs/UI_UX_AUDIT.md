@@ -58,3 +58,43 @@ now have zero violations for the tested automated rules. Named dialogs, main
 landmarks and state-button pressed values were added. This remains an automated
 rule audit, not formal accessibility certification. Manual visual QA uses the
 actual screenshots included with the release.
+
+## 3.0 alpha integration
+
+The existing visual design is retained. Molecular subnavigation now exposes
+calculated systems beyond H2+, geometry and vibrations; computed/reference
+labels remain distinct. Computational tools group correlation, excitations,
+spin-aware orbitals and evidence selection. Dynamics keeps the original demo
+and adds finite/atomic evolution. Quantum experiments group measurement,
+tunneling, fields, Lindblad and circuits/VQE; materials has a separate route.
+Only one controller/viewer is mounted per tool.
+
+Corrected reproducible issues: retained atomic failures lacked a clear stale
+label; measurement batches could not accumulate/reset; expensive requests had
+no true running-worker cancellation; NIST inline link relied on color; adaptive
+tolerance default violated its HTML step. Textarea controls now match theme and
+width, and presets retain longer bounded JSON parameters. Input changes stop
+playback and invalidate results. Wavefunction phase, density, harmonic playback,
+reference surfaces and user-parameter material models have explicit legends.
+
+All 85 browser workflows pass, including all original 51 and new geometry,
+correlation/response, atomic/Open Systems, circuits/VQE/materials, adaptive
+abstention and ten new representative axe screens. New responsive checks cover
+320/768/1440 px; preserved atomic tests extend to 1920 px. Automated coverage
+is not a claim that all UI/device/assistive-technology defects are eliminated.
+
+Actual images captured and manually inspected:
+
+| Before | After |
+| --- | --- |
+| `quantum-lab-2-molecular.png` (H2+ only direct calculated tool) | `quantum-lab-3-molecular.png` (triplet O2, full calculated selector) |
+| `quantum-lab-2-mobile.png` | `quantum-lab-3-mobile.png` (390 px material model/viewport) |
+| No geometry/vibration tool | `quantum-lab-3-vibrations.png` (optimized water, force/energy history) |
+| Original two-state well only | `quantum-lab-3-atomic-dynamics.png` (calculated 3D density/phase) |
+
+These are real Chrome screenshots, not design mockups. Desktop views preserve
+readable scientific controls and a dominant 3D viewport; mobile controls collapse
+and charts/tables scroll locally. Browser audit found zero console errors and
+no new GPU buffers during the measured atomic playback interval. Further full
+camera/overlay/device testing, named portable workspaces and code splitting
+remain incomplete.

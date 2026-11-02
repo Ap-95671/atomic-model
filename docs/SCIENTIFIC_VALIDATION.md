@@ -1,5 +1,10 @@
 # Scientific validation — Quantum Lab 2 milestones
 
+The original 2.0 record below is preserved. Current 3.0 alpha additions and
+independent numerical evidence are in [3.0 validation](QUANTUM_LAB_3_VALIDATION.md);
+[current limitations](LIMITATIONS.md) and the [feature audit](FEATURE_COMPLETENESS_AUDIT.md)
+supersede starting-state missing-feature descriptions.
+
 Baseline: 36 tests. Frontend foundation: 12 browser checks. Spectroscopy and
 measurement milestone: **46 Python tests, 19 browser tests passed**; production
 TypeScript/Vite build passed. Later milestone totals supersede these counts.

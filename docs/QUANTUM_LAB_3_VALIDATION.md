@@ -189,3 +189,52 @@ anticommutation and VQE agreement with independent PySCF FCI at R=1/1.4/3/6 a0.
 Ten physics browser tests pass, including new circuit/error/VQE/export and
 320/768/1440 px band-control workflows. Full pre-E browser checkpoint was
 **69 tests passed in 58.6 s**; all original workflows remain preserved.
+
+## F1 / G1 — SDK, evidence baseline and final integration
+
+Experimental `quantum_atom_lab` API v1 / distribution 3.0.0a1 builds as a local
+wheel, includes synchronized provenance-preserving data, and imports/functions
+are exercised outside the checkout without backend/PySCF. Atomic scientific
+geometry moved into `quantum_engine.geometry`; existing backend imports remain
+compatibility exports. Normal installed-wheel examples run successfully. Seven
+SDK/policy tests cover broadcasting, values, invalid inputs, public wrappers,
+optional-import isolation, data-byte identity, evidence constraints, disjoint
+molecule splits and explicit abstention. Additional HTTP tests exercise every
+core operation, invalid requests and missing optional backend behavior.
+
+The independent research baseline uses measured median HF/MP2/CCSD latency and
+observed error against same-basis FCI in six generated small cases. Three
+repetitions, environment metadata, fixed baselines, a latency-only ablation and
+failure analysis are included. Held-out molecules never route choices; unknown
+conditions abstain. This is not a generalizable learned router or calibrated
+uncertainty model. See `ADAPTIVE_ENGINE.md` for scope and remaining research.
+
+Final local verification on Python 3.14.7/macOS arm64 / Node 24.13:
+
+- **126 Python tests pass in 12.837 s**, including all original 80.
+- **85 Chromium tests pass in approximately 1.2 min**, including all original 51.
+- PySCF deliberately unavailable in a separate import-isolated suite:
+  **105 tests pass, 21 explicitly skip** (126 discovered, 2.973 s). This simulates
+  missing imports without uninstalling the user's working optional environment.
+- TypeScript/production build, Python compilation, installed core/chemistry
+  examples, standalone wheel/data verification and `pip check` pass.
+- Expanded axe checks cover ten new workflows. They caught and prompted fixes
+  for an un-underlined source link; actual adaptive-form step validation also
+  caught/fixed an invalid default. No suppressed accessibility rule was needed.
+- Actual screenshots manually inspected: O2 calculated MO, optimized water,
+  3D atomic interference, 390 px materials view. Before images remain the
+  2.0 screenshots; new images and `browser-audit3.json` are committed.
+- Exact comparison against the original revision confirms all seven original
+  Pygame modules are unchanged. No downgrade or replacement stack was used.
+
+A cold-process scientific benchmark and browser instrumentation are recorded in
+`benchmark3.json`, `browser-audit3.json` and `PERFORMANCE.md`. Eleven workloads
+complete, with native-worker peaks ≈97–112 MiB for representative default cases.
+Atomic playback creates/deletes zero WebGL buffers in the measured 1.5 seconds;
+idle rendering issues zero draw calls over 400 ms. These are representative
+measurements, not a worst-case/concurrency/GPU-memory guarantee.
+
+CI definitions cover core-only Python 3.14 and optional chemistry/Chrome with
+read-only repository permissions. Configuration is not a claim of hosted CI
+success; actual remote results are reported separately. No license decision,
+PyPI publication, stable release tag, public hosting or merge was performed.

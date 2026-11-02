@@ -1,0 +1,100 @@
+{
+  "environment": {
+    "python": "3.14.7",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyscf": "2.14.0"
+  },
+  "measurement": "One cold isolated process per case; solver/field time vs full process/import/serialization latency are separate. Peak RSS is per process high-water mark, not total concurrent/GPU memory. Single-thread native-library environment.",
+  "records": [
+    {
+      "case": "atomic-high",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.6194223749917,
+      "wall_seconds": 0.29385487496620044,
+      "cpu_seconds": 0.293544,
+      "peak_rss_mib": 236.21875
+    },
+    {
+      "case": "o2-uhf",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.40211108297808096,
+      "wall_seconds": 0.15729654196184129,
+      "cpu_seconds": 0.11331499999999997,
+      "peak_rss_mib": 107.703125
+    },
+    {
+      "case": "water-vibrations",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.6078650419949554,
+      "wall_seconds": 0.2704415420303121,
+      "cpu_seconds": 0.22497300000000003,
+      "peak_rss_mib": 110.609375
+    },
+    {
+      "case": "water-ccsd",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.4141143749584444,
+      "wall_seconds": 0.14704945898847654,
+      "cpu_seconds": 0.14288300000000004,
+      "peak_rss_mib": 99.71875
+    },
+    {
+      "case": "water-excitations",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.5013614579802379,
+      "wall_seconds": 0.23551466700155288,
+      "cpu_seconds": 0.21951500000000007,
+      "peak_rss_mib": 112.28125
+    },
+    {
+      "case": "h2-vqe",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.36771758302347735,
+      "wall_seconds": 0.10928708396386355,
+      "cpu_seconds": 0.10576900000000003,
+      "peak_rss_mib": 96.953125
+    },
+    {
+      "case": "general-well",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.23540529102319852,
+      "wall_seconds": 0.00031112501164898276,
+      "cpu_seconds": 0.0003110000000000057,
+      "peak_rss_mib": 72.15625
+    },
+    {
+      "case": "atomic-evolution",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.2538322079926729,
+      "wall_seconds": 0.007098665984813124,
+      "cpu_seconds": 0.007095000000000018,
+      "peak_rss_mib": 75.328125
+    },
+    {
+      "case": "lindblad",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.2765872090240009,
+      "wall_seconds": 0.003229374997317791,
+      "cpu_seconds": 0.0032310000000000186,
+      "peak_rss_mib": 72.078125
+    },
+    {
+      "case": "circuits",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.24357504199724644,
+      "wall_seconds": 0.00017291598487645388,
+      "cpu_seconds": 0.00017500000000000154,
+      "peak_rss_mib": 71.890625
+    },
+    {
+      "case": "honeycomb",
+      "status": "succeeded",
+      "cold_process_wall_seconds": 0.23757133295293897,
+      "wall_seconds": 0.0008426250424236059,
+      "cpu_seconds": 0.0008449999999999916,
+      "peak_rss_mib": 72.375
+    }
+  ]
+}

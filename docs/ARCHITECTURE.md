@@ -1,65 +1,65 @@
-# Architecture
+# Architecture · 3.0 alpha
 
-The seven original Pygame modules remain intact. `run.py` still launches the
-loopback-only standard-library HTTP server and offline compiled frontend.
+The original Pygame modules and launch remain intact. `run.py` serves the
+loopback-only standard-library HTTP API and compiled TypeScript/Three.js app.
 
-- `quantum_engine`: original atomic code plus independent spectroscopy,
-  measurement and dynamics modules. No HTTP, DOM or Three.js dependencies.
-- `backend/api/experiments.py`: query adapters, validation and model dispatch.
-  Original API paths are unchanged. Scientific requests share the two-job
-  semaphore and reject overload with 503. Each new engine bounds its states,
-  samples, grid and/or propagation steps. Serialization rejects nonfinite JSON.
-- `frontend/src/services`: timeout/cancellation-aware typed fetches, CSV/PNG
-  export with model/parameter/unit information.
-- `components`: escaped HTML helpers, native dialog lifecycle, SVG plots and
-  a playback controller that owns and cancels its animation-frame loop.
-- `app/navigation`: one mounted lab lifetime; switches call cleanup first.
-- `labs`: separate spectroscopy, Born-rule measurement, exact well dynamics
-  and numerical tunneling controllers. `LabSession` owns request revisions,
-  aborts, status/error messages, validation and versioned local presets.
-- `main.ts`: existing atomic controller, with shared responsibilities extracted.
-  Further atomic state/template separation remains possible; no UI framework
-  was introduced.
-- `visualization/viewer.ts`: Three.js rendering only. On-demand frames,
-  visibility suspension, buffer reuse and explicit GPU resource disposal.
+| Layer | Ownership |
+| --- | --- |
+| `quantum_engine` | Mathematical models, pure numerical solvers, scientific geometry and bundled data; no HTTP/DOM/Three.js |
+| `quantum_atom_lab` | Versioned experimental public SDK; lazy optional calculations, direct synchronous API |
+| `research_engine` | Evidence-limited baseline selection and packaged generated benchmark artifact |
+| `backend/api` | Strict finite query/JSON-to-model adapters; original routes preserved |
+| `backend/jobs` | Bounded subprocess orchestration, JSON-line progress, cancellation, timeout, scratch/result lifetimes |
+| `backend/geometry.py` | Compatibility exports of reusable `quantum_engine.geometry` |
+| `frontend/src/services` | Typed fetch/job polling, stale-response revisions, exports and catalog caching |
+| `frontend/src/labs` | One mounted scientific workflow and contextual controls per controller |
+| `components` | Escaped HTML/dialog helpers, SVG charts and bounded opt-in playback |
+| `visualization/viewer.ts` | Three.js only; fixed-frame structure motion, weighted clouds/Bloch vectors, mesh/buffer disposal |
+| `app/navigation` | One active lab lifetime; disposes previous work before mounting next |
 
-New GET APIs: `/api/spectroscopy`, `/api/spectroscopy/transition`,
-`/api/spectroscopy/series`, `/api/measurement`,
-`/api/dynamics/superposition`, `/api/tunneling`. New APIs return model/units
-alongside scientific results. Input/model errors return 400, unknown routes
-404, capacity exhaustion 503, unexpected errors 500. No endpoint writes files,
-launches processes or executes supplied code.
+Original GET contracts remain. New core `/api/physics` accepts allowlisted
+operations with finite JSON parameters ≤8192 characters. Core calculations are
+short and bounded; they use the same two-slot semaphore as legacy calculations
+and chemistry jobs. Input errors: 400; missing/expired job: 404; expired
+calculated state for field reuse: 410; capacity/dependency: 503.
 
-Client abort cancels obsolete display work; it does not interrupt an active
-NumPy calculation. Bounded engine workloads terminate independently. This
-server is a local instrument; hostile remote multi-user operation is outside the current deployment model.
-Handler concurrency was subsequently bounded as described below.
+New chemistry protocol: POST `/api/jobs` (JSON ≤32768 bytes), GET
+`/api/jobs/<id>`, DELETE to cancel. Operations are SCF/field, optimization,
+vibrations, correlation, electronic response, bounded H2 scan and H2 VQE.
+`ChemistryRequest` and operation-specific options validate types/ranges/catalogs;
+no arbitrary code, file paths or shell text is accepted. Fixed module workers
+use JSON lines for progress/results. Real cancellation kills/reaps the worker;
+a 90-second timer does the same on timeout. Terminal status is published only
+after slot release/process cleanup. Native-thread environment is bounded.
 
-## Integrated advanced methods
+Limits: 16 HTTP handlers, two shared compute slots, 16 job records, four stored
+calculated solutions. Field jobs reuse orbitals/density matrices and immutable
+calculation geometry/method; only view/spin-orbital/threshold/quality changes are
+allowed. Optimized fields use the final nuclei, never the starting conformer.
+Scientific/basis/CI/time bounds constrain requests. PySCF workspace memory is a
+hint rather than a hard OS cap; public deployment requires stronger isolation.
+The preserved legacy HF/DFT GET path retains its separate 12-second worker/cache.
 
-`molecular` now includes analytic H₂⁺ LCAO, source-backed structures and
-qualitative occupation schemes. `hartree_fock` is the independent He/H₂
-Gaussian-integral/SCF foundation. `fields` owns n=2 hydrogen angular momentum,
-Stark/Zeeman and Dirac calculations. Geometry adapters compute surfaces from
-wavefunction/density fields; source structure sticks are labeled schematic.
+Core imports never load PySCF/QuTiP. Optional availability is checked before
+starting jobs, and failure does not disable original atomic/physics tools.
+Direct SDK calls execute in the caller process and do not inherit job timeouts.
+Canonical source-provenance data remain under `data/`; synchronized copies under
+`quantum_engine/data` travel in wheels and are byte-checked in tests.
 
-Optional PySCF stays in `backend/optional_computation.py`: fixed whitelisted
-system/method/basis inputs, an internal Python module worker, no shell,
-12-second process timeout, bounded cache and batch AO evaluation. The core
-server does not import PySCF. The runtime checks installed availability and
-reports failures explicitly. Same-geometry HF comparisons run in the same
-compute slot, sequentially, with a cache of at most four results.
+`LabSession` owns request revisions, input invalidation, real job cancellation,
+loading/errors and local presets. `JobClient` handles late POST responses so a
+cancelled client still cancels a newly assigned server ID. Atomic failed states
+explicitly mark retained geometry; stale exports remain disabled. No obsolete
+result silently updates changed controls.
 
-The application server now bounds live HTTP handlers to 16 and sets a
-30-second socket timeout. Overload receives JSON 503; scientific jobs remain
-limited to two. Cache limits: original atomic geometries 16; molecular LCAO 12;
-RHF field payloads 8; optional native results 4. NumPy work is not forcibly
-interrupted by a browser abort; native workers are killed at timeout.
+The viewer renders on demand, pauses hidden views, reuses position/color/weight
+buffers during atomic playback, and updates existing atom/bond transforms during
+normal modes. Camera controls have one lifetime; disposal releases geometries,
+materials, textures and the WebGL context. Data playback is opt-in and ≤10 Hz;
+camera rendering remains browser-frame-driven as needed. Scientific coordinates
+and schematic particle radii are labeled separately.
 
-Additional APIs: `/api/molecular`, `/api/molecular/diagram`,
-`/api/molecular/structure`, `/api/computation/hartree-fock`,
-`/api/computation/pyscf`, `/api/fields`. No prior API contract was removed.
-
-The existing atomic controller/template remains sizable; shared components,
-services and every new lab live outside it. Its further decomposition can be
-incremental. No large frontend framework or runtime chart dependency was added.
+The sizable original atomic controller/styles are preserved with incremental
+extraction. No replacement framework, Kubernetes, remote account or paid API is
+required. Public-demo architecture is documented separately; local safeguards
+are not presented as multi-tenant production readiness.

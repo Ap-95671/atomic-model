@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 from scipy.linalg import eigh
 
-BASIS_DATA=json.loads((Path(__file__).resolve().parents[2]/'data/sto-3g-h-he.json').read_text())
+BASIS_DATA=json.loads((Path(__file__).resolve().parents[1]/'data/sto-3g-h-he.json').read_text())
 
 
 @dataclass

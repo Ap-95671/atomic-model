@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools==84.2.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quantum-atom-lab"
+version = "3.0.0a1"
+description = "Local scientific quantum models and visualization engine"
+readme = "README.md"
+requires-python = ">=3.14"
+dynamic = ["dependencies", "optional-dependencies"]
+# License intentionally omitted pending explicit owner approval. No PyPI publication.
+
+[tool.setuptools.packages.find]
+include = ["quantum_atom_lab*", "quantum_engine*", "research_engine*"]
+
+[tool.setuptools.package-data]
+quantum_engine = ["data/*.json", "data/*.md", "data/molecules/*.json"]
+research_engine = ["data/*.json"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+optional-dependencies = {computation = {file = ["requirements-computation.txt"]}}

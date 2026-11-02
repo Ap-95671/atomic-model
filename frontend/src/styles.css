@@ -2123,3 +2123,5 @@ pre {
 @media (max-width:760px) { .atomic-result-status { left: 14px; right: 14px; top: 260px; } }
 
 .lab-controls textarea { resize: vertical; font: 12px/1.5 ui-monospace, monospace; }
+
+.lab-results p a { text-decoration: underline; text-underline-offset: 3px; }

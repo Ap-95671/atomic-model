@@ -1,5 +1,10 @@
 # Scientific methods
 
+The original 2.0 record below is preserved. Current 3.0 alpha additions and
+independent numerical evidence are in [3.0 validation](QUANTUM_LAB_3_VALIDATION.md);
+[current limitations](LIMITATIONS.md) and the [feature audit](FEATURE_COMPLETENESS_AUDIT.md)
+supersede starting-state missing-feature descriptions.
+
 All lengths use Bohr radii internally. Atomic energies in the original API
 are eV; displayed photon wavelengths are explicitly vacuum nm. New APIs carry
 model and unit metadata. Original hydrogenic evaluation remains unchanged.
