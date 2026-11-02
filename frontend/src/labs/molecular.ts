@@ -1,3 +1,4 @@
+import {mountGeometry} from "./geometry";
 import { mountComputedMolecules } from "./computed-molecules";
 import { chemistryCatalog } from "../services/chemistry";
 import { mountStructures } from "./structures";
@@ -52,12 +53,12 @@ function mountLcao(host:HTMLElement,onSystem?:(name:string)=>void){
 }
 
 export function mountMolecular(host:HTMLElement){
-  host.innerHTML='<nav class="experiment-nav" aria-label="Molecular tools"><button data-molecular="lcao" aria-pressed="true">Calculated orbitals</button><button data-molecular="diagrams" aria-pressed="false">MO reference diagrams</button><button data-molecular="structures" aria-pressed="false">3D structures</button></nav><div data-molecular-host></div>';
+  host.innerHTML='<nav class="experiment-nav" aria-label="Molecular tools"><button data-molecular="lcao" aria-pressed="true">Calculated orbitals</button><button data-molecular="diagrams" aria-pressed="false">MO reference diagrams</button><button data-molecular="geometry" aria-pressed="false">Geometry optimization</button><button data-molecular="vibrations" aria-pressed="false">Vibrational analysis</button><button data-molecular="structures" aria-pressed="false">3D structures</button></nav><div data-molecular-host></div>';
   const target=host.querySelector<HTMLElement>('[data-molecular-host]')!;let cleanup:()=>void;
   const switchSystem=(name:string)=>{cleanup();cleanup=mountComputedMolecules(target,name);};
   cleanup=mountLcao(target,switchSystem);
   host.querySelectorAll<HTMLButtonElement>('[data-molecular]').forEach(b=>b.onclick=()=>{
     cleanup();host.querySelectorAll('[data-molecular]').forEach(button=>button.setAttribute('aria-pressed',String(button===b)));
-    cleanup=b.dataset.molecular==='lcao'?mountLcao(target,switchSystem):b.dataset.molecular==='diagrams'?mountDiagrams(target):mountStructures(target);
+    cleanup=b.dataset.molecular==='lcao'?mountLcao(target,switchSystem):b.dataset.molecular==='diagrams'?mountDiagrams(target):b.dataset.molecular==='geometry'?mountGeometry(target):b.dataset.molecular==='vibrations'?mountGeometry(target,true):mountStructures(target);
   });return()=>cleanup();
 }

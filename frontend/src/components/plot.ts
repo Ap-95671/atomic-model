@@ -12,9 +12,10 @@ export function plot(curves: Curve[], xLabel: string, yLabel: string, title: str
   const x=(v:number)=>left+(v-xmin)/(xmax-xmin)*(width-left-right);
   const y=(v:number)=>height-bottom-(v-ymin)/(ymax-ymin)*(height-top-bottom);
   const fmt=(v:number)=>Math.abs(v)>=1000 || (Math.abs(v)<.01 && v!==0) ? v.toExponential(1) : Number(v.toPrecision(3)).toString();
+  const yfmt=(v:number)=>yDomain&&Math.abs(ymax-ymin)<.1?v.toFixed(Math.min(8,Math.max(3,Math.ceil(-Math.log10(ymax-ymin))+1))):fmt(v);
   return `<div class="plot-scroll"><svg xmlns="http://www.w3.org/2000/svg" class="scientific-plot" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(title)}; ${esc(yLabel)} versus ${esc(xLabel)}" style="background:#101821;font:12px sans-serif;color:#b8c5d0"><title>${esc(title)}</title><text x="${left}" y="20" fill="#e3e9ef">${esc(title)}</text>${Array.from({length:5},(_,i)=>{
     const vx=xmin+(xmax-xmin)*i/4, vy=ymin+(ymax-ymin)*i/4;
-    return `<line x1="${left}" x2="${width-right}" y1="${y(vy)}" y2="${y(vy)}" stroke="#2b3945"/><text x="${left-10}" y="${y(vy)+4}" text-anchor="end" fill="#b8c5d0">${fmt(vy)}</text><text x="${x(vx)}" y="${height-bottom+22}" text-anchor="middle" fill="#b8c5d0">${fmt(vx)}</text>`;
+    return `<line x1="${left}" x2="${width-right}" y1="${y(vy)}" y2="${y(vy)}" stroke="#2b3945"/><text x="${left-10}" y="${y(vy)+4}" text-anchor="end" fill="#b8c5d0">${yfmt(vy)}</text><text x="${x(vx)}" y="${height-bottom+22}" text-anchor="middle" fill="#b8c5d0">${fmt(vx)}</text>`;
   }).join('')}${curves.map(c=>`<path d="${c.x.map((v,i)=>`${i?'L':'M'}${x(v).toFixed(2)},${y(c.y[i]).toFixed(2)}`).join(' ')}" fill="none" stroke="${c.color}" stroke-width="2" ${c.dashed?'stroke-dasharray="6 4"':''}/>${c.x.filter((_,i)=>i%Math.max(1,Math.floor(c.x.length/100))===0).map((v,j)=>{
     const i=j*Math.max(1,Math.floor(c.x.length/100));
     return `<circle cx="${x(v)}" cy="${y(c.y[i])}" r="5" fill="transparent"><title>${esc(c.label)}: ${fmt(v)} ${esc(xLabel)}; ${fmt(c.y[i])} ${esc(yLabel)}</title></circle>`;

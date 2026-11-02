@@ -49,3 +49,39 @@ remain visible; they are not suppressed or treated as passing scientific checks.
 
 Primary method reference: https://pyscf.org/user/scf.html . No core dependency or
 Python downgrade is required. Optional package behavior remains explicit.
+
+## B1 — geometry and harmonic vibrations
+
+Working Molecular Lab tools: closed-shell RHF/PBE/B3LYP local BFGS geometry
+optimization, PySCF analytic nuclear gradients, and final-geometry analytic
+Hessians. Workloads: 2–5 atoms, ≤50 basis functions, ≤60 geometry steps, two
+shared workers and 90-second timeout. Success requires optimizer success and
+maximum Cartesian gradient ≤ the requested 1e-6…1e-4 Eh/a0 threshold. Failure
+returns no optimized state. Source conformers initialize polyatomic systems.
+
+Accepted-step energies, coordinates, gradient max/RMS, final distances/angles,
+initial/final common-scale structure overlay, CSV/JSON/XYZ/PNG exports are
+connected. Rigid translations/rotations are projected out before mass-weighted
+normal-mode analysis. Every Hessian is checked for symmetry and every mode for
+mass-metric orthonormality. Mode playback updates existing meshes; magnification
+and playback units are explicitly schematic. Frequencies are unscaled harmonic
+predictions, with imaginary modes identified. IR/Raman derivative intensities,
+isotope-resolved modes, open-shell optimizations, geometry import, saddle-point
+searches and global-minimum guarantees remain unsupported.
+
+Validation: six added Python tests and ten integrated 3.0 browser tests pass.
+H2/RHF/STO-3G: E = −1.1175058851 Eh; R ≈1.3459189 a0 (0.71223 Å), maximum
+final gradient 2.64e-7 Eh/a0; stretch ≈5480.7722 cm⁻¹. Independent scalar
+energy minimization agrees within 2e-6 a0, tightened force tolerance preserves
+the energy, and analytic Hessian columns converge against central differences
+of gradients at .02/.01/.005 a0. Water has three positive normal modes and a
+calculated bending angle; PBE/B3LYP gradients and Hessians run successfully.
+A one-step failed optimization, unsupported spin/size, optimized-coordinate
+orbital reevaluation, exports, overlays and stable canvas during playback are
+exercised. Experimental H2 reference values are separately attributed to NIST;
+finite-basis HF predictions are not fitted to them.
+
+Methods: [PySCF gradients/geometry](https://pyscf.org/user/geomopt.html),
+[analytic harmonic analysis](https://pyscf.org/pyscf_api_docs/pyscf.hessian.html),
+[SciPy BFGS](https://docs.scipy.org/doc/scipy/reference/optimize.minimize-bfgs.html),
+[NIST H2 diatomic constants](https://webbook.nist.gov/cgi/cbook.cgi?ID=C1333740&Mask=1000).

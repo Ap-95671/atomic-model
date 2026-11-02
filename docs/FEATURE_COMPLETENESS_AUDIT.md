@@ -82,3 +82,9 @@ implemented end to end. No placeholder laboratory pages will be added for them.
   atomic-result labels. Existing restricted/reference models remain labeled.
   Detailed evidence and final test totals: `QUANTUM_LAB_3_VALIDATION.md`.
   This does not complete the missing advanced laboratories listed above.
+- B1: geometry optimization and harmonic vibrations now **Limited/validated**
+  for 2–5 atom closed-shell RHF/RKS systems, with force convergence, analytic
+  Hessians, mode-count/normalization checks, overlays, exports and interactive
+  mode playback. Six independent science/input tests plus real browser
+  geometry/failure/water-mode workflows pass. Derivative intensities, open-shell
+  geometries and imports remain unsupported; see validation report.

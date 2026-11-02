@@ -61,3 +61,26 @@ for(const width of [320,768,1440])test(`computed molecules fit ${width}px`,async
   await expect(page.locator('.lab-status')).toHaveText('Calculation complete.',{timeout:30_000});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
 });
+test('geometry uses converged forces, overlays and exports optimized XYZ',async({page})=>{
+ await page.getByRole('button',{name:'Molecular Lab',exact:true}).click();await page.getByRole('button',{name:'Geometry optimization',exact:true}).click();
+ await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');await expect(page.locator('.result-heading')).toContainText('Converged local geometry');
+ await expect(page.locator('.lab-results')).toContainText('0.7122');
+ await page.getByRole('button',{name:'Toggle initial overlay'}).click();
+ const file=page.waitForEvent('download');await page.getByRole('button',{name:'Export optimized XYZ'}).click();expect(await(await file).failure()).toBeNull();
+ await page.locator('[name="max_steps"]').fill('1');await page.locator('[name="distance"]').fill('3');await page.getByRole('button',{name:'Calculate',exact:true}).click();
+ await expect(page.locator('.lab-status')).toContainText('did not converge');await expect(page.locator('[data-result]')).toBeHidden();
+});
+test('water has three calculated modes with stable canvas during playback',async({page})=>{
+ await page.getByRole('button',{name:'Molecular Lab',exact:true}).click();await page.getByRole('button',{name:'Vibrational analysis',exact:true}).click();
+ await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');await expect(page.locator('[data-mode] option')).toHaveCount(1);
+ await expect(page.locator('.lab-results')).toContainText('5480.77');
+ await page.locator('[name="system"]').selectOption('water');await page.getByRole('button',{name:'Calculate',exact:true}).click();
+ await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');await expect(page.locator('[data-mode] option')).toHaveCount(3);
+ await expect(page.locator('.lab-results')).toContainText('IR and Raman intensities unavailable');
+ const canvas=await page.locator('[data-geometry-view] canvas').elementHandle();
+ await page.locator('[data-mode]').selectOption('1');await page.getByRole('button',{name:'Play',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Pause',exact:true})).toBeVisible();
+ await page.waitForTimeout(400);expect(await page.locator('[data-geometry-view] canvas').evaluate((el,prior)=>el===prior,canvas)).toBe(true);
+ await page.getByRole('button',{name:'Pause',exact:true}).click();await expect(page.locator('[data-mode-info]')).toContainText('Mode 2');
+ await page.getByRole('button',{name:'Rewind',exact:true}).click();await expect(page.locator('[data-time-value]')).toHaveText('0.000');
+});

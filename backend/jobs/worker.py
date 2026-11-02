@@ -23,6 +23,9 @@ def run(payload):
     before = resource.getrusage(resource.RUSAGE_SELF)
     if payload["operation"] == "scf":
         result, solution = solve(request, progress)
+    elif payload["operation"] in ("optimize", "vibrations"):
+        from quantum_engine.chemistry.geometry import optimize, GeometryOptions
+        result, solution = optimize(request, GeometryOptions.parse(payload.get("options", {})), progress, vibrations=payload["operation"] == "vibrations")
     elif payload["operation"] == "field" and payload.get("solution"):
         solution = payload["solution"]
         result = dict(solution["result"])
@@ -33,7 +36,7 @@ def run(payload):
     result["resources"] = {"wall_seconds": time.perf_counter()-started,
                            "cpu_seconds": after.ru_utime+after.ru_stime-before.ru_utime-before.ru_stime,
                            "peak_rss_mib": after.ru_maxrss/(1024**2 if sys.platform == "darwin" else 1024)}
-    emit({"event": "result", "result": result, "solution": solution if payload["operation"] == "scf" else None})
+    emit({"event": "result", "result": result, "solution": solution if payload["operation"] != "field" else None})
 
 
 if __name__ == "__main__":
