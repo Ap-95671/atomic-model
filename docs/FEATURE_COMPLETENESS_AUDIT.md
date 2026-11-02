@@ -88,3 +88,9 @@ implemented end to end. No placeholder laboratory pages will be added for them.
   mode playback. Six independent science/input tests plus real browser
   geometry/failure/water-mode workflows pass. Derivative intensities, open-shell
   geometries and imports remain unsupported; see validation report.
+- C1: post-HF energies, restricted singlet linear-response excited states and a
+  computed same-basis H2 correlated stretching comparison are now connected and
+  **Limited/validated** within explicit size/time/active-space bounds. Six added
+  science/input tests and three added browser workflows pass. NTO pair data and
+  coefficients are exported; dedicated NTO surfaces, open-shell post-HF and
+  automatic chemical active-space selection remain unsupported/incomplete.

@@ -26,6 +26,14 @@ def run(payload):
     elif payload["operation"] in ("optimize", "vibrations"):
         from quantum_engine.chemistry.geometry import optimize, GeometryOptions
         result, solution = optimize(request, GeometryOptions.parse(payload.get("options", {})), progress, vibrations=payload["operation"] == "vibrations")
+    elif payload["operation"] in ("correlation", "excitations", "bond_scan"):
+        from quantum_engine.chemistry.correlated import correlation, excitations, bond_scan, CorrelationOptions, ExcitationOptions
+        if payload["operation"] == "correlation":
+            result, solution = correlation(request, CorrelationOptions.parse(payload.get("options", {})), progress)
+        elif payload["operation"] == "excitations":
+            result, solution = excitations(request, ExcitationOptions.parse(payload.get("options", {})), progress)
+        else:
+            result, solution = bond_scan(request, progress)
     elif payload["operation"] == "field" and payload.get("solution"):
         solution = payload["solution"]
         result = dict(solution["result"])

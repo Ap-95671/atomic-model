@@ -31,12 +31,18 @@ class JobManager:
         if not isinstance(data, dict) or set(data)-{"operation", "request", "calculation_id", "options"}:
             raise ValueError("Expected operation, request and optional calculation_id")
         operation = data.get("operation", "scf")
-        if operation not in ("scf", "field", "optimize", "vibrations"):
+        if operation not in ("scf", "field", "optimize", "vibrations", "correlation", "excitations", "bond_scan"):
             raise ValueError("Unsupported job operation")
         from quantum_engine.chemistry.geometry import GeometryOptions
-        options = GeometryOptions.parse(data.get("options", {}))
-        if operation not in ("optimize", "vibrations") and data.get("options"):
-            raise ValueError("Options apply only to geometry workflows")
+        from quantum_engine.chemistry.correlated import CorrelationOptions, ExcitationOptions
+        option_type = {"optimize": GeometryOptions, "vibrations": GeometryOptions,
+                       "correlation": CorrelationOptions, "excitations": ExcitationOptions}.get(operation)
+        if option_type:
+            options = option_type.parse(data.get("options", {})).__dict__
+        else:
+            if data.get("options"):
+                raise ValueError("This operation has no calculation options")
+            options = {}
         solution = None
         source_id = data.get("calculation_id")
         if operation == "field":
@@ -60,7 +66,7 @@ class JobManager:
         with self.lock:
             self.records[job_id] = {"id": job_id, "operation": operation, "status": "queued",
                                     "stage": "Queued", "created": time.monotonic(), "progress": deque(maxlen=100),
-                                    "request": request.to_dict(), "options": options.__dict__, "cancel_requested": False, "process": None,
+                                    "request": request.to_dict(), "options": options, "cancel_requested": False, "process": None,
                                     "calculation_id": source_id or job_id}
             while len(self.records) > 16:
                 old = next((key for key, value in self.records.items() if value["status"] in TERMINAL), None)

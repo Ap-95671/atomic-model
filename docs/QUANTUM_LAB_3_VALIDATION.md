@@ -85,3 +85,42 @@ Methods: [PySCF gradients/geometry](https://pyscf.org/user/geomopt.html),
 [analytic harmonic analysis](https://pyscf.org/pyscf_api_docs/pyscf.hessian.html),
 [SciPy BFGS](https://docs.scipy.org/doc/scipy/reference/optimize.minimize-bfgs.html),
 [NIST H2 diatomic constants](https://webbook.nist.gov/cgi/cbook.cgi?ID=C1333740&Mask=1000).
+
+## C1 — correlation, electronic excitations and H2 stretching
+
+Connected Computational Chemistry laboratories calculate MP2, CCSD, CCSD(T),
+CISD, FCI and contiguous-frontier CASCI/CASSCF energies; convergence, correlation
+energy, integral-storage estimate, runtime/RSS and applicable active-density/T1
+diagnostics are reported. Limits: restricted closed-shell, ≤5 atoms / ≤30 AOs;
+FCI/CAS ≤12 orbitals and ≤100,000 determinants; same two process slots and
+90-second timeout. Active-space choice is user input, not chemically automatic.
+The displayed orbital remains explicitly the RHF/RKS reference. MP2/CCSD(T)
+are nonvariational and can fail for near-degeneracy; no universal accuracy claim.
+
+TDHF/TDDFT and TDA (CIS for HF) calculate up to five vertical singlet excitations,
+energies/wavelengths, length-gauge oscillator strengths and transition dipoles,
+X-amplitude contributions and SVD natural-transition pair weights/AO vectors.
+Spectra use a disclosed arbitrary 0.15 eV Gaussian width. No excited-state
+relaxation, double-excitation guarantee or measured-lifetime inference. NTO
+coefficients are exported; NTO-specific surface rendering remains incomplete.
+
+A computed six-point H2 scan compares RHF, broken-symmetry UHF, MP2 and FCI in
+the same basis. At 6 a0/STO-3G, RHF −0.64507675, UHF −0.93322735, MP2
+−0.89808095, FCI −0.93340218 Eh; UHF S²≈0.9993. FCI approaches twice the
+independently computed atomic-H basis energy within 3e-4 Eh. This explicitly
+shows restricted dissociation error and UHF spin contamination.
+
+Six additional Python tests pass: the two-electron FCI/CCSD/CISD/full-active-space
+energies coincide (−1.137275943617 Eh at R=1.4 a0), no-virtual He limit has zero
+correlation, expanded-basis FCI lowers energy, independently evaluated MP2 MO
+integral expression agrees, TD response matches independent A/B-matrix
+solutions, 2(X†X−Y†Y)=1, NTO weights sum to one, oscillator strengths match
+2ω|μ|²/3, wavelengths match hc/E, and unsupported/oversized requests fail.
+All thirteen integrated 3.0 Chromium workflows pass, including response spectrum
+PNG, correlated energies/active-space errors and six-point bond comparison.
+
+Primary methods: [PySCF MP2](https://pyscf.org/user/mp.html),
+[CCSD/(T)](https://pyscf.org/user/cc.html),
+[configuration interaction](https://pyscf.org/user/ci.html),
+[active spaces](https://pyscf.org/user/mcscf.html),
+[electronic linear response/NTOs](https://pyscf.org/user/tddft.html).
