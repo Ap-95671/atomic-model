@@ -13,6 +13,7 @@ from quantum_engine.atomic_structure import species
 from quantum_engine.electron_configuration import ELEMENTS
 from quantum_engine.energy_levels import energy_ev, transition
 from .geometry import orbital_payload
+from .api.experiments import calculate
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPUTE = threading.BoundedSemaphore(2)
@@ -73,6 +74,14 @@ class Handler(BaseHTTPRequestHandler):
                         quality=q.get("quality", ["balanced"])[0], point_count=integer(q, "points", 0),
                         threshold=floating(q, "threshold", 0.06), show_nodes=q.get("nodes", ["false"])[0] == "true",
                         effective_z=floating(q, "zeff", 1.0))
+                finally:
+                    COMPUTE.release()
+                return self.send_data(200, payload)
+            if url.path in ("/api/spectroscopy", "/api/spectroscopy/transition", "/api/spectroscopy/series", "/api/measurement"):
+                if not COMPUTE.acquire(blocking=False):
+                    return self.send_data(503, {"error": "Two scientific calculations are running; retry shortly."})
+                try:
+                    payload = calculate(url.path, q, atom_from_query(q))
                 finally:
                     COMPUTE.release()
                 return self.send_data(200, payload)

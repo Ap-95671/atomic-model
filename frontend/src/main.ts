@@ -3,7 +3,9 @@ import { $, esc } from "./components/dom";
 import { graph } from "./components/graph";
 import { modal, closeModal, initializeDialog } from "./components/dialog";
 import { api } from "./services/api";
-import { initializeNavigation } from "./app/navigation";
+import { mountSpectroscopy } from "./labs/spectroscopy";
+import { mountMeasurement } from "./labs/measurement";
+import { registerLab, initializeNavigation } from "./app/navigation";
 import { OrbitalViewer } from "./visualization/viewer";
 import type { ElementData, Species, OrbitalData } from "./types";
 
@@ -824,6 +826,8 @@ async function start() {
     );
   }
 }
+registerLab("spectroscopy", mountSpectroscopy);
+registerLab("experiments", mountMeasurement);
 initializeNavigation({ guide: scienceGuide });
 // The tablist follows the keyboard interaction specified by its ARIA role.
 const tabs = [...document.querySelectorAll<HTMLButtonElement>("[data-tab]")];

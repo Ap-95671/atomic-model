@@ -66,6 +66,33 @@ class ApiTests(unittest.TestCase):
             '/api/orbital?basis=bad','/api/orbital?spin=0','/api/energy?initial=2&final=2']:
             with self.subTest(path=path):self.assertEqual(self.get(path)[0],400)
 
+    def test_spectroscopy_and_measurement_contracts(self):
+        code,data=self.get('/api/spectroscopy?i_n=3&i_l=1&f_n=2&f_l=0')
+        self.assertEqual(code,200)
+        self.assertTrue(data['transition']['allowed'])
+        self.assertAlmostEqual(data['transition']['wavelength_nm'],656.47,delta=.02)
+        self.assertEqual(data['series']['name'],'Balmer')
+        code,data=self.get('/api/measurement?n=2&l=1&m=0&count=1000&seed=123')
+        self.assertEqual(code,200)
+        self.assertEqual(sum(data['counts'])+data['tail_count'],1000)
+        self.assertEqual(len(data['edges_a0']),61)
+        self.assertIn('uncertainty_product',data['units'])
+        self.assertEqual(self.get('/api/spectroscopy/transition?i_n=2&i_l=0&f_n=1&f_l=0')[1]['dipole_squared_a0'],0)
+        self.assertEqual(self.get('/api/spectroscopy/series?lower=3')[1]['name'],'Paschen')
+
+    def test_experiment_validation_and_capacity(self):
+        for path in ['/api/measurement?n=9','/api/measurement?l=1&n=1',
+                     '/api/measurement?seed=-1','/api/measurement?count=60001',
+                     '/api/measurement?z=2','/api/measurement?basis=invalid',
+                     '/api/spectroscopy?i_n=2&f_n=2','/api/spectroscopy?i_n=9',
+                     '/api/spectroscopy/series?lower=4','/api/spectroscopy?polarization=invalid',
+                     '/api/spectroscopy?z=6','/api/spectroscopy?i_spin=nan']:
+            with self.subTest(path=path): self.assertEqual(self.get(path)[0],400)
+        from backend.server import COMPUTE
+        COMPUTE.acquire();COMPUTE.acquire()
+        try: self.assertEqual(self.get('/api/measurement')[0],503)
+        finally: COMPUTE.release();COMPUTE.release()
+
     def test_unknown_endpoint_and_directory_traversal(self):
         self.assertEqual(self.get('/api/unknown')[0],404)
         self.assertEqual(self.get('/%2e%2e/%2e%2e/requirements.txt')[0],403)
