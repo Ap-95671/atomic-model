@@ -25,3 +25,24 @@ The small multiply charged cation table is separate from general filling logic. 
 Public scientific facts and government source snapshots are retained for traceability. Third-party references linked from those sources retain their own rights. Remote scripts in saved HTML are never executed; the rebuild script parses the files as text.
 
 Source snapshots retain their upstream formatting verbatim. `.gitattributes` exempts only those snapshots from whitespace linting; generated data and application code remain checked normally.
+
+## Molecular Gaussian basis (Quantum Lab 2)
+
+`sto-3g-h-he.json` is the complete H/He subset returned by
+[MolSSI Basis Set Exchange](https://www.basissetexchange.org/api/basis/sto-3g/format/json/?elements=1,2),
+retrieved 2 November 2026. It preserves version/revision and original reference
+keys (Hehre et al. 1969/1970). Only s primitives on H/He are supported by the
+in-house RHF engine. Contracted functions are normalized after primitive
+prefactors. The expanded option uncontracts these same published exponents;
+no invented exponents are introduced.
+
+## Source-preserved molecular conformers
+
+`data/molecules/*.json`: PUG REST 3D records retrieved 2 November 2026 from
+`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/<CID>/JSON?record_type=3d`.
+Water 962; ammonia 222; methane 297; carbon dioxide 280; carbon monoxide 281;
+benzene 241. Raw source records retain conformer/method metadata. The app derives
+lengths and angles directly; it makes no measured equilibrium-geometry claim.
+For example, this water conformer gives ~103.98°, rather than replacing its
+coordinates with a textbook angle. PubChem3D generation uses theoretical
+conformers; see https://pmc.ncbi.nlm.nih.gov/articles/PMC3042967/.

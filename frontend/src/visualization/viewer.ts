@@ -28,6 +28,9 @@ export class OrbitalViewer {
   opacity = 0.6;
   rotation = false;
   private frame = 0;
+  private disposed = false;
+  private onVisibility = () => { if (!document.hidden) this.invalidate(); };
+  private intersectionObserver: IntersectionObserver;
   private displayExtent = 1;
   private raycaster = new THREE.Raycaster();
   private resizeObserver: ResizeObserver;
@@ -54,7 +57,9 @@ export class OrbitalViewer {
     this.camera.up.set(0, 0, 1);
     this.reset();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
+    this.controls.enableDamping = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    this.controls.listenToKeyEvents(this.renderer.domElement);
+    this.controls.addEventListener("change", () => this.invalidate());
     this.controls.minDistance = 0.8;
     this.controls.maxDistance = 50;
     this.controls.addEventListener("start", () =>
@@ -74,6 +79,11 @@ export class OrbitalViewer {
     this.makeAxes();
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe(container);
+    this.intersectionObserver = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) this.invalidate();
+    });
+    this.intersectionObserver.observe(container);
+    document.addEventListener("visibilitychange", this.onVisibility);
     this.resize();
     this.renderer.domElement.addEventListener(
       "pointerdown",
@@ -105,7 +115,7 @@ export class OrbitalViewer {
         this.reset();
     };
     window.addEventListener("keydown", this.onKey);
-    this.animate();
+    this.invalidate();
   }
   reset() {
     this.camera.position.set(8, -12, 7);
@@ -113,13 +123,15 @@ export class OrbitalViewer {
     if (this.controls) {
       this.controls.target.set(0, 0, 0);
       this.controls.update();
+      this.invalidate();
     }
   }
   resize() {
     const { clientWidth: w, clientHeight: h } = this.container;
     this.camera.aspect = w / Math.max(h, 1);
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(w, h);
+    this.renderer.setSize(w, h, false);
+    this.invalidate();
   }
   private clear(group: THREE.Group) {
     for (const child of [...group.children]) {
@@ -131,7 +143,11 @@ export class OrbitalViewer {
           for (const material of Array.isArray(mesh.material)
             ? mesh.material
             : [mesh.material])
-            material.dispose();
+            {
+              const map = (material as THREE.SpriteMaterial).map;
+              map?.dispose();
+              material.dispose();
+            }
         }
       });
     }
@@ -282,8 +298,9 @@ export class OrbitalViewer {
       );
     }
     this.makeNucleus(atom);
+    this.invalidate();
   }
-  addOrbital(data: OrbitalData, colorIndex?: number) {
+  addOrbital(data: Pick<OrbitalData,"points"|"phases"|"surfaces">, colorIndex?: number) {
     const scale = 4 / this.displayExtent;
     if (data.points.length) {
       const geometry = new THREE.BufferGeometry();
@@ -312,21 +329,51 @@ export class OrbitalViewer {
       this.orbitals.add(obj);
     }
     for (const mesh of data.surfaces) this.surface(mesh, scale, colorIndex);
+    this.invalidate();
+  }
+  showStructure(data:{coordinates_angstrom:number[][];atomic_numbers:number[];bonds:{a:number;b:number;order:number}[]}) {
+    this.clear(this.orbitals); this.clear(this.nodes); this.clear(this.nucleus);
+    const points=data.coordinates_angstrom.map(p=>new THREE.Vector3(...p as [number,number,number]));
+    const center=points.reduce((a,p)=>a.add(p),new THREE.Vector3()).divideScalar(points.length);
+    const extent=Math.max(...points.map(p=>p.distanceTo(center)))+1;
+    points.forEach(p=>p.sub(center).multiplyScalar(4/extent));
+    const colors:Record<number,number>={1:0xe8e8e4,6:0x7c8b95,7:0x629cde,8:0xe57469};
+    points.forEach((p,i)=>{
+      const marker=new THREE.Mesh(new THREE.SphereGeometry(data.atomic_numbers[i]===1?.17:.26,22,16),new THREE.MeshStandardMaterial({color:colors[data.atomic_numbers[i]]||0xa5a5a5}));
+      marker.position.copy(p);marker.userData.type=`atom ${i+1}`;this.nucleus.add(marker);
+    });
+    for(const bond of data.bonds){
+      const a=points[bond.a],b=points[bond.b],direction=b.clone().sub(a);
+      const stick=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,direction.length(),12),new THREE.MeshStandardMaterial({color:0x7e96a8}));
+      stick.position.copy(a).add(b).multiplyScalar(.5);stick.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction.normalize());
+      this.orbitals.add(stick);
+    }
+    this.invalidate();
+  }
+  showMolecule(data: {extent:number;points:number[][];phases:number[];surfaces:MeshData[];centers_a0:number[][]}) {
+    this.displayExtent = data.extent;
+    this.phase = true; this.complex = false;
+    this.clear(this.orbitals); this.clear(this.nodes); this.clear(this.nucleus);
+    this.addOrbital(data);
+    for (const center of data.centers_a0) {
+      const marker = new THREE.Mesh(new THREE.SphereGeometry(.09,20,16),new THREE.MeshStandardMaterial({color:0xe57969}));
+      marker.position.set(center[0],center[1],center[2]).multiplyScalar(4/data.extent);
+      marker.userData.type = "proton"; this.nucleus.add(marker);
+    }
+    this.invalidate();
   }
   setColor(phase: boolean) {
     this.phase = phase;
     for (const child of this.orbitals.children) {
       const obj = child as THREE.Mesh;
       const phases = obj.userData.phases;
-      if (phases)
-        obj.geometry.setAttribute(
-          "color",
-          new THREE.BufferAttribute(
-            this.colors(phases, obj.userData.colorIndex),
-            3,
-          ),
-        );
+      if (phases) {
+        const attribute = obj.geometry.getAttribute("color") as THREE.BufferAttribute;
+        attribute.set(this.colors(phases, obj.userData.colorIndex));
+        attribute.needsUpdate = true;
+      }
     }
+    this.invalidate();
   }
   setOpacity(value: number) {
     this.opacity = value;
@@ -336,6 +383,7 @@ export class OrbitalViewer {
         material.uniforms.opacity.value = value;
       else material.opacity = value;
     }
+    this.invalidate();
   }
   makeNucleus(atom: Species) {
     this.clear(this.nucleus);
@@ -372,11 +420,16 @@ export class OrbitalViewer {
       this.nucleus.add(mesh);
     }
   }
+  /** Schedule only when data, the camera, or visible presentation changes. */
+  invalidate = () => {
+    if (!this.disposed && !this.frame) this.frame = requestAnimationFrame(this.animate);
+  };
   private animate = () => {
-    this.frame = requestAnimationFrame(this.animate);
-    this.controls.autoRotate = this.rotation;
+    this.frame = 0;
+    if (this.disposed || document.hidden || !this.container.getClientRects().length) return;
+    this.controls.autoRotate = this.rotation && !matchMedia("(prefers-reduced-motion: reduce)").matches;
     this.controls.autoRotateSpeed = 0.55;
-    this.controls.update();
+    const changed = this.controls.update();
     if (this.container.classList.contains("interacting")) {
       for (const obj of this.orbitals.children)
         if (obj instanceof THREE.Points)
@@ -389,18 +442,37 @@ export class OrbitalViewer {
         if (obj instanceof THREE.Points) obj.geometry.setDrawRange(0, Infinity);
     }
     this.renderer.render(this.scene, this.camera);
+    if (changed || this.controls.autoRotate) this.invalidate();
   };
-  screenshot() {
-    return this.renderer.domElement.toDataURL("image/png");
+  screenshot(model = "Quantum Atom Lab", units = "Lengths in a₀; nucleus schematic") {
+    this.renderer.render(this.scene, this.camera);
+    const source = this.renderer.domElement;
+    const canvas = document.createElement("canvas");
+    canvas.width = source.width; canvas.height = source.height + 100;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = "#0a1017"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(source, 0, 100);
+    ctx.fillStyle = "#e3e9ef"; ctx.font = "16px sans-serif";
+    ctx.fillText(model, 20, 32, canvas.width - 40);
+    ctx.fillStyle = "#a5b6c5"; ctx.font = "14px sans-serif";
+    ctx.fillText(units, 20, 62, canvas.width - 40);
+    ctx.fillText(this.phase ? "Cyan: +ψ; amber: −ψ in real phase view. Complex view: cyclic phase hue." : "Density view: nonnegative density, without phase coloring.", 20, 84, canvas.width - 40);
+    return canvas.toDataURL("image/png");
   }
   dispose() {
+    this.disposed = true;
     cancelAnimationFrame(this.frame);
+    this.intersectionObserver.disconnect();
+    document.removeEventListener("visibilitychange", this.onVisibility);
     this.resizeObserver.disconnect();
     window.removeEventListener("keydown", this.onKey);
     this.controls.dispose();
     this.clear(this.orbitals);
     this.clear(this.nucleus);
     this.clear(this.nodes);
+    this.clear(this.axes);
     this.renderer.dispose();
+    this.renderer.forceContextLoss();
+    this.renderer.domElement.remove();
   }
 }
