@@ -31,7 +31,7 @@ class JobManager:
         if not isinstance(data, dict) or set(data)-{"operation", "request", "calculation_id", "options"}:
             raise ValueError("Expected operation, request and optional calculation_id")
         operation = data.get("operation", "scf")
-        if operation not in ("scf", "field", "optimize", "vibrations", "correlation", "excitations", "bond_scan"):
+        if operation not in ("scf", "field", "optimize", "vibrations", "correlation", "excitations", "bond_scan", "vqe"):
             raise ValueError("Unsupported job operation")
         from quantum_engine.chemistry.geometry import GeometryOptions
         from quantum_engine.chemistry.correlated import CorrelationOptions, ExcitationOptions

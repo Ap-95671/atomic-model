@@ -1,6 +1,6 @@
 import { $ } from "../components/dom";
 
-export type Lab = "atomic" | "spectroscopy" | "experiments" | "dynamics" | "molecular" | "computation";
+export type Lab = "atomic" | "spectroscopy" | "experiments" | "dynamics" | "molecular" | "computation" | "materials";
 type Mount = (host: HTMLElement) => (() => void);
 const mounts = new Map<Lab, Mount>();
 let cleanup: (() => void) | undefined;
@@ -14,7 +14,7 @@ export function initializeNavigation(actions: { guide: () => void }) {
     ["atomic", "Atomic Explorer"], ["molecular", "Molecular Lab"],
     ["dynamics", "Quantum Dynamics"], ["spectroscopy", "Spectroscopy"],
     ["experiments", "Quantum Experiments"], ["computation", "Computational Chemistry"],
-    ["guide", "Scientific Guide"],
+    ["materials", "Quantum Materials"], ["guide", "Scientific Guide"],
   ];
   for (const [key, name] of items) {
     const button = document.createElement("button");

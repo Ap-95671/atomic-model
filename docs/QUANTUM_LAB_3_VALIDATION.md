@@ -156,3 +156,36 @@ atomic playback/canvas reuse, density exports and Lindblad controls. Full Python
 suite at this checkpoint: **112 tests pass in 11.929 s**. These physics tools
 require no PySCF or QuTiP. Broader numerical TDSE propagation, MD and reaction
 pathways remain incomplete and have no placeholder screens.
+
+## E1 — ideal circuits, molecular VQE and tight-binding models
+
+Core ideal state-vector simulation: 1–5 qubits, ≤32 H/X/Y/Z/S/T/RX/RY/RZ/CX/CZ/
+SWAP gates, seeded final measurements, exact amplitudes/probabilities and reduced
+q0 Bloch vector, purity and entanglement entropy. Bit ordering is explicitly
+little endian (q0 rightmost). No hardware/noise/mid-circuit-measurement claim.
+
+Molecular VQE uses actual PySCF RHF H2/STO-3G one-/two-electron integrals, a
+four-spin-orbital Jordan–Wigner mapping, explicit Pauli decomposition and a
+parameterized four-qubit doubles-excitation unitary. BFGS minimizes exact ideal
+state-vector expectations; same-electron/spin-sector diagonalization is the
+comparison. H2's parity makes the two-determinant ansatz sufficient in this basis;
+this is not a general-molecule completeness/quantum-advantage claim. At R=1.4 a0,
+E=−1.137275943617 Eh, theta≈−0.112955596 rad, electron count=2. Mapping checks
+Hermiticity, number conservation and Pauli reconstruction. Reference HOMO is
+labeled separately from the correlated VQE state.
+
+Materials tool: one-orbital nearest-neighbor 1D chain / square / two-site
+honeycomb bands, user parameters, real/reciprocal vectors, high-symmetry paths,
+finite lattice patch and uniform-BZ DOS histogram per spin/cell. Honeycomb is
+explicitly a graphene-like topology with illustrative parameters, not a sourced
+experimental graphene dataset or periodic DFT. No unsupported materials gap
+predictions are shown. Rectangular DOS-bin integration counts one state per band.
+
+Six new science/input tests pass: Bell entanglement, bit ordering, rotation
+Bloch formulas, inverse gates/CZ/SWAP, seeded measurements, 5-qubit workload;
+known dispersions/Dirac crossing, independent Bloch-Hamiltonian diagonalization,
+reciprocal identity, analytic spectral moments, DOS-grid convergence; JW
+anticommutation and VQE agreement with independent PySCF FCI at R=1/1.4/3/6 a0.
+Ten physics browser tests pass, including new circuit/error/VQE/export and
+320/768/1440 px band-control workflows. Full pre-E browser checkpoint was
+**69 tests passed in 58.6 s**; all original workflows remain preserved.

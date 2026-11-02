@@ -1,5 +1,7 @@
 """Bounded read-only JSON adapters for core physics, independent of PySCF."""
 import json
+from quantum_engine.quantum_computing import circuit
+from quantum_engine.materials import bands
 from quantum_engine.dynamics.atomic import atomic
 from quantum_engine.dynamics.general import well
 from quantum_engine.dynamics.open_systems import lindblad
@@ -7,7 +9,7 @@ from quantum_engine.dynamics.open_systems import lindblad
 
 def calculate(operation,parameters):
     if not isinstance(parameters,dict):raise ValueError('Physics parameters must be a JSON object')
-    functions={'well':well,'lindblad':lindblad,'atomic':atomic}
+    functions={'well':well,'lindblad':lindblad,'atomic':atomic,'circuit':circuit,'bands':bands}
     if operation not in functions:raise ValueError('Unsupported core physics calculation')
     return functions[operation](**parameters)
 

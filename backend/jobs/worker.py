@@ -34,6 +34,9 @@ def run(payload):
             result, solution = excitations(request, ExcitationOptions.parse(payload.get("options", {})), progress)
         else:
             result, solution = bond_scan(request, progress)
+    elif payload["operation"] == "vqe":
+        from quantum_engine.quantum_computing.vqe import vqe
+        result, solution = vqe(request, progress)
     elif payload["operation"] == "field" and payload.get("solution"):
         solution = payload["solution"]
         result = dict(solution["result"])

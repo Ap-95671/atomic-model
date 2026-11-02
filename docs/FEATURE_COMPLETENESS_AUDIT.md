@@ -99,3 +99,8 @@ implemented end to end. No placeholder laboratory pages will be added for them.
   with nine new science tests and five browser workflows. General spatial TDSE,
   laser driving, reaction paths and nuclear MD remain missing. Exact spectral
   dynamics is not presented as a general spatial propagator.
+- E1: ideal small circuits, bounded H2/STO-3G Jordan–Wigner VQE and three analytic
+  tight-binding models are now **Limited/validated**, with six science tests and
+  five additional browser workflows. Real materials reference integration and
+  periodic DFT remain missing; illustrative model parameters are not attributed
+  to experimental datasets. Noise/hardware/general-molecule VQE are unsupported.
