@@ -80,6 +80,17 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.get('/api/spectroscopy/transition?i_n=2&i_l=0&f_n=1&f_l=0')[1]['dipole_squared_a0'],0)
         self.assertEqual(self.get('/api/spectroscopy/series?lower=3')[1]['name'],'Paschen')
 
+    def test_molecular_contract_and_validation(self):
+        code,data=self.get('/api/molecular?distance=2&orbital=antibonding')
+        self.assertEqual(code,200)
+        self.assertEqual(len(data['surfaces']),2)
+        self.assertAlmostEqual(data['overlap'],.586452894,places=8)
+        self.assertLess(data['residual'],1e-12)
+        self.assertIn('nuclear_repulsion_hartree',data)
+        for path in ['/api/molecular?distance=0','/api/molecular?distance=nan',
+                     '/api/molecular?orbital=unsupported','/api/molecular?threshold=0']:
+            with self.subTest(path=path):self.assertEqual(self.get(path)[0],400)
+
     def test_dynamics_contract_and_bounds(self):
         code,data=self.get('/api/dynamics/superposition')
         self.assertEqual(code,200)

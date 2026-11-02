@@ -84,3 +84,26 @@ barrier occupancy produce explicit warnings. A conserved norm alone does not
 prove time/grid convergence.
 
 Reference: [Feit, Fleck & Steiger, J. Computational Physics 47 (1982), 412–433](https://doi.org/10.1016/0021-9991(82)90091-2).
+
+## H₂⁺ molecular orbitals and bonding
+
+The two basis functions are normalized hydrogen 1s Slater orbitals on fixed
+centers ±R/2. Analytical integrals:
+`S=exp(−R)(1+R+R²/3)`,
+`J=−1/R+exp(−2R)(1+1/R)`, `K=−exp(−R)(1+R)`,
+`H_AA=−1/2+J`, `H_AB=−S/2+K`.
+SciPy solves the symmetric generalized eigenproblem `Hc=ESc` and verifies
+S-orthonormality. Total energy adds nuclear repulsion 1/R. The model predicts
+R≈2.49283 a₀, E≈−0.56483099 Eₕ; the discrepancy with an accurate H₂⁺ solution
+is a limitation of the **fixed-exponent two-function basis**.
+
+The 65³-grid surfaces evaluate the resulting `cA φA+cB φB`, extracting positive
+and negative amplitude levels. Atomic A/B views evaluate each original basis
+function. The antibonding nodal plane follows antisymmetry; no decorative
+molecular geometry is substituted. The bond curve includes both total
+energies, electronic and nuclear contributions, minimum and H + proton
+asymptote. Surface cache: at most 12 molecular entries; bond curve cached once.
+
+Reference: [MIT 5.61 Fall 2017, problem set 8 solutions](https://ocw.mit.edu/courses/5-61-physical-chemistry-fall-2017/baa9411b4794655a75eb93f81fa26239_MIT5_61F17_pset8_soln.pdf).
+MIT includes nuclear repulsion inside its Hamiltonian convention; here it is
+separated and added to total energies. The total predictions agree.

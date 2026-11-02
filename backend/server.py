@@ -14,6 +14,7 @@ from quantum_engine.electron_configuration import ELEMENTS
 from quantum_engine.energy_levels import energy_ev, transition
 from .geometry import orbital_payload
 from .api.experiments import calculate
+from .molecular_geometry import molecule_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPUTE = threading.BoundedSemaphore(2)
@@ -77,6 +78,14 @@ class Handler(BaseHTTPRequestHandler):
                 finally:
                     COMPUTE.release()
                 return self.send_data(200, payload)
+            if url.path == "/api/molecular":
+                if not COMPUTE.acquire(blocking=False):
+                    return self.send_data(503, {"error": "Two scientific calculations are running; retry shortly."})
+                try:
+                    payload = molecule_payload(floating(q,"distance",2.),q.get("orbital",["bonding"])[0],floating(q,"threshold",.12))
+                finally:
+                    COMPUTE.release()
+                return self.send_data(200,payload)
             if url.path in ("/api/spectroscopy", "/api/spectroscopy/transition", "/api/spectroscopy/series", "/api/measurement", "/api/dynamics/superposition", "/api/tunneling"):
                 if not COMPUTE.acquire(blocking=False):
                     return self.send_data(503, {"error": "Two scientific calculations are running; retry shortly."})

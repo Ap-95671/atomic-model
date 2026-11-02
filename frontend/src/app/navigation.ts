@@ -1,6 +1,6 @@
 import { $ } from "../components/dom";
 
-export type Lab = "atomic" | "spectroscopy" | "experiments" | "dynamics";
+export type Lab = "atomic" | "spectroscopy" | "experiments" | "dynamics" | "molecular";
 type Mount = (host: HTMLElement) => (() => void);
 const mounts = new Map<Lab, Mount>();
 let cleanup: (() => void) | undefined;

@@ -130,7 +130,7 @@ export class OrbitalViewer {
     const { clientWidth: w, clientHeight: h } = this.container;
     this.camera.aspect = w / Math.max(h, 1);
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(w, h);
+    this.renderer.setSize(w, h, false);
     this.invalidate();
   }
   private clear(group: THREE.Group) {
@@ -300,7 +300,7 @@ export class OrbitalViewer {
     this.makeNucleus(atom);
     this.invalidate();
   }
-  addOrbital(data: OrbitalData, colorIndex?: number) {
+  addOrbital(data: Pick<OrbitalData,"points"|"phases"|"surfaces">, colorIndex?: number) {
     const scale = 4 / this.displayExtent;
     if (data.points.length) {
       const geometry = new THREE.BufferGeometry();
@@ -329,6 +329,18 @@ export class OrbitalViewer {
       this.orbitals.add(obj);
     }
     for (const mesh of data.surfaces) this.surface(mesh, scale, colorIndex);
+    this.invalidate();
+  }
+  showMolecule(data: {extent:number;points:number[][];phases:number[];surfaces:MeshData[];centers_a0:number[][]}) {
+    this.displayExtent = data.extent;
+    this.phase = true; this.complex = false;
+    this.clear(this.orbitals); this.clear(this.nodes); this.clear(this.nucleus);
+    this.addOrbital(data);
+    for (const center of data.centers_a0) {
+      const marker = new THREE.Mesh(new THREE.SphereGeometry(.09,20,16),new THREE.MeshStandardMaterial({color:0xe57969}));
+      marker.position.set(center[0],center[1],center[2]).multiplyScalar(4/data.extent);
+      marker.userData.type = "proton"; this.nucleus.add(marker);
+    }
     this.invalidate();
   }
   setColor(phase: boolean) {
@@ -441,6 +453,7 @@ export class OrbitalViewer {
     this.clear(this.nodes);
     this.clear(this.axes);
     this.renderer.dispose();
+    this.renderer.forceContextLoss();
     this.renderer.domElement.remove();
   }
 }

@@ -43,3 +43,13 @@ agreement within 0.006 at matched sampled barrier width; and boundary warnings.
 The discontinuous rectangular potential limits spatial convergence; these are
 educational grids with explicit diagnostics, not guaranteed scattering accuracy
 for every permitted input. All 56 Python tests passed at this milestone.
+
+H₂⁺ adds five scientific tests and an API test (62 Python tests pass):
+S-orthonormality and generalized eigenproblem residuals at five separations;
+independent cylindrical quadrature of overlap and both MO norms (2e-6 absolute
+tolerance); exact midpoint nodal plane; extracted mesh amplitude residuals;
+fixed-basis energy minimum and dissociation; invalid inputs and cache reuse.
+The 2.49283 a₀ / −0.56483099 Eₕ minimum matches the fixed-1s LCAO model in
+MIT's 5.61 notes, rather than claiming agreement with an accurate H₂⁺ solution.
+Molecular browser checks exercise both states, distance changes, camera and
+image/data exports, plus 320/768/1024/1440 px layouts.
