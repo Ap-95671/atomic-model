@@ -4,7 +4,7 @@ A local, interactive 3D Schrödinger orbital laboratory built on the original
 `atomic-model` Python project. Python computes the wavefunctions, samples, and
 surfaces; Three.js renders them with a movable 3D camera.
 
-![Live 4f isosurface in Quantum Atom Lab](docs/quantum-lab-4f.png)
+![Live 4f isosurface in Quantum Atom Lab](docs/quantum-lab-4f.jpg)
 
 The original seven Pygame modules are **unchanged**. The new primary entry point
 is `run.py`; `main.py` remains the working classical comparison.

@@ -37,7 +37,7 @@ The locally served compiled app was exercised in the in-app WebGL browser:
   wavelength to about 486.27 nm; He-3⁺ n=3 → n=2 gives about 164.06 nm.
 - Desktop/sidebar and narrow responsive layouts were inspected.
 
-Screenshots: `quantum-lab-4f.png`, `quantum-lab-3d.png`. These are actual UI
+Screenshots: `quantum-lab-4f.jpg`, `quantum-lab-3d.jpg`. These are actual UI
 captures, not generated mockups. The 3d screenshot is scrolled to include the
 radial graph.
 
