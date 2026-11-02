@@ -4,7 +4,8 @@ import { graph } from "./components/graph";
 import { modal, closeModal, initializeDialog } from "./components/dialog";
 import { api } from "./services/api";
 import { mountSpectroscopy } from "./labs/spectroscopy";
-import { mountMeasurement } from "./labs/measurement";
+import { mountExperiments } from "./labs/experiments";
+import { mountDynamics } from "./labs/dynamics";
 import { registerLab, initializeNavigation } from "./app/navigation";
 import { OrbitalViewer } from "./visualization/viewer";
 import type { ElementData, Species, OrbitalData } from "./types";
@@ -827,7 +828,8 @@ async function start() {
   }
 }
 registerLab("spectroscopy", mountSpectroscopy);
-registerLab("experiments", mountMeasurement);
+registerLab("experiments", mountExperiments);
+registerLab("dynamics", mountDynamics);
 initializeNavigation({ guide: scienceGuide });
 // The tablist follows the keyboard interaction specified by its ARIA role.
 const tabs = [...document.querySelectorAll<HTMLButtonElement>("[data-tab]")];

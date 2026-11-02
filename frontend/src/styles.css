@@ -2069,3 +2069,12 @@ pre {
   .lab-results { order: 1; }
   .result-heading h2 { font-size: 26px; }
 }
+.playback { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 15px 0; margin-top: 10px; border-block: 1px solid #2c3e4b; }
+.playback button, .experiment-nav button { min-height: 44px; border: 1px solid #3b5264; border-radius: 5px; padding: 10px 16px; }
+.playback label { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; color: #b8c8d4; font-size: 13px; }
+.playback input { width: 160px; max-width: 100%; }
+.playback select { background: #101b26; color: #e2eaf0; border: 1px solid #3d5162; padding: 8px; }
+.playback output { font-variant-numeric: tabular-nums; min-width: 60px; }
+.experiment-nav { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
+.experiment-nav [aria-pressed="true"] { background: #234556; border-color: #5b9cb8; }
+.lab-warning { border: 1px solid #a27856; color: #f2c7a5; padding: 14px; border-radius: 5px; margin: 18px 0; }

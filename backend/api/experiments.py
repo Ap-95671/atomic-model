@@ -2,6 +2,8 @@
 from quantum_engine import QuantumState
 from quantum_engine.spectroscopy import electric_dipole, spectral_series
 from quantum_engine.measurement import measurement
+from quantum_engine.dynamics import superposition
+from quantum_engine.dynamics.tunneling import propagate
 
 
 def state(q, prefix="", basis="complex", defaults=(3, 1, 0)):
@@ -12,6 +14,12 @@ def state(q, prefix="", basis="complex", defaults=(3, 1, 0)):
 
 
 def calculate(path, q, atom):
+    if path == "/api/dynamics/superposition":
+        defaults={"state_a":1,"state_b":2,"ar":1.,"ai":0.,"br":1.,"bi":0.,"length":10.}
+        return superposition(**{key: type(value)(q.get(key,[str(value)])[0]) for key,value in defaults.items()})
+    if path == "/api/tunneling":
+        defaults={"height":.8,"width":2.,"center":-35.,"momentum":1.2,"spread":5.,"duration":60.,"dt":.02,"grid":1024}
+        return propagate(**{key: type(value)(q.get(key,[str(value)])[0]) for key,value in defaults.items()})
     if not atom["one_electron"]:
         raise ValueError("This laboratory requires a one-electron species, such as H or He+")
     z, mass = atom["z"], atom["nuclear_mass_u"]

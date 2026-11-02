@@ -1,0 +1,48 @@
+import { test, expect } from '@playwright/test';
+test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('#loading')).toBeHidden();});
+test('superposition playback, pause, stationary eigenstate and export',async({page})=>{
+  await page.getByRole('button',{name:'Quantum Dynamics',exact:true}).click();
+  await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');
+  const initial=await page.locator('[data-x]').textContent();
+  await page.getByRole('button',{name:'Play',exact:true}).click();
+  await expect(page.locator('[data-time-value]')).not.toHaveText('0.000');
+  await page.getByRole('button',{name:'Pause',exact:true}).click();
+  await expect(page.locator('[data-x]')).not.toHaveText(initial!);
+  await page.locator('[name="br"]').fill('0');
+  await page.getByRole('button',{name:'Calculate',exact:true}).click();
+  await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');
+  const first=await page.locator('[data-density] path').getAttribute('d');
+  await page.locator('[data-time]').press('ArrowRight');
+  expect(await page.locator('[data-density] path').getAttribute('d')).toBe(first);
+  const file=page.waitForEvent('download');await page.getByRole('button',{name:'Export current state CSV'}).click();expect((await file).suggestedFilename()).toBe('quantum-dynamics.csv');
+  await page.getByRole('button',{name:'Play',exact:true}).click();
+  await page.getByRole('button',{name:'Spectroscopy',exact:true}).click();
+  await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');
+});
+test('tunneling scrubbing, probability conservation and numerical diagnostics',async({page})=>{
+  await page.getByRole('button',{name:'Quantum Experiments',exact:true}).click();
+  await page.getByRole('button',{name:'Tunneling',exact:true}).click();
+  await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');
+  await expect(page.locator('[data-norm]')).toHaveText('1.0000000000');
+  await page.locator('[data-time]').fill('60');
+  expect(Number(await page.locator('[data-right]').textContent())).toBeGreaterThan(.2);
+  expect(Number(await page.locator('[data-right]').textContent())).toBeLessThan(.5);
+  await expect(page.getByText('Numerical method & convergence',{exact:true})).toBeVisible();
+  await page.locator('[name="width"]').fill('10');
+  await page.locator('[name="center"]').fill('-15');
+  await page.getByRole('button',{name:'Calculate',exact:true}).click();
+  await expect(page.locator('.lab-status')).toContainText('separated from barrier');
+  await page.getByRole('button',{name:'Defaults',exact:true}).click();
+  await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');
+  const file=page.waitForEvent('download');await page.getByRole('button',{name:'Export scattering CSV'}).click();expect(await(await file).failure()).toBeNull();
+});
+for(const width of [320,390,768,1024,1440])test(`dynamics experiments fit ${width}px`,async({page})=>{
+  await page.setViewportSize({width,height:900});
+  await page.getByRole('button',{name:'Quantum Dynamics',exact:true}).click();
+  await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  await page.getByRole('button',{name:'Quantum Experiments',exact:true}).click();
+  await page.getByRole('button',{name:'Tunneling',exact:true}).click();
+  await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+});

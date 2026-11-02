@@ -73,3 +73,28 @@ test('textual science remains available when WebGL initialization fails', async 
   await expect(page.locator('#element-name')).toHaveText('Hydrogen');
   await expect(page.locator('#toast')).toContainText('WebGL could not initialize');
 });
+test('idle rendering stops and repeated cloud/color changes release GPU buffers',async({page})=>{
+  await page.addInitScript(()=>{
+    const stats={draws:0,buffers:new Set<WebGLBuffer>()};
+    (window as unknown as {gpuStats:typeof stats}).gpuStats=stats;
+    const prototype=WebGL2RenderingContext.prototype;
+    const create=prototype.createBuffer,remove=prototype.deleteBuffer,draw=prototype.drawArrays;
+    prototype.createBuffer=function(){const buffer=create.call(this);if(buffer)stats.buffers.add(buffer);return buffer;};
+    prototype.deleteBuffer=function(buffer){if(buffer)stats.buffers.delete(buffer);return remove.call(this,buffer);};
+    prototype.drawArrays=function(...args){stats.draws++;return draw.apply(this,args);};
+  });
+  await page.reload();await expect(page.locator('#loading')).toBeHidden();
+  const sample=()=>page.evaluate(()=>{const s=(window as unknown as {gpuStats:{draws:number;buffers:Set<WebGLBuffer>}}).gpuStats;return {draws:s.draws,buffers:s.buffers.size};});
+  // Wait for the initial WebGL draw, then sample a genuinely idle window.
+  await expect.poll(async()=>(await sample()).draws).toBeGreaterThan(0);
+  const before=await sample();
+  await page.waitForTimeout(300);
+  expect((await sample()).draws).toBe(before.draws);
+  for(let i=0;i<5;i++){
+    await page.locator('[data-family="1"]').click();await expect(page.locator('#orbital-title')).toHaveText('2p_z');
+    await page.locator('#density').click();await page.locator('#phase').click();
+    await page.locator('[data-family="0"]').click();await expect(page.locator('#orbital-title')).toHaveText('2s');
+    await page.locator('#n').selectOption('1');await expect(page.locator('#orbital-title')).toHaveText('1s');
+  }
+  await expect.poll(async()=>(await sample()).buffers).toBeLessThanOrEqual(before.buffers+2);
+});

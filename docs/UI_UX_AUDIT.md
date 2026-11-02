@@ -34,3 +34,12 @@ This is targeted engineering, not a claim of a full WCAG conformance audit.
 Automated browser checks use installed Chrome via Playwright; run after a
 production build with `cd frontend && npm run test:e2e`. No cloud service or
 browser binary download is necessary on the validated Mac.
+
+The later scientific labs provide visible request progress/errors, versioned
+local save/restore/defaults, model-labeled CSV and graph PNG exports. Parameter
+changes hide obsolete results immediately. Plot/table overflow is contained
+within labeled panels. Live dynamics separates amplitude, density and potential
+axes and holds time-dependent density/amplitude scales fixed. Playback starts
+paused, supports keyboard scrubbing, caps redraws at 10 Hz and stops on lab
+switch, input changes or document hiding. Tunneling distinguishes early incident
+probability from a final reflected fraction and exposes numerical warnings.

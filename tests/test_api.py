@@ -80,6 +80,20 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.get('/api/spectroscopy/transition?i_n=2&i_l=0&f_n=1&f_l=0')[1]['dipole_squared_a0'],0)
         self.assertEqual(self.get('/api/spectroscopy/series?lower=3')[1]['name'],'Paschen')
 
+    def test_dynamics_contract_and_bounds(self):
+        code,data=self.get('/api/dynamics/superposition')
+        self.assertEqual(code,200)
+        self.assertAlmostEqual(data['normalization'],1,places=10)
+        self.assertEqual(data['units']['energy'],'Hartree')
+        code,data=self.get('/api/tunneling?duration=1')
+        self.assertEqual(code,200)
+        self.assertLess(data['max_norm_error'],1e-10)
+        self.assertEqual(len(data['x_a0']),512)
+        for path in ['/api/tunneling?grid=99999','/api/tunneling?dt=nan',
+                     '/api/tunneling?duration=100&dt=.005','/api/dynamics/superposition?ar=0&br=0',
+                     '/api/dynamics/superposition?state_a=2','/api/dynamics/superposition?state_a=9']:
+            with self.subTest(path=path):self.assertEqual(self.get(path)[0],400)
+
     def test_experiment_validation_and_capacity(self):
         for path in ['/api/measurement?n=9','/api/measurement?l=1&n=1',
                      '/api/measurement?seed=-1','/api/measurement?count=60001',

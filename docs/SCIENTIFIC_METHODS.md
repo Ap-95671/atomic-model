@@ -56,3 +56,31 @@ Seeds allow reproducibility; independent batches use new seeds.
 Each supported laboratory carries an in-app assumptions panel. Multi-electron
 atoms are rejected by these new hydrogenic APIs rather than assigned hydrogen
 spectra or uncertainty predictions.
+
+## Exact time evolution and numerical scattering
+
+Dynamics uses two orthonormal infinite-well eigenstates
+`φ_n=√(2/L) sin(nπx/L)`, `E_n=n²π²/(2L²)` and normalized complex coefficients.
+The browser evaluates the exact spectral phase, with separate amplitude and
+probability plots on fixed scales. Analytical `⟨x⟩` uses diagonal L/2 and
+`x_ab=−8Lab/[π²(a²−b²)²]` for opposite parity (zero otherwise). This is a 1D
+hard-wall model, **not time-dependent hydrogen**. One period is displayed;
+playback is opt-in and its viewing rate is unrelated to physical clock time.
+
+Tunneling uses second-order Strang splitting,
+`exp(−iVdt/2) FFT⁻¹ exp(−ik²dt/2) FFT exp(−iVdt/2)`, on 1024/2048
+cell-centered periodic grid points in [−100,100) a₀. Initial position standard
+deviation is σ, with mean momentum k. The initial state is normalized once;
+no step-by-step renormalization hides norm loss. Every step checks norm and
+boundary-zone probability; the API retains at most 81 display frames and 512
+spatial samples, with at most 6000 propagation steps. The full internal grid
+is used for regional integrals. The actual sampled barrier width is reported.
+
+The finite-barrier plane-wave formula uses sinh below the barrier, sin above
+it and the continuous E=V limit. The packet reference averages T(k²/2) over
+its positive-momentum spectral probability. Finite-time regional probability
+is distinguished from asymptotic scattering. Periodic wrap-around and ongoing
+barrier occupancy produce explicit warnings. A conserved norm alone does not
+prove time/grid convergence.
+
+Reference: [Feit, Fleck & Steiger, J. Computational Physics 47 (1982), 412–433](https://doi.org/10.1016/0021-9991(82)90091-2).

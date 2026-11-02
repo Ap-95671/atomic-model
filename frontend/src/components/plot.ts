@@ -1,12 +1,13 @@
 import { esc } from './dom';
 export interface Curve { label: string; x: number[]; y: number[]; color: string; dashed?: boolean; }
 /** Data-driven SVG with explicit units, accessible description, and point readouts. */
-export function plot(curves: Curve[], xLabel: string, yLabel: string, title: string) {
+export function plot(curves: Curve[], xLabel: string, yLabel: string, title: string, yDomain?: [number,number]) {
   const width=760, height=290, left=78, right=22, top=35, bottom=58;
   const xs=curves.flatMap(c=>c.x), ys=curves.flatMap(c=>c.y);
   let xmin=Math.min(...xs), xmax=Math.max(...xs), ymin=Math.min(0,...ys), ymax=Math.max(...ys);
   if(xmax===xmin) xmax=xmin+1;
   if(ymax===ymin) ymax=ymin+1;
+  if(yDomain){[ymin,ymax]=yDomain;}
   const pad=(ymax-ymin)*.08; ymax+=pad; if(ymin<0)ymin-=pad;
   const x=(v:number)=>left+(v-xmin)/(xmax-xmin)*(width-left-right);
   const y=(v:number)=>height-bottom-(v-ymin)/(ymax-ymin)*(height-top-bottom);

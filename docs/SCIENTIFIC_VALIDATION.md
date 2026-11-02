@@ -31,3 +31,15 @@ width is measured; plots and wide data tables scroll within their own panels.
 
 These tests establish correctness within the implemented models. They do not
 validate missing many-electron, molecular, field or relativistic solvers.
+
+Dynamics/scattering add nine scientific tests and an HTTP contract test:
+stationary eigenstate density at four times, normalization, hard walls,
+complex-coefficient expectation values checked by independent Simpson
+quadrature, revival and same-parity interference; free Gaussian center and
+variance; plane-wave barrier limits and resonance; regional probability sum;
+<1e-10 norm drift; default transmitted probability within 0.012 of its
+bandwidth average; improved dt=.04 over .08 against .01; 1024/2048 grid
+agreement within 0.006 at matched sampled barrier width; and boundary warnings.
+The discontinuous rectangular potential limits spatial convergence; these are
+educational grids with explicit diagnostics, not guaranteed scattering accuracy
+for every permitted input. All 56 Python tests passed at this milestone.
