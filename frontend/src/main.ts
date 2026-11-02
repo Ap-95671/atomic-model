@@ -1,3 +1,4 @@
+import {mountMaterials} from "./labs/materials";
 import "./styles.css";
 import { $, esc } from "./components/dom";
 import { graph } from "./components/graph";
@@ -886,6 +887,7 @@ async function start() {
 registerLab("spectroscopy", mountSpectroscopy);
 registerLab("experiments", mountExperiments);
 registerLab("dynamics", mountDynamics);
+registerLab("materials",mountMaterials);
 registerLab("molecular", mountMolecular);
 registerLab("computation", mountComputation);
 initializeNavigation({ guide: scienceGuide });
