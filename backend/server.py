@@ -14,7 +14,7 @@ from quantum_engine.electron_configuration import ELEMENTS
 from quantum_engine.energy_levels import energy_ev, transition
 from .geometry import orbital_payload
 from .api.experiments import calculate
-from .molecular_geometry import molecule_payload
+from .molecular_geometry import molecule_payload, hartree_fock_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPUTE = threading.BoundedSemaphore(2)
@@ -78,6 +78,14 @@ class Handler(BaseHTTPRequestHandler):
                 finally:
                     COMPUTE.release()
                 return self.send_data(200, payload)
+            if url.path == "/api/computation/hartree-fock":
+                if not COMPUTE.acquire(blocking=False):
+                    return self.send_data(503, {"error": "Two scientific calculations are running; retry shortly."})
+                try:
+                    payload = hartree_fock_payload(q.get("system",["h2"])[0],floating(q,"distance",1.4),q.get("basis",["sto-3g"])[0],q.get("view",["density"])[0])
+                finally:
+                    COMPUTE.release()
+                return self.send_data(200,payload)
             if url.path == "/api/molecular":
                 if not COMPUTE.acquire(blocking=False):
                     return self.send_data(503, {"error": "Two scientific calculations are running; retry shortly."})

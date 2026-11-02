@@ -53,3 +53,13 @@ The 2.49283 a₀ / −0.56483099 Eₕ minimum matches the fixed-1s LCAO model in
 MIT's 5.61 notes, rather than claiming agreement with an accurate H₂⁺ solution.
 Molecular browser checks exercise both states, distance changes, camera and
 image/data exports, plus 320/768/1024/1440 px layouts.
+
+RHF adds five scientific tests plus an API contract: reference He/H₂ energies,
+SCF convergence, electron count, S-orthonormality, `PSP=2P`, ERI permutation
+symmetry and Boys limit; nonconvergence rejection; expanded-basis variational
+lowering; numerical density integration; and independent PySCF comparisons.
+PySCF 2.14.0 successfully runs on the existing Python 3.14.7/macOS arm64.
+Against PySCF’s built-in STO-3G, energy differences are 9.26e-10 Eₕ (He) and
+−1.13e-10 Eₕ (H₂); max ERI differences 2.72e-9/9.05e-10 Eₕ, respectively.
+Tolerances 1e-8 Eₕ energy and 5e-9 integrals account for published basis-data
+rounding; no energy offset or fitted correction is applied.

@@ -1,0 +1,3 @@
+# Optional validated advanced backend. The core app runs without these packages.
+pyscf==2.14.0
+h5py==3.16.0

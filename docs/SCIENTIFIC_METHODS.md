@@ -107,3 +107,26 @@ asymptote. Surface cache: at most 12 molecular entries; bond curve cached once.
 Reference: [MIT 5.61 Fall 2017, problem set 8 solutions](https://ocw.mit.edu/courses/5-61-physical-chemistry-fall-2017/baa9411b4794655a75eb93f81fa26239_MIT5_61F17_pset8_soln.pdf).
 MIT includes nuclear repulsion inside its Hamiltonian convention; here it is
 separated and added to total energies. The total predictions agree.
+
+## Restricted Hartree–Fock foundation
+
+`quantum_engine/hartree_fock` computes normalized s-Gaussian overlap, kinetic,
+nuclear attraction and four-center electron-repulsion integrals analytically
+using the Boys F₀ function with a small-argument expansion. Published BSE
+STO-3G H/He exponents and contractions are bundled. The expanded option uses
+those primitives as independent functions (3 per atom), increasing variational
+freedom without claiming a complete-basis result.
+
+SCF uses `P=2 C_occ C_occᵀ`, `F=H+J[P]−K[P]/2`, generalized eigensolves,
+20% density damping, ΔE<1e-10 Eₕ and max density change<1e-8, at most 100
+iterations. Total energy is `½ Tr[P(H+F)] + E_nuc`. Nonconvergence and failed
+invariants raise errors, rather than returning a nominally converged result.
+The API returns matrices, ERIs, occupations, iteration history, electron count,
+orthonormality and residuals. Total density evaluates `ρ(r)=φᵀPφ`; HOMO/LUMO
+surfaces evaluate calculated MO coefficients. The finite-grid density integral
+is reported separately from exact basis-space `Tr(PS)=2`.
+
+He/STO-3G gives −2.8077839566 Eₕ; H₂ at 1.4 a₀ gives −1.1167143252 Eₕ.
+Uncontracting lowers both energies, to about −2.8162463082 and −1.1200169522 Eₕ.
+RHF excludes correlation and fails H₂ dissociation into correlated radicals;
+this limitation is displayed alongside the computed energy curve.

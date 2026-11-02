@@ -80,6 +80,16 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.get('/api/spectroscopy/transition?i_n=2&i_l=0&f_n=1&f_l=0')[1]['dipole_squared_a0'],0)
         self.assertEqual(self.get('/api/spectroscopy/series?lower=3')[1]['name'],'Paschen')
 
+    def test_hartree_fock_contract(self):
+        code,data=self.get('/api/computation/hartree-fock?system=he')
+        self.assertEqual(code,200);self.assertTrue(data['converged'])
+        self.assertAlmostEqual(data['electron_count'],2)
+        self.assertAlmostEqual(data['total_energy_hartree'],-2.8077839566,places=8)
+        self.assertEqual(len(data['density_matrix']),1)
+        for path in ['/api/computation/hartree-fock?system=o2','/api/computation/hartree-fock?basis=unknown',
+                     '/api/computation/hartree-fock?distance=nan','/api/computation/hartree-fock?system=he&view=lumo']:
+            with self.subTest(path=path):self.assertEqual(self.get(path)[0],400)
+
     def test_molecular_contract_and_validation(self):
         code,data=self.get('/api/molecular?distance=2&orbital=antibonding')
         self.assertEqual(code,200)

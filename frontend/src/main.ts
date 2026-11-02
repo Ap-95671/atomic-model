@@ -5,6 +5,7 @@ import { modal, closeModal, initializeDialog } from "./components/dialog";
 import { api } from "./services/api";
 import { mountSpectroscopy } from "./labs/spectroscopy";
 import { mountExperiments } from "./labs/experiments";
+import { mountComputation } from "./labs/computation";
 import { mountMolecular } from "./labs/molecular";
 import { mountDynamics } from "./labs/dynamics";
 import { registerLab, initializeNavigation } from "./app/navigation";
@@ -832,6 +833,7 @@ registerLab("spectroscopy", mountSpectroscopy);
 registerLab("experiments", mountExperiments);
 registerLab("dynamics", mountDynamics);
 registerLab("molecular", mountMolecular);
+registerLab("computation", mountComputation);
 initializeNavigation({ guide: scienceGuide });
 // The tablist follows the keyboard interaction specified by its ARIA role.
 const tabs = [...document.querySelectorAll<HTMLButtonElement>("[data-tab]")];
