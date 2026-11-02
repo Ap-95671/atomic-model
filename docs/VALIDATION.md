@@ -1,4 +1,7 @@
-# Validation record
+# Original 1.0 validation record
+
+Historical baseline; current 2.0 results are in [Release audit](RELEASE_AUDIT.md)
+and [Scientific validation](SCIENTIFIC_VALIDATION.md).
 
 Validated locally on **2 November 2026**, macOS arm64, Python **3.14.7**,
 Node **24.13.0**, npm **11.6.2**.

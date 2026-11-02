@@ -5,8 +5,9 @@ Baseline screenshots and measurements are in `BASELINE_AUDIT.md`.
 The first implementation milestone extracts API requests, dialog lifecycle,
 SVG graph rendering and laboratory navigation from the atomic controller.
 The atomic workspace, gallery, periodic table, overlays and inspector remain.
-Unavailable laboratories are explicitly marked planned and disabled; they do
-not pretend to be functioning calculations.
+During the foundation milestone, unavailable laboratories were marked planned
+and disabled. The integrated release now implements all seven navigation areas;
+scientific scopes remain explicit.
 
 Corrections verified by the browser suite:
 
