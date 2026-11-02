@@ -4,7 +4,7 @@ from scipy.constants import m_e, m_p
 from .constants import ATOMIC_MASS
 from .electron_configuration import ELEMENTS, configuration_for
 
-ISOTOPES = json.loads((Path(__file__).resolve().parents[1]/"data/isotopes.json").read_text())
+ISOTOPES = json.loads((Path(__file__).resolve().parent/"data/isotopes.json").read_text())
 
 
 def species(z=1, a=None, charge=0):

@@ -46,3 +46,16 @@ class JobApiTests(unittest.TestCase):
         self.assertEqual(job['status'],'succeeded',job.get('error'))
         self.assertAlmostEqual(job['result']['total_energy_hartree'],-1.11671432506,places=8)
         self.assertIn('resources',job['result'])
+
+    def test_core_physics_validation_and_optional_dependency_failure(self):
+        from urllib.parse import urlencode
+        from unittest.mock import patch
+        for operation in ('well','lindblad','atomic','circuit','bands','adaptive'):
+            code,data=self.call('/api/physics?'+urlencode({'operation':operation}))
+            self.assertEqual(code,200,(operation,data))
+        for operation,parameters in (('well',{'states':[1,1]}),('circuit',{'qubits':99}),('bands',{'grid':9999}),('lindblad',{'relaxation':-1}),('unknown',{})):
+            self.assertEqual(self.call('/api/physics?'+urlencode({'operation':operation,'parameters':json.dumps(parameters)}))[0],400)
+        with patch('backend.jobs.manager.importlib.util.find_spec',return_value=None):
+            code,data=self.call('/api/jobs','POST',{'request':{}})
+            self.assertEqual(code,503);self.assertIn('Optional PySCF unavailable',data['error'])
+            self.assertEqual(self.call('/api/physics?operation=well')[0],200)

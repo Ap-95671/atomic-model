@@ -3,7 +3,7 @@ import json
 import re
 from pathlib import Path
 
-ELEMENTS = json.loads((Path(__file__).resolve().parents[1]/"data/elements.json").read_text())
+ELEMENTS = json.loads((Path(__file__).resolve().parent/"data/elements.json").read_text())
 BY_SYMBOL = {item["symbol"]: item for item in ELEMENTS}
 FAMILIES = "spdf"
 ORDER = sorted([(n, l) for n in range(1, 8) for l in range(min(n, 4))], key=lambda v: (sum(v), v[0]))

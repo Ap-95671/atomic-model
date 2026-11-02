@@ -33,13 +33,13 @@ export class LabSession {
     this.form.addEventListener('change',()=>this.invalidate());
   }
   get form(){return this.host.querySelector('form')!;}
-  inputs(){return [...this.host.querySelectorAll<HTMLInputElement|HTMLSelectElement>('form [name]')];}
+  inputs(){return [...this.host.querySelectorAll<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>('form [name]')];}
   params(){return new URLSearchParams(this.inputs().map(i=>[i.name,i.value]));}
   private restore(values: unknown){
     if(!values || typeof values!=='object')throw new Error('Invalid configuration');
     for(const input of this.inputs()){
       const value=(values as Record<string,unknown>)[input.name];
-      if(typeof value==='string' && value.length<100)input.value=value;
+      if(typeof value==='string' && value.length<=8192)input.value=value;
     }
     this.invalidate(); this.form.requestSubmit();
   }

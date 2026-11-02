@@ -14,7 +14,7 @@ SYMBOLS={1:'H',6:'C',7:'N',8:'O'}
 def structure(name='water'):
     if name not in CATALOG:raise ValueError('Select a supported bundled molecule')
     cid,formula,shape=CATALOG[name]
-    compound=json.loads((Path(__file__).resolve().parents[2]/f'data/molecules/{name}.json').read_text())['PC_Compounds'][0]
+    compound=json.loads((Path(__file__).resolve().parents[1]/f'data/molecules/{name}.json').read_text())['PC_Compounds'][0]
     coord=compound['coords'][0];conformer=coord['conformers'][0]
     points=np.array([conformer[axis] for axis in ('x','y','z')],float).T
     # PubChem atom IDs need not be indices in another record; map them explicitly.
