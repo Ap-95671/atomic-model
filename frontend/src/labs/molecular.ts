@@ -1,3 +1,5 @@
+import { mountStructures } from "./structures";
+import { mountDiagrams } from "./diagrams";
 import { LabSession, numberField, assumptions } from './session';
 import { esc } from '../components/dom';
 import { plot } from '../components/plot';
@@ -11,7 +13,7 @@ interface Molecule {
   extent:number;points:number[][];phases:number[];surfaces:MeshData[];centers_a0:number[][];orbital:string;grid_size:number;
   curve:{distance_a0:number[];bonding_total_hartree:number[];antibonding_total_hartree:number[];bonding_electronic_hartree:number[];nuclear_repulsion_hartree:number[];equilibrium_a0:number;minimum_total_hartree:number;binding_energy_hartree:number};
 }
-export function mountMolecular(host:HTMLElement){
+function mountLcao(host:HTMLElement){
   const session=new LabSession(host,'molecular','Molecular Lab','Calculate H₂⁺ molecular orbitals and a bond-energy curve from a two-center variational Hamiltonian.',`<label>System<select name="system"><option value="h2plus">H₂⁺ · one electron, two protons</option></select></label>${numberField('distance','Nuclear separation / a₀',2,.5,10,.05)}<label>Calculated orbital<select name="orbital"><option value="bonding">σ1s · bonding</option><option value="antibonding">σ*1s · antibonding</option><option value="atomic-a">Atomic 1s on A · before combination</option><option value="atomic-b">Atomic 1s on B · before combination</option></select></label>${numberField('threshold','Surface amplitude / grid peak',.12,.02,.4,.01)}<p class="lab-explanation">Use the same separation and threshold to compare signed orbitals. The antibonding state has a plane of zero amplitude between the nuclei. Its total energy is distinct from the bonding state.</p>`);
   let viewer:OrbitalViewer|undefined;
   const calculate=()=>{
@@ -33,4 +35,13 @@ export function mountMolecular(host:HTMLElement){
     });
   };
   session.form.onsubmit=e=>{e.preventDefault();calculate();};calculate();return()=>{viewer?.dispose();session.dispose();};
+}
+
+export function mountMolecular(host:HTMLElement){
+  host.innerHTML='<nav class="experiment-nav" aria-label="Molecular tools"><button data-molecular="lcao" aria-pressed="true">H₂⁺ calculated orbitals</button><button data-molecular="diagrams" aria-pressed="false">MO reference diagrams</button><button data-molecular="structures" aria-pressed="false">3D structures</button></nav><div data-molecular-host></div>';
+  const target=host.querySelector<HTMLElement>('[data-molecular-host]')!;let cleanup=mountLcao(target);
+  host.querySelectorAll<HTMLButtonElement>('[data-molecular]').forEach(b=>b.onclick=()=>{
+    cleanup();host.querySelectorAll('[data-molecular]').forEach(button=>button.setAttribute('aria-pressed',String(button===b)));
+    cleanup=b.dataset.molecular==='lcao'?mountLcao(target):b.dataset.molecular==='diagrams'?mountDiagrams(target):mountStructures(target);
+  });return()=>cleanup();
 }

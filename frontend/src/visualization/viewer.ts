@@ -331,6 +331,25 @@ export class OrbitalViewer {
     for (const mesh of data.surfaces) this.surface(mesh, scale, colorIndex);
     this.invalidate();
   }
+  showStructure(data:{coordinates_angstrom:number[][];atomic_numbers:number[];bonds:{a:number;b:number;order:number}[]}) {
+    this.clear(this.orbitals); this.clear(this.nodes); this.clear(this.nucleus);
+    const points=data.coordinates_angstrom.map(p=>new THREE.Vector3(...p as [number,number,number]));
+    const center=points.reduce((a,p)=>a.add(p),new THREE.Vector3()).divideScalar(points.length);
+    const extent=Math.max(...points.map(p=>p.distanceTo(center)))+1;
+    points.forEach(p=>p.sub(center).multiplyScalar(4/extent));
+    const colors:Record<number,number>={1:0xe8e8e4,6:0x7c8b95,7:0x629cde,8:0xe57469};
+    points.forEach((p,i)=>{
+      const marker=new THREE.Mesh(new THREE.SphereGeometry(data.atomic_numbers[i]===1?.17:.26,22,16),new THREE.MeshStandardMaterial({color:colors[data.atomic_numbers[i]]||0xa5a5a5}));
+      marker.position.copy(p);marker.userData.type=`atom ${i+1}`;this.nucleus.add(marker);
+    });
+    for(const bond of data.bonds){
+      const a=points[bond.a],b=points[bond.b],direction=b.clone().sub(a);
+      const stick=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,direction.length(),12),new THREE.MeshStandardMaterial({color:0x7e96a8}));
+      stick.position.copy(a).add(b).multiplyScalar(.5);stick.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction.normalize());
+      this.orbitals.add(stick);
+    }
+    this.invalidate();
+  }
   showMolecule(data: {extent:number;points:number[][];phases:number[];surfaces:MeshData[];centers_a0:number[][]}) {
     this.displayExtent = data.extent;
     this.phase = true; this.complex = false;
@@ -437,7 +456,7 @@ export class OrbitalViewer {
     ctx.fillText(model, 20, 32, canvas.width - 40);
     ctx.fillStyle = "#a5b6c5"; ctx.font = "14px sans-serif";
     ctx.fillText(units, 20, 62, canvas.width - 40);
-    ctx.fillText("Cyan: +ψ; amber: −ψ in real phase view. Complex view: cyclic phase hue.", 20, 84, canvas.width - 40);
+    ctx.fillText(this.phase ? "Cyan: +ψ; amber: −ψ in real phase view. Complex view: cyclic phase hue." : "Density view: nonnegative density, without phase coloring.", 20, 84, canvas.width - 40);
     return canvas.toDataURL("image/png");
   }
   dispose() {

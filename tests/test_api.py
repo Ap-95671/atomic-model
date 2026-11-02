@@ -5,7 +5,7 @@ import unittest
 from http.server import ThreadingHTTPServer
 from urllib.request import urlopen
 from urllib.error import HTTPError
-from backend.server import Handler
+from backend.server import Handler, LocalHTTPServer
 
 
 class QuietHandler(Handler):
@@ -15,7 +15,7 @@ class QuietHandler(Handler):
 class ApiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.server=ThreadingHTTPServer(('127.0.0.1',0),QuietHandler)
+        cls.server=LocalHTTPServer(('127.0.0.1',0),QuietHandler)
         cls.worker=threading.Thread(target=cls.server.serve_forever,daemon=True)
         cls.worker.start()
         cls.base=f'http://127.0.0.1:{cls.server.server_port}'
@@ -29,6 +29,13 @@ class ApiTests(unittest.TestCase):
             with urlopen(self.base+path,timeout=15) as r:return r.status,json.load(r)
         except HTTPError as e:
             with e:return e.code,json.load(e)
+
+    def test_bounded_http_handlers(self):
+        for _ in range(self.server.max_handlers):self.server.handler_slots.acquire()
+        try:self.assertEqual(self.get('/api/health')[0],503)
+        finally:
+            for _ in range(self.server.max_handlers):self.server.handler_slots.release()
+        self.assertEqual(self.get('/api/health')[0],200)
 
     def test_health_and_periodic_table(self):
         self.assertEqual(self.get('/api/health')[1]['elements'],118)
@@ -79,6 +86,24 @@ class ApiTests(unittest.TestCase):
         self.assertIn('uncertainty_product',data['units'])
         self.assertEqual(self.get('/api/spectroscopy/transition?i_n=2&i_l=0&f_n=1&f_l=0')[1]['dipole_squared_a0'],0)
         self.assertEqual(self.get('/api/spectroscopy/series?lower=3')[1]['name'],'Paschen')
+
+    def test_fields_structures_and_reference_diagrams(self):
+        code,d=self.get('/api/fields?magnetic=0&electric=.000001')
+        self.assertEqual(code,200)
+        self.assertTrue(all(v==0 for v in d['lande_shifts_ev']))
+        self.assertAlmostEqual(d['stark_shifts_ev'][1],3e-6*27.21138624598,places=10)
+        self.assertEqual(self.get('/api/molecular/diagram?name=o2')[1]['unpaired_electrons'],2)
+        self.assertEqual(self.get('/api/molecular/structure?name=water')[1]['pubchem_cid'],962)
+        for path in ['/api/fields?z=2','/api/fields?magnetic=3','/api/fields?electric=nan',
+                     '/api/fields?l=0&j=1.5','/api/molecular/structure?name=../outside',
+                     '/api/molecular/diagram?name=unknown','/api/computation/pyscf?method=invalid']:
+            with self.subTest(path=path):self.assertEqual(self.get(path)[0],400)
+
+    def test_optional_backend_failure_is_explicit(self):
+        from unittest.mock import patch
+        with patch('backend.server.optional_compute',side_effect=RuntimeError('Optional backend unavailable')):
+            code,d=self.get('/api/computation/pyscf')
+            self.assertEqual(code,503);self.assertIn('unavailable',d['error'])
 
     def test_hartree_fock_contract(self):
         code,data=self.get('/api/computation/hartree-fock?system=he')

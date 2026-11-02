@@ -87,9 +87,13 @@ test('idle rendering stops and repeated cloud/color changes release GPU buffers'
   const sample=()=>page.evaluate(()=>{const s=(window as unknown as {gpuStats:{draws:number;buffers:Set<WebGLBuffer>}}).gpuStats;return {draws:s.draws,buffers:s.buffers.size};});
   // Wait for the initial WebGL draw, then sample a genuinely idle window.
   await expect.poll(async()=>(await sample()).draws).toBeGreaterThan(0);
-  const before=await sample();
-  await page.waitForTimeout(300);
-  expect((await sample()).draws).toBe(before.draws);
+  let before=await sample();
+  // Initial resize/font/intersection events may legitimately schedule another
+  // frame. Require a settled 300 ms window, rather than the first visible draw.
+  await expect(async()=>{
+    before=await sample();await page.waitForTimeout(300);
+    expect((await sample()).draws).toBe(before.draws);
+  }).toPass({timeout:5000});
   for(let i=0;i<5;i++){
     await page.locator('[data-family="1"]').click();await expect(page.locator('#orbital-title')).toHaveText('2p_z');
     await page.locator('#density').click();await page.locator('#phase').click();
@@ -97,4 +101,15 @@ test('idle rendering stops and repeated cloud/color changes release GPU buffers'
     await page.locator('#n').selectOption('1');await expect(page.locator('#orbital-title')).toHaveText('1s');
   }
   await expect.poll(async()=>(await sample()).buffers).toBeLessThanOrEqual(before.buffers+2);
+});
+test('subshell overlays preserve visibility and a common physical scale',async({page})=>{
+  await page.locator('[data-family="2"]').click();await expect(page.locator('#orbital-title')).toHaveText('3d_z²');
+  await page.locator('#overlay').selectOption('subshell');
+  await expect(page.locator('#viewport-caption')).toContainText('Overlay of individually normalized');
+  await expect(page.locator('#scale-readout')).toContainText('Common scale');
+  const layers=page.locator('[data-overlay-state]');await expect(layers).toHaveCount(5);
+  for(const layer of await layers.all()){await layer.uncheck();await expect(page.locator('#loading')).toBeHidden();}
+  await expect(page.locator('#viewport-caption')).toContainText('No orbital layers selected');
+  await layers.first().check();await expect(page.locator('#loading')).toBeHidden();
+  await expect(page.locator('#viewport-caption')).toContainText('Overlay of individually normalized');
 });

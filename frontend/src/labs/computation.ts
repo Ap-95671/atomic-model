@@ -1,3 +1,4 @@
+import { mountPySCF } from "./pyscf";
 import { LabSession, numberField, assumptions } from './session';
 import { esc } from '../components/dom';
 import { plot } from '../components/plot';
@@ -5,7 +6,7 @@ import { OrbitalViewer } from '../visualization/viewer';
 import type { MeshData } from '../types';
 import { csv, download } from '../services/export';
 interface Result {model:string;assumptions:string;surface_note:string;system:string;basis:string;basis_size:number;electron_count:number;converged:boolean;total_energy_hartree:number;electronic_energy_hartree:number;nuclear_repulsion_hartree:number;orbital_energies_hartree:number[];occupations:number[];density_integral_finite_grid:number;residual:number;density_idempotency_error:number;scf_history:{iteration:number;total_energy_hartree:number;density_change:number}[];extent:number;points:number[][];phases:number[];surfaces:MeshData[];centers_a0:number[][];view:string;curve:null|{distance_a0:number[];total_energy_hartree:number[];electronic_energy_hartree:number[];nuclear_repulsion_hartree:number[];note:string};}
-export function mountComputation(host:HTMLElement){
+function mountHartreeFock(host:HTMLElement){
   const session=new LabSession(host,'hartree-fock','Computational Chemistry','Solve small closed-shell systems with explicit Gaussian integrals and a self-consistent Fock matrix.',`<label>Closed-shell system<select name="system"><option value="h2">H₂ · 2 electrons</option><option value="he">He · 2 electrons</option></select></label>${numberField('distance','H₂ separation / a₀ (ignored for He)',1.4,.5,6,.05)}<label>Gaussian basis<select name="basis"><option value="sto-3g">STO-3G · contracted</option><option value="uncontracted-sto-3g">STO-3G primitives · uncontracted</option></select></label><label>Calculated field<select name="view"><option value="density">Total electron density</option><option value="homo">HOMO · occupied spatial orbital</option><option value="lumo">LUMO · virtual orbital if available</option></select></label><p class="lab-explanation">The uncontracted option expands the orbital space from 1 to 3 functions per atom. He/STO-3G has one spatial function and no virtual orbital. Nuclear repulsion is included for H₂.</p>`);
   let viewer:OrbitalViewer|undefined;
   const calculate=()=>{
@@ -21,4 +22,13 @@ export function mountComputation(host:HTMLElement){
     });
   };
   session.form.onsubmit=e=>{e.preventDefault();calculate();};calculate();return()=>{viewer?.dispose();session.dispose();};
+}
+
+export function mountComputation(host:HTMLElement){
+  host.innerHTML='<nav class="experiment-nav" aria-label="Computational methods"><button data-method="foundation" aria-pressed="true">RHF foundation</button><button data-method="pyscf" aria-pressed="false">Optional HF / DFT</button></nav><div data-computation-host></div>';
+  const target=host.querySelector<HTMLElement>('[data-computation-host]')!;let cleanup=mountHartreeFock(target);
+  host.querySelectorAll<HTMLButtonElement>('[data-method]').forEach(b=>b.onclick=()=>{
+    cleanup();host.querySelectorAll('[data-method]').forEach(button=>button.setAttribute('aria-pressed',String(button===b)));
+    cleanup=b.dataset.method==='foundation'?mountHartreeFock(target):mountPySCF(target);
+  });return()=>cleanup();
 }

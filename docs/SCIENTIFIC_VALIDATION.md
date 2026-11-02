@@ -63,3 +63,19 @@ Against PySCF’s built-in STO-3G, energy differences are 9.26e-10 Eₕ (He) and
 −1.13e-10 Eₕ (H₂); max ERI differences 2.72e-9/9.05e-10 Eₕ, respectively.
 Tolerances 1e-8 Eₕ energy and 5e-9 integrals account for published basis-data
 rounding; no energy offset or fitted correction is applied.
+
+Final scientific scope adds zero-field, Stark matrix eigenproblem/mixing and
+field-reversal checks; gJ=2, 2/3, 4/3 limits; Dirac versus α⁴ splitting;
+invalid coupling/field rejection; all source-coordinate/connectivity checks;
+MO filling, ordering, magnetism and bond-order benchmarks for ten diatomics;
+optional backend absence/timeout/whitelist rejection; and actual PySCF PBE,
+B3LYP and expanded-basis executions. PBE H₂ grid-level 1 agrees with level 3
+within 2e-5 Eₕ. H₂ HF total −1.11671432506 Eₕ; PBE −1.15206545538 Eₕ and
+B3LYP −1.16540179496 Eₕ with this geometry/basis/grid. These values describe
+different models and are not exact experimental energies.
+
+**80 Python tests pass**, including optional computations on this Mac. Tests
+requiring PySCF skip explicitly when it is absent; missing-backend error tests
+still run. Browser and accessibility totals are recorded in the release audit.
+Upstream scikit-image/NumPy deprecations and PySCF tempfile/OpenMP diagnostics
+are visible and do not invalidate numerical results.

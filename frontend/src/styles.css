@@ -2084,3 +2084,38 @@ pre {
 .assumptions pre { max-width: 100%; overflow-x: auto; font-size: 12px; color: #bdcbd5; }
 @media (max-width: 760px) { .molecular-viewport { height: 340px; } }
 .viewport > canvas { width: 100%; height: 100%; }
+.mo-levels { padding: 20px; border: 1px solid #314656; border-radius: 6px; margin-top: 18px; }
+.mo-level { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 15px 0; border-bottom: 1px solid #293c4a; }
+.mo-level > span { min-width: 65px; }
+.mo-level small { display: block; color: #a4b9c9; font-size: 12px; }
+.mo-box { display: inline-block; text-align: center; min-width: 44px; margin: 0 4px; border-bottom: 2px solid #6dc5df; font-size: 22px; }
+@media (max-width: 420px) { .mo-levels { padding: 8px; } .mo-level { gap: 5px; } .mo-box { min-width: 27px; margin: 0 2px; } }
+/* Reproduced axe contrast failures from the original muted labels. */
+.toggle-row small, .scale-note, .config-status, .analysis-note,
+.node-formula, #energy-label, footer { color: #a4b5c4; }
+.scale-note, #energy-label, footer { font-size: 11px; }
+.lab-settings > summary { display: none; }
+@media (max-width:760px) {
+  .lab-settings > summary { display: list-item; cursor: pointer; min-height: 44px; padding: 10px 0; font-size: 14px; color: #c0d8e5; }
+  .lab-controls .lab-status { margin-top: 10px; }
+}
+@media (max-width:760px) {
+  .topbar { flex-wrap: nowrap; }
+  .topbar .brand { flex: 1 1 0; min-width: 0; }
+  .topbar .main-nav { order: initial; flex: 0 0 40px; min-height: 40px; align-self: center; }
+  .topbar .nav-item { min-width: 40px; min-height: 40px; border: 1px solid #344c5e; border-radius: 5px; }
+  .topbar .nav-item > span { padding: 0; font-size: 18px; color: #a9c1d2; }
+  .topbar .classical-label { display: none; }
+  .experiment-nav { flex-wrap: nowrap; overflow-x: auto; margin-bottom: 16px; }
+  .experiment-nav button { flex: none; }
+  .lab-heading { margin-bottom: 16px; }
+  .lab-heading > div > .eyebrow { display: none; }
+  .lab-heading p { font-size: 12px; line-height: 1.6; }
+  .lab-controls { padding: 10px 14px; }
+  .lab-controls .lab-status { margin-top: 0; }
+}
+.nav-item .classical-label { color: inherit; padding: 0; font-size: inherit; }
+.visible-spectrum { margin: 22px 0 10px; }
+.spectrum-band { position: relative; height: 18px; border-radius: 3px; background: linear-gradient(to right,#6656ba,#4379df,#38b6bd,#76b75c,#e4d66d,#dc8a53,#b54e47); }
+.spectrum-band > span { position: absolute; top: -5px; height: 28px; border-left: 2px solid #050b10; box-shadow: -2px 0 #fff; }
+.spectrum-labels { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 12px; color: #b9c8d4; flex-wrap: wrap; }

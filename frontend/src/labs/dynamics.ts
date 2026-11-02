@@ -32,7 +32,7 @@ export function mountDynamics(host:HTMLElement){
         const cross=evolved[0].real*evolved[1].real+evolved[0].imag*evolved[1].imag;
         session.result.querySelector('[data-x]')!.textContent=`${(d.length_a0/2+2*cross*d.x_ab_a0).toFixed(6)} a₀`;
         const relative=Math.atan2(evolved[1].imag,evolved[1].real)-Math.atan2(evolved[0].imag,evolved[0].real);
-        session.result.querySelector('[data-phase]')!.textContent=(Math.atan2(Math.sin(relative),Math.cos(relative))).toFixed(4);
+        session.result.querySelector('[data-phase]')!.textContent=d.coefficients.every(v=>Math.hypot(v.real,v.imag)>1e-12) ? (Math.atan2(Math.sin(relative),Math.cos(relative))).toFixed(4) : 'undefined (one coefficient is zero)';
         session.result.querySelector('[data-density]')!.innerHTML=plot([{label:'Probability density |Ψ|²',x:d.x_a0,y:density,color:'#68cce7'}],'Position / a₀','|Ψ|² / a₀⁻¹',`Infinite well / n=${d.states.join(',')} / t=${time.toFixed(3)} a.u.`,[0,4/d.length_a0]);
         session.result.querySelector('[data-amplitude]')!.innerHTML=plot([{label:'Real Ψ',x:d.x_a0,y:real,color:'#68cce7'},{label:'Imaginary Ψ',x:d.x_a0,y:imag,color:'#efad79',dashed:true}],'Position / a₀','Amplitude / a₀⁻½','Complex wavefunction / global phase is not density',[-2/Math.sqrt(d.length_a0),2/Math.sqrt(d.length_a0)]);
       };

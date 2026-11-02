@@ -35,3 +35,14 @@ keys (Hehre et al. 1969/1970). Only s primitives on H/He are supported by the
 in-house RHF engine. Contracted functions are normalized after primitive
 prefactors. The expanded option uncontracts these same published exponents;
 no invented exponents are introduced.
+
+## Source-preserved molecular conformers
+
+`data/molecules/*.json`: PUG REST 3D records retrieved 2 November 2026 from
+`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/<CID>/JSON?record_type=3d`.
+Water 962; ammonia 222; methane 297; carbon dioxide 280; carbon monoxide 281;
+benzene 241. Raw source records retain conformer/method metadata. The app derives
+lengths and angles directly; it makes no measured equilibrium-geometry claim.
+For example, this water conformer gives ~103.98°, rather than replacing its
+coordinates with a textbook angle. PubChem3D generation uses theoretical
+conformers; see https://pmc.ncbi.nlm.nih.gov/articles/PMC3042967/.

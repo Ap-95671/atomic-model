@@ -7,10 +7,13 @@ export class LabSession {
   private revision=0;
   private closed=false;
   private original: Record<string,string>={};
+  private media=matchMedia('(max-width:760px)');
+  private responsive=()=>{const details=this.host.querySelector<HTMLDetailsElement>('.lab-settings');if(details)details.open=!this.media.matches;};
   readonly status: HTMLElement;
   readonly result: HTMLElement;
   constructor(readonly host: HTMLElement, readonly key: string, title: string, description: string, controls: string) {
-    host.innerHTML=`<div class="lab-heading"><div><span class="eyebrow">QUANTUM ATOM LAB / ${esc(key.toUpperCase())}</span><h1 tabindex="-1">${esc(title)}</h1><p>${esc(description)}</p></div></div><div class="lab-layout"><aside class="lab-controls"><form>${controls}<div class="lab-actions"><button type="submit" class="primary">Calculate</button><button type="button" data-save>Save parameters</button><button type="button" data-restore>Restore saved</button><button type="button" data-defaults>Defaults</button></div></form><p class="lab-status" role="status" aria-live="polite">Ready.</p></aside><section class="lab-results" aria-label="Scientific results"><div data-result></div></section></div>`;
+    host.innerHTML=`<div class="lab-heading"><div><span class="eyebrow">QUANTUM ATOM LAB / ${esc(key.toUpperCase())}</span><h1 tabindex="-1">${esc(title)}</h1><p>${esc(description)}</p></div></div><div class="lab-layout"><aside class="lab-controls"><details class="lab-settings" open><summary>Experiment parameters</summary><form>${controls}<div class="lab-actions"><button type="submit" class="primary">Calculate</button><button type="button" data-save>Save parameters</button><button type="button" data-restore>Restore saved</button><button type="button" data-defaults>Defaults</button></div></form></details><p class="lab-status" role="status" aria-live="polite">Ready.</p></aside><section class="lab-results" aria-label="Scientific results"><div data-result></div></section></div>`;
+    this.responsive();this.media.addEventListener("change",this.responsive);
     this.status=host.querySelector('.lab-status')!; this.result=host.querySelector('[data-result]')!;
     for(const el of this.inputs())this.original[el.name]=el.value;
     host.querySelector('[data-save]')!.addEventListener('click',()=>{
@@ -60,7 +63,7 @@ export class LabSession {
       if(!this.closed && id===this.revision)this.host.querySelector('.lab-results')?.setAttribute('aria-busy','false');
     }
   }
-  dispose=()=>{this.closed=true;this.controller?.abort();++this.revision;};
+  dispose=()=>{this.media.removeEventListener("change",this.responsive);this.closed=true;this.controller?.abort();++this.revision;};
 }
 export const numberField=(name:string,label:string,value:number,min:number,max:number,step=1)=>`<label>${label}<input name="${name}" type="number" value="${value}" min="${min}" max="${max}" step="${step}" required></label>`;
 export const speciesField=`<label>One-electron species<select name="species"><option value="h">Hydrogen-1</option><option value="he">Helium-4 ion He⁺</option></select></label>`;

@@ -43,3 +43,17 @@ axes and holds time-dependent density/amplitude scales fixed. Playback starts
 paused, supports keyboard scrubbing, caps redraws at 10 Hz and stops on lab
 switch, input changes or document hiding. Tunneling distinguishes early incident
 probability from a final reflected fraction and exposes numerical warnings.
+
+Final integration adds guided activities using live engines, calculation JSON
+exports, source-linked molecular geometry, reference MO occupations, optional
+DFT and same-geometry HF comparison. Mobile experiment settings collapse behind
+a native disclosure; local tool navigation scrolls horizontally, keeping the
+active visualization closer to the first screen. Classical comparison remains
+keyboard-accessible through the compact ↗ action on mobile.
+
+Axe WCAG 2.2 AA rule checks found low contrast in eight original label/footer
+locations; explicit muted-text colors fix those failures. Six main workspaces
+now have zero violations for the tested automated rules. Named dialogs, main
+landmarks and state-button pressed values were added. This remains an automated
+rule audit, not formal accessibility certification. Manual visual QA uses the
+actual screenshots included with the release.

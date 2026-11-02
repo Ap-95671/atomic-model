@@ -130,3 +130,64 @@ He/STO-3G gives −2.8077839566 Eₕ; H₂ at 1.4 a₀ gives −1.1167143252 E�
 Uncontracting lowers both energies, to about −2.8162463082 and −1.1200169522 Eₕ.
 RHF excludes correlation and fails H₂ dissociation into correlated radicals;
 this limitation is displayed alongside the computed energy curve.
+
+## External fields, spin and fine structure
+
+Separate n=2 hydrogen experiments use infinite nuclear mass. First-order
+Zeeman includes an orbital-only spinless comparison and coupled `gJ mJ μB B`
+levels, with s=½, g_s=2 and B≤0.05 T to keep magnetic mixing small relative to
+fine structure. Valid j=l±½ is enforced. Angular-momentum magnitudes are
+l(l+1), s(s+1), j(j+1) in ℏ².
+
+The Stark calculation diagonalizes the degenerate 2s/2p_z perturbation matrix
+with off-diagonal −3F Eₕ. It calculates actual mixed wavefunction density on the
+z axis, not stretched meshes. The other two 2p magnetic states have zero
+first-order shifts. The plot is a 3D density **slice**, not a normalized 1D
+probability. At zero field, a basis choice is retained in the degenerate space.
+The electric and magnetic Hamiltonians are not combined.
+
+Fine-structure energies evaluate the Dirac point-Coulomb formula for n=2, j=½
+and 3/2 with stable `log1p`/`expm1` arithmetic. The approximately 4.5283e-5 eV
+splitting agrees with the leading mc²α⁴/32 limit. QED/Lamb, hyperfine and finite
+nuclear effects are excluded; formulas are not applied to many-electron atoms.
+References: [UCSD n=2 Stark derivation](https://quantummechanics.ucsd.edu/ph130a/130_notes/node338.html),
+[NIST hydrogen levels](https://physics.nist.gov/PhysRefData/Handbook/Tables/hydrogentable5.htm).
+
+## Reference diagrams and molecular structures
+
+Elementary homonuclear MO diagrams are reference occupation schemes, with
+ordinal ordering and no numerical energies or decorative spatial orbitals.
+Pauli/Hund filling yields O₂'s two unpaired π* electrons and zero elementary
+He₂ bond order. B/C/N place π2p below σ2p; O/F/Ne reverse the order. Filled
+1s cores cancel from valence bond order. Weak dispersion binding is not ruled
+out by zero elementary covalent bond order.
+[MIT molecular-orbital lecture](https://ocw.mit.edu/courses/5-111sc-principles-of-chemical-science-fall-2014/bceb89367a2924eab97dcb476cec369e_MIT5_111F14_Lec13.pdf).
+
+Six offline PubChem3D conformers preserve source coordinates and connectivity.
+Bond lengths and all bonded three-atom angles are calculated from them. These
+are theoretical reference conformers, not measured equilibrium geometries or
+local optimizations. Rendered ball sizes/sticks are schematic. The app labels
+coordinate units and source IDs and retains the source JSON.
+[PubChem3D generation methodology](https://pmc.ncbi.nlm.nih.gov/articles/PMC3042967/).
+
+## Optional PySCF HF/DFT
+
+PySCF 2.14.0 and h5py 3.16.0 were installed and executed on unchanged Python
+3.14.7/macOS arm64. They are optional, in `requirements-computation.txt`; core
+atomic, molecular LCAO, 1D experiments and the in-house RHF engine do not import
+PySCF. Supported closed-shell systems: H₂ (1.4 a₀), He and the six bundled
+conformers. Methods: restricted HF, PBE and B3LYP; basis: STO-3G or 6-31G.
+No arbitrary method, code, atom list or filesystem path can be supplied.
+
+A fixed Python worker subprocess bounds native-library calculations to 12 s
+and 80 SCF cycles. The existing two-job semaphore bounds concurrency; comparison
+calculations run sequentially in the same slot. Subprocess execution uses no
+shell. Missing engines, timeout and nonconvergence return explicit errors.
+SCF target is 1e-9 Eₕ; DFT integration grid level 1 is disclosed. Electron count
+is checked with Tr(DS); MO occupations/energies, convergence history and total
+energy are returned. AO evaluation in 8192-point batches generates calculated
+HOMO/LUMO or density surfaces on a 65³ grid. Tight cores may be under-resolved.
+Same-geometry/basis HF comparison is available without implying a universal
+cross-method energy ranking. This backend does not optimize geometry or
+calculate electrostatic potential.
+[PySCF quickstart and method documentation](https://pyscf.org/quickstart.html).
