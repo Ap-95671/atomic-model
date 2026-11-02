@@ -1963,3 +1963,66 @@ pre {
     min-height: 500px;
   }
 }
+
+/* Shared laboratory shell. These overrides also correct audited narrow layouts. */
+:root { --muted: #a2aeb9; }
+.lab-nav {
+  display: flex; gap: 5px; padding: 8px 24px; overflow-x: auto;
+  background: #0e151e; border-bottom: 1px solid var(--border);
+}
+.lab-nav button { flex: none; min-height: 44px; padding: 8px 14px; border-radius: 5px; color: #a8b6c3; }
+.lab-nav button.active { background: #17303d; color: #b6edff; }
+.lab-nav button:disabled { color: #9aa5af; opacity: .75; font-size: 11px; }
+.skip-link { position: fixed; left: 15px; top: -80px; z-index: 100; background: #17303d; padding: 12px; }
+.skip-link:focus { top: 10px; }
+.workspace { grid-template-columns: 258px minmax(0, 1fr) 280px; }
+.center-panel, .panel, .two-fields > *, .visual-controls > * { min-width: 0; }
+.analysis-tabs { overflow-x: auto; }
+.analysis-tabs button { flex: none; min-height: 44px; }
+.icon-button { min-width: 40px; min-height: 40px; }
+.equation, .orbital-name, .configuration { overflow-wrap: anywhere; }
+.lab-workspace { max-width: 1600px; margin: 0 auto; min-height: calc(100vh - 185px); padding: 32px; }
+@media (min-width: 1151px) {
+  .workspace { height: calc(100vh - 183px); }
+}
+@media (max-width: 1150px) and (min-width: 761px) {
+  .workspace { grid-template-columns: 250px minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .workspace { grid-template-columns: minmax(0, 1fr); }
+  .topbar { padding: 10px 16px; gap: 10px; height: auto; min-height: 76px; flex-wrap: wrap; }
+  .brand { min-width: 0; flex: 1 1 180px; }
+  .brand small { font-size: 10px; letter-spacing: .5px; }
+  .main-nav { order: 3; flex: 1 1 100%; min-height: 44px; }
+  .lab-nav { padding: 6px 10px; }
+  .lab-nav button { font-size: 13px; padding: 8px 12px; }
+  .viewport-heading { right: 14px; }
+  .viewport-heading h2 { font-size: 22px; }
+  .model-badge { max-width: 120px; white-space: normal; text-align: right; }
+  .view-toolbar { flex-wrap: wrap; right: 14px; gap: 8px; }
+  .segmented button { min-height: 40px; font-size: 12px; }
+  .visual-controls { padding: 14px; }
+  .visual-controls .slider-label { font-size: 11px; flex-basis: 100%; }
+  .visual-controls input[type="range"] { min-width: 0; width: 100%; }
+  .visual-controls label, .section-heading, .subtle, .state-note p, .basis-note,
+  .body-copy, .analysis-note, .isotope-note, .toggle-row small { font-size: 12px; }
+  .analysis-tabs { gap: 14px; }
+  .analysis-tabs button { font-size: 12px; }
+  .particle-counts button, .text-button, .orbital-picker button { min-height: 44px; }
+  .scale-readout, .scale-readout small, .legend small { font-size: 11px; }
+  .mouse-help { font-size: 10px; }
+  .viewport-caption { font-size: 11px; }
+  .view-actions { top: 205px; }
+  .lab-workspace { padding: 20px 14px; }
+  footer { height: auto; flex-wrap: wrap; font-size: 10px; }
+}
+@media (max-width: 760px) {
+  .left-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .left-panel > * { min-width: 0; }
+  .nav-item { max-width: none; font-size: 12px; }
+}
+@media (max-width: 420px) {
+  .left-panel { grid-template-columns: minmax(0, 1fr); }
+  .left-panel > * { grid-column: 1 / -1 !important; }
+  .left-panel > .two-fields { width: 100%; }
+}

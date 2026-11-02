@@ -1,17 +1,12 @@
 import "./styles.css";
+import { $, esc } from "./components/dom";
+import { graph } from "./components/graph";
+import { modal, closeModal, initializeDialog } from "./components/dialog";
+import { api } from "./services/api";
+import { initializeNavigation } from "./app/navigation";
 import { OrbitalViewer } from "./visualization/viewer";
 import type { ElementData, Species, OrbitalData } from "./types";
 
-const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
-  document.getElementById(id) as T;
-const esc = (s: unknown) =>
-  String(s).replace(
-    /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
-      ]!,
-  );
 const names: Record<number, Record<number, string>> = {
   0: { 0: "s" },
   1: { "-1": "pᵧ", 0: "p_z", 1: "pₓ" },
@@ -59,12 +54,14 @@ let overlayMode = "single";
 let overlayChoices = new Set<string>();
 let subshellChoices = new Set<string>();
 let subshellKey = "";
-let modalReturnFocus: HTMLElement | null = null;
+
+let energyRevision = 0;
 
 const atomIcon = `<svg width="27" height="27" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="2.2" fill="currentColor"/><ellipse cx="16" cy="16" rx="14" ry="5.5" stroke="currentColor"/><ellipse cx="16" cy="16" rx="14" ry="5.5" stroke="currentColor" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" stroke="currentColor" transform="rotate(120 16 16)"/></svg>`;
 $("app").innerHTML = `
-<header class="topbar"><a class="brand" href="/">${atomIcon}<div>QUANTUM <b>ATOM LAB</b><small>THE SCHRÖDINGER EXPLORER</small></div></a><nav class="main-nav" aria-label="Application mode"><button class="nav-item active" id="quantum-tab">Quantum explorer</button><button class="nav-item" id="classical">Classical comparison <span>↗</span></button></nav><div class="local-status"><i></i> LOCAL COMPUTATION</div><button class="icon-button" id="help" title="Scientific guide and controls" aria-label="Scientific guide and controls">?</button></header>
-<main class="workspace">
+<header class="topbar"><a class="brand" href="/">${atomIcon}<div>QUANTUM <b>ATOM LAB</b><small>A LOCAL SCIENTIFIC WORKSPACE</small></div></a><nav class="main-nav" aria-label="Application mode"><button class="nav-item" id="classical">Classical comparison <span>↗</span></button></nav><div class="local-status"><i></i> LOCAL COMPUTATION</div><button class="icon-button" id="help" title="Scientific guide and controls" aria-label="Scientific guide and controls">?</button></header>
+<a class="skip-link" href="#viewport">Skip to visualization</a>
+<main class="workspace" id="atomic-workspace" aria-label="Atomic Explorer">
 <aside class="left-panel panel">
 <div class="section-heading"><span>01 / ATOMIC SPECIES</span><button class="text-button" id="open-table">Periodic table ↗</button></div>
 <button id="element-select" class="element-card" aria-label="Choose element"><div class="element-tile"><small id="atomic-z">1</small><strong id="symbol">H</strong><span id="atomic-a">1.008</span></div><div><h1 id="element-name">Hydrogen</h1><p id="category">Nonmetal</p><span class="subtle">Change element <span class="arrow">⌄</span></span></div></button>
@@ -104,40 +101,17 @@ $("app").innerHTML = `
 </section>
 <aside class="right-panel panel"><div class="section-heading"><span>STATE INSPECTOR</span><i class="status-dot"></i></div><div class="orbital-name"><span id="inspector-title">1s</span><small id="orbital-family">s ORBITAL</small></div><div class="quantum-grid"><div><span>Principal</span><strong id="qn-n">n = 1</strong></div><div><span>Angular</span><strong id="qn-l">l = 0</strong></div><div><span id="qn-m-label">Basis index</span><strong id="qn-m">m = 0</strong></div><div><span>Spin</span><strong id="qn-spin">mₛ = +½</strong></div></div><p class="basis-note" id="basis-note"></p><div class="divider"></div><div class="section-heading"><span>THE WAVEFUNCTION</span></div><div class="equation">ψₙₗₘ = Rₙₗ(r) Yₗᵐ(θ,φ)</div><p class="body-copy" id="shape-explanation"></p><p class="body-copy">The wavefunction has phase. Its squared magnitude, <b>|ψ|²</b>, is a nonnegative probability density.</p><div class="node-grid"><div><strong id="radial-nodes">0</strong><span>Radial nodes</span></div><div><strong id="angular-nodes">0</strong><span id="angular-node-caption">Angular nodes</span></div><div><strong id="total-nodes">0</strong><span>Total nodes</span></div></div><p class="node-formula">n − l − 1 <span>+</span> l <span>=</span> n − 1</p><div class="divider"></div><div class="section-heading"><span>MODEL & UNITS</span></div><div class="energy-readout"><span id="energy-value">−13.5983 <small>eV</small></span><small id="energy-label">NONRELATIVISTIC STATE ENERGY</small></div><label class="field" id="zeff-field" hidden>Demonstration Z_eff<input id="zeff" type="number" min="0.1" max="118" step="0.1" value="1"></label><div class="model-note" id="model-note"></div><div class="unit-key"><span>1 a₀</span><span>0.0529177 nm</span></div><div class="normalization"><i></i><span id="normalization">∫ |ψ|² dV = 1.000000</span></div><button class="guide-button" id="science-guide">Read the scientific guide ↗</button></aside>
 </main>
+<section id="lab-workspace" class="lab-workspace" hidden></section>
 <footer><span>QUANTUM ATOM LAB <span class="footer-line">/</span> An interactive study of matter</span><span>NumPy + SciPy <span class="footer-line">/</span> Three.js · WebGL</span></footer>
 <div id="toast" class="toast" role="alert" hidden></div>
 <dialog id="dialog"><div class="dialog-header"><div><span class="eyebrow" id="dialog-kicker">EXPLORE</span><h2 id="dialog-title"></h2></div><button id="close-dialog" class="icon-button" aria-label="Close dialog">×</button></div><div id="dialog-body"></div></dialog>`;
 
-async function api<T>(url: string, signal?: AbortSignal): Promise<T> {
-  const response = await fetch(url, { signal });
-  const body = await response.json();
-  if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
-  return body as T;
-}
 function notify(message: string) {
   $("toast").textContent = message;
   $("toast").hidden = false;
   setTimeout(() => ($("toast").hidden = true), 6500);
 }
-function modal(title: string, body: string, kicker = "EXPLORE") {
-  modalReturnFocus = document.activeElement as HTMLElement;
-  $("dialog-title").textContent = title;
-  $("dialog-kicker").textContent = kicker;
-  $("dialog-body").innerHTML = body;
-  if (!$<HTMLDialogElement>("dialog").open)
-    $<HTMLDialogElement>("dialog").showModal();
-}
-function closeModal() {
-  $<HTMLDialogElement>("dialog").close();
-  modalReturnFocus?.focus();
-}
-$("close-dialog").onclick = closeModal;
-$("dialog").addEventListener("click", (e) => {
-  if (e.target === $("dialog")) closeModal();
-});
-$("dialog").addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeModal();
-});
+initializeDialog();
 
 function quantumControls() {
   $<HTMLSelectElement>("n").value = String(n);
@@ -276,11 +250,11 @@ async function loadOrbital() {
     );
     if (id !== requestId) return;
     orbital = data;
-    viewer.show(data, atom, phase, basis === "complex");
-    viewer.nodes.visible = showNodes;
+    viewer?.show(data, atom, phase, basis === "complex");
+    if (viewer) viewer.nodes.visible = showNodes;
     updateInspector();
     renderAnalysis();
-    if (overlayMode !== "single") await loadOverlay(id, controller.signal);
+    if (viewer && overlayMode !== "single") await loadOverlay(id, controller.signal);
   } catch (error) {
     if ((error as Error).name !== "AbortError" && id === requestId)
       notify((error as Error).message);
@@ -437,37 +411,6 @@ function updateOverlayList() {
       }),
   );
 }
-function graph(
-  xs: number[],
-  ys: number[],
-  xLabel: string,
-  yLabel: string,
-  markers: number[] = [],
-) {
-  const width = 650,
-    height = 155,
-    left = 46,
-    right = 20,
-    top = 14,
-    bottom = 30;
-  const xMax = Math.max(...xs),
-    yMax = Math.max(...ys) * 1.12 || 1;
-  const x = (v: number) => left + (v / xMax) * (width - left - right);
-  const y = (v: number) =>
-    height - bottom - (v / yMax) * (height - top - bottom);
-  const path = xs
-    .map((v, i) => `${i ? "L" : "M"}${x(v).toFixed(1)},${y(ys[i]).toFixed(1)}`)
-    .join(" ");
-  return `<svg class="graph" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(yLabel)} versus ${esc(xLabel)}">${[0, 0.5, 1].map((f) => `<line x1="${left}" y1="${y(f * yMax)}" x2="${width - right}" y2="${y(f * yMax)}" class="gridline"/><text x="${left - 7}" y="${y(f * yMax) + 4}" text-anchor="end">${(f * yMax).toPrecision(2)}</text>`).join("")}<path d="${path} L${x(xMax)},${y(0)} L${x(0)},${y(0)} Z" fill="url(#graph-fill)"/><path d="${path}" fill="none" stroke="#61c8e5" stroke-width="2"/>${markers
-    .filter((v) => v < xMax)
-    .map(
-      (v) =>
-        `<line x1="${x(v)}" y1="${top}" x2="${x(v)}" y2="${height - bottom}" stroke="#dda477" stroke-dasharray="3 4"/>`,
-    )
-    .join(
-      "",
-    )}${[0, 0.25, 0.5, 0.75, 1].map((f) => `<text x="${x(f * xMax)}" y="${height - 12}" text-anchor="middle">${(f * xMax).toFixed(1)}</text>`).join("")}<text x="${width - right}" y="11" text-anchor="end">${esc(yLabel)}</text><text x="${width / 2}" y="${height}" text-anchor="middle">${esc(xLabel)}</text><defs><linearGradient id="graph-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#53bfdc" stop-opacity="0.16"/><stop offset="1" stop-color="#53bfdc" stop-opacity="0"/></linearGradient></defs></svg>`;
-}
 function renderAnalysis() {
   if (!atom) return;
   if (activeTab === "occupancy") {
@@ -508,6 +451,7 @@ function renderAnalysis() {
   } else if (activeTab === "energy") void renderEnergy();
 }
 async function renderEnergy() {
+  const revision = ++energyRevision;
   if (!atom.one_electron) {
     $("analysis-content").innerHTML =
       '<div class="empty-state"><span>≈</span><div><h3>A many-electron atom needs a different energy model.</h3><p>The Madelung filling sequence is qualitative; −13.6 Z²/n² is not a many-electron spectrum. Select hydrogen or a one-electron ion, such as He⁺, for numerical levels and transitions.</p></div></div>';
@@ -525,7 +469,7 @@ async function renderEnergy() {
     }>(
       `/api/energy?z=${activeZ}&a=${activeA}&charge=${charge}&initial=3&final=2`,
     );
-    if (id !== speciesId || activeTab !== "energy") return;
+    if (id !== speciesId || activeTab !== "energy" || revision !== energyRevision) return;
     const values = data.levels;
     const e0 = values[0];
     const diagram = `<svg class="energy-graph" viewBox="0 0 370 150" role="img" aria-label="Hydrogenic bound state energies">${values
@@ -555,11 +499,11 @@ async function renderEnergy() {
         if (
           request === transitionRequest &&
           id === speciesId &&
-          activeTab === "energy"
+          activeTab === "energy" && revision === energyRevision
         )
           result(v);
       } catch (error) {
-        if (activeTab === "energy" && $("transition-result"))
+        if (request === transitionRequest && id === speciesId && revision === energyRevision && activeTab === "energy" && $("transition-result"))
           $("transition-result").textContent = (error as Error).message;
       }
     };
@@ -576,7 +520,7 @@ async function renderEnergy() {
       };
     }
   } catch (error) {
-    notify((error as Error).message);
+    if (id === speciesId && activeTab === "energy" && revision === energyRevision) notify((error as Error).message);
   }
 }
 function periodicTable() {
@@ -787,26 +731,26 @@ function changePhase(value: boolean) {
   phase = value;
   $("phase").classList.toggle("selected", phase);
   $("density").classList.toggle("selected", !phase);
-  viewer.setColor(phase);
+  viewer?.setColor(phase);
   updateLegend();
 }
 $("phase").onclick = () => changePhase(true);
 $("density").onclick = () => changePhase(false);
-$("reset").onclick = () => viewer.reset();
+$("reset").onclick = () => viewer?.reset();
 $("axes").onchange = () =>
-  (viewer.axes.visible = $<HTMLInputElement>("axes").checked);
+  { if (viewer) { viewer.axes.visible = $<HTMLInputElement>("axes").checked; viewer.invalidate(); } };
 $("nucleus").onchange = () =>
-  (viewer.nucleus.visible = $<HTMLInputElement>("nucleus").checked);
+  { if (viewer) { viewer.nucleus.visible = $<HTMLInputElement>("nucleus").checked; viewer.invalidate(); } };
 $("nodes").onchange = () => {
   showNodes = $<HTMLInputElement>("nodes").checked;
   void loadOrbital();
 };
 $("rotate").onchange = () =>
-  (viewer.rotation = $<HTMLInputElement>("rotate").checked);
+  { if (viewer) { viewer.rotation = $<HTMLInputElement>("rotate").checked; viewer.invalidate(); } };
 $("opacity").oninput = () => {
   const value = Number($<HTMLInputElement>("opacity").value);
   $("opacity-value").textContent = `${Math.round(value * 100)}%`;
-  viewer.setOpacity(value);
+  viewer?.setOpacity(value);
 };
 $("points").oninput = () => {
   $("points-value").textContent =
@@ -848,12 +792,13 @@ document.querySelectorAll<HTMLButtonElement>("[data-tab]").forEach(
     }),
 );
 $("export").onclick = () => {
+  if (!viewer || !orbital) { notify("No rendered orbital available to export."); return; }
   const link = document.createElement("a");
   link.download = `quantum-${n}${"spdf"[l]}-${m}.png`;
-  link.href = viewer.screenshot();
+  link.href = viewer.screenshot(`${atom.symbol}-${atom.a} · ${orbital.label} · ${orbital.model}`, `Length: a₀ · ${mode} · ${basis} basis · nucleus schematic${mode === "surface" ? ` · amplitude threshold ${threshold}` : ""}`);
   link.click();
   notify(
-    "Viewport image saved. Nucleus is schematic; include the app’s scientific labels when sharing.",
+    "Viewport image saved with model and unit labels.",
   );
 };
 
@@ -867,7 +812,6 @@ async function start() {
       "WebGL could not initialize. Enable hardware acceleration and reload. " +
         (error as Error).message,
     );
-    return;
   }
   try {
     elements = await api<ElementData[]>("/api/elements");
@@ -880,4 +824,25 @@ async function start() {
     );
   }
 }
+initializeNavigation({ guide: scienceGuide });
+// The tablist follows the keyboard interaction specified by its ARIA role.
+const tabs = [...document.querySelectorAll<HTMLButtonElement>("[data-tab]")];
+tabs.forEach((button, index) => {
+  button.id = `analysis-${button.dataset.tab}`;
+  button.setAttribute("aria-controls", "analysis-content");
+  button.tabIndex = index === 0 ? 0 : -1;
+  button.addEventListener("click", () => {
+    tabs.forEach(tab => tab.tabIndex = tab === button ? 0 : -1);
+    $("analysis-content").setAttribute("aria-labelledby", button.id);
+  });
+  button.addEventListener("keydown", event => {
+    const next = event.key === "ArrowRight" ? (index + 1) % tabs.length
+      : event.key === "ArrowLeft" ? (index + tabs.length - 1) % tabs.length
+      : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : -1;
+    if (next < 0) return;
+    event.preventDefault(); tabs[next].focus(); tabs[next].click();
+  });
+});
+$("analysis-content").setAttribute("aria-labelledby", tabs[0].id);
+window.addEventListener("pagehide", () => { controller?.abort(); viewer?.dispose(); });
 void start();

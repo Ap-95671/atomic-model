@@ -1,0 +1,75 @@
+import { test, expect } from '@playwright/test';
+test.beforeEach(async ({page}) => {
+  await page.goto('/');
+  await expect(page.locator('#loading')).toBeHidden();
+});
+for (const width of [320, 390, 768, 1024, 1440, 1920]) {
+  test(`atomic layout fits ${width}px`, async ({page}) => {
+    await page.setViewportSize({width, height:900});
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    await expect(page.locator('#viewport canvas')).toBeVisible();
+  });
+}
+test('orbital families, nodes, complex phase and rendering controls', async ({page}) => {
+  await page.locator('[data-family="1"]').click();
+  await expect(page.locator('#orbital-title')).toHaveText('2p_z');
+  await page.locator('#nodes').check();
+  await page.locator('#surface').click();
+  await expect(page.locator('#viewport-caption')).toContainText('73³');
+  await page.locator('[data-family="3"]').click();
+  await expect(page.locator('#orbital-title')).toHaveText('4f_z³');
+  await page.locator('#basis').selectOption('complex');
+  await expect(page.locator('#legend')).toContainText('arg(ψ)');
+  await page.locator('#density').click();
+  await expect(page.locator('#legend')).toContainText('|ψ|²');
+  await page.locator('#reset').click();
+});
+test('periodic search, ions and modal focus return', async ({page}) => {
+  await page.locator('#open-table').click();
+  await page.locator('#element-search').fill('iron');
+  await page.locator('[data-z="26"]').click();
+  await expect(page.locator('#element-name')).toHaveText('Iron');
+  await page.locator('#charge').fill('2');
+  await page.locator('#charge').press('Tab');
+  await expect(page.locator('#e-count')).toHaveText('24');
+  await page.locator('#help').click();
+  await expect(page.locator('#dialog')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#dialog')).toBeHidden();
+  await expect(page.locator('#help')).toBeFocused();
+});
+test('analysis tabs implement arrow-key navigation', async ({page}) => {
+  await page.getByRole('tab', {name:'Electron configuration'}).focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('tab',{name:'Radial probability'})).toBeFocused();
+  await expect(page.locator('#analysis-content svg')).toBeVisible();
+});
+test('error feedback and recovery preserve atomic state', async ({page}) => {
+  await page.route('**/api/orbital?**', route => route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'Test geometry capacity reached'})}));
+  await page.locator('[data-family="1"]').click();
+  await expect(page.locator('#toast')).toContainText('capacity reached');
+  await expect(page.locator('#loading')).toBeHidden();
+  await page.unroute('**/api/orbital?**');
+  await page.locator('[data-family="2"]').click();
+  await expect(page.locator('#orbital-title')).toHaveText('3d_z²');
+});
+test('viewport PNG export completes', async ({page}) => {
+  const downloaded=page.waitForEvent('download');
+  await page.locator('#export').click();
+  const file=await downloaded;
+  expect(file.suggestedFilename()).toMatch(/quantum-.*\.png/);
+  expect(await file.failure()).toBeNull();
+});
+test('textual science remains available when WebGL initialization fails', async ({page}) => {
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(kind: string, ...args: unknown[]) {
+      if (kind.startsWith('webgl')) return null;
+      return original.call(this, kind, ...args);
+    } as typeof original;
+  });
+  await page.reload();
+  await expect(page.locator('#normalization')).toContainText('1.000000');
+  await expect(page.locator('#element-name')).toHaveText('Hydrogen');
+  await expect(page.locator('#toast')).toContainText('WebGL could not initialize');
+});

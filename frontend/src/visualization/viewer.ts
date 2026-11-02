@@ -28,6 +28,9 @@ export class OrbitalViewer {
   opacity = 0.6;
   rotation = false;
   private frame = 0;
+  private disposed = false;
+  private onVisibility = () => { if (!document.hidden) this.invalidate(); };
+  private intersectionObserver: IntersectionObserver;
   private displayExtent = 1;
   private raycaster = new THREE.Raycaster();
   private resizeObserver: ResizeObserver;
@@ -54,7 +57,9 @@ export class OrbitalViewer {
     this.camera.up.set(0, 0, 1);
     this.reset();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
+    this.controls.enableDamping = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    this.controls.listenToKeyEvents(this.renderer.domElement);
+    this.controls.addEventListener("change", () => this.invalidate());
     this.controls.minDistance = 0.8;
     this.controls.maxDistance = 50;
     this.controls.addEventListener("start", () =>
@@ -74,6 +79,11 @@ export class OrbitalViewer {
     this.makeAxes();
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe(container);
+    this.intersectionObserver = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) this.invalidate();
+    });
+    this.intersectionObserver.observe(container);
+    document.addEventListener("visibilitychange", this.onVisibility);
     this.resize();
     this.renderer.domElement.addEventListener(
       "pointerdown",
@@ -105,7 +115,7 @@ export class OrbitalViewer {
         this.reset();
     };
     window.addEventListener("keydown", this.onKey);
-    this.animate();
+    this.invalidate();
   }
   reset() {
     this.camera.position.set(8, -12, 7);
@@ -113,6 +123,7 @@ export class OrbitalViewer {
     if (this.controls) {
       this.controls.target.set(0, 0, 0);
       this.controls.update();
+      this.invalidate();
     }
   }
   resize() {
@@ -120,6 +131,7 @@ export class OrbitalViewer {
     this.camera.aspect = w / Math.max(h, 1);
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h);
+    this.invalidate();
   }
   private clear(group: THREE.Group) {
     for (const child of [...group.children]) {
@@ -131,7 +143,11 @@ export class OrbitalViewer {
           for (const material of Array.isArray(mesh.material)
             ? mesh.material
             : [mesh.material])
-            material.dispose();
+            {
+              const map = (material as THREE.SpriteMaterial).map;
+              map?.dispose();
+              material.dispose();
+            }
         }
       });
     }
@@ -282,6 +298,7 @@ export class OrbitalViewer {
       );
     }
     this.makeNucleus(atom);
+    this.invalidate();
   }
   addOrbital(data: OrbitalData, colorIndex?: number) {
     const scale = 4 / this.displayExtent;
@@ -312,21 +329,20 @@ export class OrbitalViewer {
       this.orbitals.add(obj);
     }
     for (const mesh of data.surfaces) this.surface(mesh, scale, colorIndex);
+    this.invalidate();
   }
   setColor(phase: boolean) {
     this.phase = phase;
     for (const child of this.orbitals.children) {
       const obj = child as THREE.Mesh;
       const phases = obj.userData.phases;
-      if (phases)
-        obj.geometry.setAttribute(
-          "color",
-          new THREE.BufferAttribute(
-            this.colors(phases, obj.userData.colorIndex),
-            3,
-          ),
-        );
+      if (phases) {
+        const attribute = obj.geometry.getAttribute("color") as THREE.BufferAttribute;
+        attribute.set(this.colors(phases, obj.userData.colorIndex));
+        attribute.needsUpdate = true;
+      }
     }
+    this.invalidate();
   }
   setOpacity(value: number) {
     this.opacity = value;
@@ -336,6 +352,7 @@ export class OrbitalViewer {
         material.uniforms.opacity.value = value;
       else material.opacity = value;
     }
+    this.invalidate();
   }
   makeNucleus(atom: Species) {
     this.clear(this.nucleus);
@@ -372,11 +389,16 @@ export class OrbitalViewer {
       this.nucleus.add(mesh);
     }
   }
+  /** Schedule only when data, the camera, or visible presentation changes. */
+  invalidate = () => {
+    if (!this.disposed && !this.frame) this.frame = requestAnimationFrame(this.animate);
+  };
   private animate = () => {
-    this.frame = requestAnimationFrame(this.animate);
-    this.controls.autoRotate = this.rotation;
+    this.frame = 0;
+    if (this.disposed || document.hidden || !this.container.getClientRects().length) return;
+    this.controls.autoRotate = this.rotation && !matchMedia("(prefers-reduced-motion: reduce)").matches;
     this.controls.autoRotateSpeed = 0.55;
-    this.controls.update();
+    const changed = this.controls.update();
     if (this.container.classList.contains("interacting")) {
       for (const obj of this.orbitals.children)
         if (obj instanceof THREE.Points)
@@ -389,18 +411,36 @@ export class OrbitalViewer {
         if (obj instanceof THREE.Points) obj.geometry.setDrawRange(0, Infinity);
     }
     this.renderer.render(this.scene, this.camera);
+    if (changed || this.controls.autoRotate) this.invalidate();
   };
-  screenshot() {
-    return this.renderer.domElement.toDataURL("image/png");
+  screenshot(model = "Quantum Atom Lab", units = "Lengths in a₀; nucleus schematic") {
+    this.renderer.render(this.scene, this.camera);
+    const source = this.renderer.domElement;
+    const canvas = document.createElement("canvas");
+    canvas.width = source.width; canvas.height = source.height + 100;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = "#0a1017"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(source, 0, 100);
+    ctx.fillStyle = "#e3e9ef"; ctx.font = "16px sans-serif";
+    ctx.fillText(model, 20, 32, canvas.width - 40);
+    ctx.fillStyle = "#a5b6c5"; ctx.font = "14px sans-serif";
+    ctx.fillText(units, 20, 62, canvas.width - 40);
+    ctx.fillText("Cyan: +ψ; amber: −ψ in real phase view. Complex view: cyclic phase hue.", 20, 84, canvas.width - 40);
+    return canvas.toDataURL("image/png");
   }
   dispose() {
+    this.disposed = true;
     cancelAnimationFrame(this.frame);
+    this.intersectionObserver.disconnect();
+    document.removeEventListener("visibilitychange", this.onVisibility);
     this.resizeObserver.disconnect();
     window.removeEventListener("keydown", this.onKey);
     this.controls.dispose();
     this.clear(this.orbitals);
     this.clear(this.nucleus);
     this.clear(this.nodes);
+    this.clear(this.axes);
     this.renderer.dispose();
+    this.renderer.domElement.remove();
   }
 }

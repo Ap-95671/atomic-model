@@ -25,3 +25,6 @@ env/
 *.tsbuildinfo
 build/
 dist/
+
+frontend/test-results/
+frontend/playwright-report/
