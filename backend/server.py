@@ -138,6 +138,15 @@ class Handler(BaseHTTPRequestHandler):
         url = urlsplit(self.path)
         q = parse_qs(url.query)
         try:
+            if url.path == "/api/physics":
+                from .api.physics import from_query
+                if not COMPUTE.acquire(blocking=False):
+                    return self.send_data(503, {"error":"Two scientific calculations are active"})
+                try:
+                    payload = from_query(q)
+                finally:
+                    COMPUTE.release()
+                return self.send_data(200, payload)
             if url.path == "/api/chemistry/catalog":
                 return self.send_data(200, catalog())
             if url.path.startswith("/api/jobs/"):

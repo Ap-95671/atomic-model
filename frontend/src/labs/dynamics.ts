@@ -1,3 +1,4 @@
+import {mountCoreDynamics} from "./core-dynamics";
 import { LabSession, numberField, assumptions } from './session';
 import { Playback } from '../components/playback';
 import { plot } from '../components/plot';
@@ -8,7 +9,7 @@ interface Superposition {
   energies_hartree:number[];x_a0:number[];basis:number[][];length_a0:number;x_ab_a0:number;
   period_au:number;times_au:number[];expectation_x_a0:number[];expectation_energy_hartree:number;normalization:number;
 }
-export function mountDynamics(host:HTMLElement){
+function mountTwoState(host:HTMLElement){
   const session=new LabSession(host,'dynamics','Quantum Dynamics','Evolve a normalized complex superposition in a one-dimensional infinite square well.',`${numberField('length','Well length / a₀',10,2,30,.1)}<fieldset><legend>Basis state A</legend>${numberField('state_a','Stationary state n',1,1,8)}<div class="lab-field-grid">${numberField('ar','Real coefficient',1,-10,10,.1)}${numberField('ai','Imaginary coefficient',0,-10,10,.1)}</div></fieldset><fieldset><legend>Basis state B</legend>${numberField('state_b','Stationary state n',2,1,8)}<div class="lab-field-grid">${numberField('br','Real coefficient',1,-10,10,.1)}${numberField('bi','Imaginary coefficient',0,-10,10,.1)}</div></fieldset><p class="lab-explanation">Coefficients normalize automatically. Set B to 0 + 0i to verify a stationary eigenstate. The two basis indices must differ.</p>`);
   let playback:Playback|undefined;
   session.form.addEventListener('input',()=>playback?.pause());
@@ -43,4 +44,10 @@ export function mountDynamics(host:HTMLElement){
   };
   session.form.onsubmit=e=>{e.preventDefault();calculate();};calculate();
   return ()=>{playback?.dispose();session.dispose();};
+}
+
+export function mountDynamics(host:HTMLElement){
+ host.innerHTML='<nav class="experiment-nav" aria-label="Dynamics tools"><button data-dynamics="two" aria-pressed="true">Two-state well</button><button data-dynamics="general" aria-pressed="false">General superpositions</button><button data-dynamics="atomic" aria-pressed="false">3D atomic evolution</button></nav><div data-dynamics-host></div>';
+ const target=host.querySelector<HTMLElement>('[data-dynamics-host]')!;let cleanup=mountTwoState(target);
+ host.querySelectorAll<HTMLButtonElement>('[data-dynamics]').forEach(button=>button.onclick=()=>{cleanup();host.querySelectorAll('[data-dynamics]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));cleanup=button.dataset.dynamics==='two'?mountTwoState(target):mountCoreDynamics(target,button.dataset.dynamics==='atomic');});return()=>cleanup();
 }

@@ -94,3 +94,8 @@ implemented end to end. No placeholder laboratory pages will be added for them.
   science/input tests and three added browser workflows pass. NTO pair data and
   coefficients are exported; dedicated NTO surfaces, open-shell post-HF and
   automatic chemical active-space selection remain unsupported/incomplete.
+- D1: general finite-state well evolution, n≤2 3D hydrogenic spectral evolution
+  and constant-generator qubit Lindblad dynamics are now **Limited/validated**,
+  with nine new science tests and five browser workflows. General spatial TDSE,
+  laser driving, reaction paths and nuclear MD remain missing. Exact spectral
+  dynamics is not presented as a general spatial propagator.

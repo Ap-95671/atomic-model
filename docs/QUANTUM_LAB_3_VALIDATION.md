@@ -124,3 +124,35 @@ Primary methods: [PySCF MP2](https://pyscf.org/user/mp.html),
 [configuration interaction](https://pyscf.org/user/ci.html),
 [active spaces](https://pyscf.org/user/mcscf.html),
 [electronic linear response/NTOs](https://pyscf.org/user/tddft.html).
+
+## D1 — exact multistate/atomic dynamics and Lindblad evolution
+
+Core tools now include 1–8 distinct well states (n≤16), arbitrary complex
+coefficient lists, exact position matrices, full revival, phase/density playback
+and spatial-quadrature diagnostics. The original two-state workflow is preserved.
+Atomic evolution uses 1–4 complex hydrogenic eigenfunctions (n≤2), exact spectral
+time dependence, 3D importance-weighted density/phase samples and Cartesian
+expectations from independent spherical quadrature. Display points are fixed
+samples from q=Σ|c|²|φ|²; opacity ∝|Ψ|²/(Kq), not electron trajectories.
+Phase and density remain distinct, including stationary degenerate mixtures.
+This is not a grid TDSE integrator, laser driving or a continuum wave packet.
+
+A constant-generator qubit Lindblad model calculates pure/mixed states,
+Hamiltonian precession/drive, amplitude relaxation, pure dephasing, density
+matrices, Bloch vectors, populations, coherences, purity and entropy. Matrix
+exponentials preserve the exact constant-generator solution up to roundoff;
+trace, Hermiticity and positivity are checked over the entire trajectory.
+The time/frequency unit is explicitly chosen/arbitrary, not a calibrated atom.
+No finite-temperature excitation or non-Markovian model is implied.
+
+Nine new Python tests pass: many-state normalization/analytic means/revival,
+spatial quadrature convergence, atomic quadrature convergence (preview norm
+error ≈1.98e-7, balanced ≈5.1e-15), independent analytic 1s–2pz dipole,
+degenerate stationary density, importance-weight bounds, Hermitian Cartesian
+matrices; analytic relaxation/dephasing and unitary/mixed limits; convergence
+against an independently integrated Bloch ODE; density invariants/invalid input.
+Five new browser workflows pass at 320/768/1440 px, including editing/errors,
+atomic playback/canvas reuse, density exports and Lindblad controls. Full Python
+suite at this checkpoint: **112 tests pass in 11.929 s**. These physics tools
+require no PySCF or QuTiP. Broader numerical TDSE propagation, MD and reaction
+pathways remain incomplete and have no placeholder screens.
