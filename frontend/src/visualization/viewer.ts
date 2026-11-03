@@ -13,6 +13,10 @@ const palette = [
   "#ced99b",
   "#9cd5d5",
 ];
+// Three r181's shared DFG LUT can retain per-renderer disposal listeners.
+// Reuse at most one released renderer instead of creating unbounded contexts.
+const idleRenderers:THREE.WebGLRenderer[]=[];
+export function disposeIdleRenderers(){for(const renderer of idleRenderers.splice(0)){renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}}
 export class OrbitalViewer {
   renderer: THREE.WebGLRenderer;
   scene = new THREE.Scene();
@@ -29,6 +33,7 @@ export class OrbitalViewer {
   rotation = false;
   private frame = 0;
   private disposed = false;
+  private nucleusKey='';
   private onVisibility = () => { if (!document.hidden) this.invalidate(); };
   private intersectionObserver: IntersectionObserver;
   private displayExtent = 1;
@@ -38,11 +43,13 @@ export class OrbitalViewer {
   private resizeObserver: ResizeObserver;
   private dragStart = { x: 0, y: 0 };
   private onKey: (e: KeyboardEvent) => void;
+  private onPointerDown:(e:PointerEvent)=>void;
+  private onClick:(e:MouseEvent)=>void;
   constructor(
     private container: HTMLElement,
     private onParticle: (type: string) => void,
   ) {
-    this.renderer = new THREE.WebGLRenderer({
+    this.renderer = idleRenderers.pop()??new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
       preserveDrawingBuffer: true,
@@ -87,28 +94,16 @@ export class OrbitalViewer {
     this.intersectionObserver.observe(container);
     document.addEventListener("visibilitychange", this.onVisibility);
     this.resize();
-    this.renderer.domElement.addEventListener(
-      "pointerdown",
-      (e) => (this.dragStart = { x: e.clientX, y: e.clientY }),
-    );
-    this.renderer.domElement.addEventListener("click", (e) => {
-      if (
-        Math.hypot(e.clientX - this.dragStart.x, e.clientY - this.dragStart.y) >
-        5
-      )
-        return;
-      const rect = this.renderer.domElement.getBoundingClientRect();
-      this.raycaster.setFromCamera(
-        new THREE.Vector2(
-          ((e.clientX - rect.left) / rect.width) * 2 - 1,
-          (-(e.clientY - rect.top) / rect.height) * 2 + 1,
-        ),
-        this.camera,
-      );
-      const hits = this.raycaster.intersectObjects(this.nucleus.children);
-      if (this.nucleus.visible && hits[0])
-        this.onParticle(hits[0].object.userData.type);
-    });
+    this.onPointerDown=e=>{this.dragStart={x:e.clientX,y:e.clientY};};
+    this.onClick=e=>{
+      if(Math.hypot(e.clientX-this.dragStart.x,e.clientY-this.dragStart.y)>5)return;
+      const rect=this.renderer.domElement.getBoundingClientRect();
+      this.raycaster.setFromCamera(new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,(-(e.clientY-rect.top)/rect.height)*2+1),this.camera);
+      const hits=this.raycaster.intersectObjects(this.nucleus.children);
+      if(this.nucleus.visible&&hits[0])this.onParticle(hits[0].object.userData.type);
+    };
+    this.renderer.domElement.addEventListener('pointerdown',this.onPointerDown);
+    this.renderer.domElement.addEventListener('click',this.onClick);
     this.onKey = (e) => {
       if (
         e.key.toLowerCase() === "r" &&
@@ -441,6 +436,7 @@ export class OrbitalViewer {
     this.invalidate();
   }
   makeNucleus(atom: Species) {
+    const key=`${atom.z}:${atom.a}`;if(this.nucleusKey===key&&this.nucleus.children.length===atom.a)return;this.nucleusKey=key;
     this.clear(this.nucleus);
     // A compact lattice is deliberately schematic, and enlarged independently
     // of the orbital's a₀ scale. Every nucleon remains separately selectable.
@@ -515,7 +511,8 @@ export class OrbitalViewer {
     return canvas.toDataURL("image/png");
   }
   dispose() {
-    this.disposed = true;
+    if(this.disposed)return;
+    this.disposed = true;this.data=null;this.blochArrow=undefined;this.structureFrame=undefined;
     cancelAnimationFrame(this.frame);
     this.intersectionObserver.disconnect();
     document.removeEventListener("visibilitychange", this.onVisibility);
@@ -526,8 +523,12 @@ export class OrbitalViewer {
     this.clear(this.nucleus);
     this.clear(this.nodes);
     this.clear(this.axes);
-    this.renderer.dispose();
-    this.renderer.forceContextLoss();
-    this.renderer.domElement.remove();
+    this.renderer.domElement.removeEventListener('pointerdown',this.onPointerDown);
+    this.renderer.domElement.removeEventListener('click',this.onClick);
+    this.renderer.domElement.remove();this.container.classList.remove('interacting');
+    this.renderer.renderLists.dispose();this.renderer.info.reset();
+    this.scene.clear();
+    if(idleRenderers.length===0)idleRenderers.push(this.renderer);
+    else{this.renderer.dispose();this.renderer.forceContextLoss();}
   }
 }

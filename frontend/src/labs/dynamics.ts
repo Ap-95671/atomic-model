@@ -1,3 +1,4 @@
+import {mountTools} from '../app/route';
 import {mountCoreDynamics} from "./core-dynamics";
 import { LabSession, numberField, assumptions } from './session';
 import { Playback } from '../components/playback';
@@ -48,6 +49,6 @@ function mountTwoState(host:HTMLElement){
 
 export function mountDynamics(host:HTMLElement){
  host.innerHTML='<nav class="experiment-nav" aria-label="Dynamics tools"><button data-dynamics="two" aria-pressed="true">Two-state well</button><button data-dynamics="general" aria-pressed="false">General superpositions</button><button data-dynamics="atomic" aria-pressed="false">3D atomic evolution</button></nav><div data-dynamics-host></div>';
- const target=host.querySelector<HTMLElement>('[data-dynamics-host]')!;let cleanup=mountTwoState(target);
- host.querySelectorAll<HTMLButtonElement>('[data-dynamics]').forEach(button=>button.onclick=()=>{cleanup();host.querySelectorAll('[data-dynamics]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));cleanup=button.dataset.dynamics==='two'?mountTwoState(target):mountCoreDynamics(target,button.dataset.dynamics==='atomic');});return()=>cleanup();
+ const target=host.querySelector<HTMLElement>('[data-dynamics-host]')!;
+ return mountTools(host,'dynamics',target,key=>key==='two'?mountTwoState(target):mountCoreDynamics(target,key==='atomic'),'two');
 }

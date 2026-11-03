@@ -1,3 +1,4 @@
+import {mountTools,savedParameters} from '../app/route';
 import {mountGeometry} from "./geometry";
 import { mountComputedMolecules } from "./computed-molecules";
 import { chemistryCatalog } from "../services/chemistry";
@@ -18,7 +19,7 @@ interface Molecule {
   curve:{distance_a0:number[];bonding_total_hartree:number[];antibonding_total_hartree:number[];bonding_electronic_hartree:number[];nuclear_repulsion_hartree:number[];equilibrium_a0:number;minimum_total_hartree:number;binding_energy_hartree:number};
 }
 function mountLcao(host:HTMLElement,onSystem?:(name:string)=>void){
-  const session=new LabSession(host,'molecular','Molecular Lab','Calculate H₂⁺ molecular orbitals and a bond-energy curve from a two-center variational Hamiltonian.',`<label>System<select name="system"><option value="h2plus">H₂⁺ · one electron, two protons</option></select></label>${numberField('distance','Nuclear separation / a₀',2,.5,10,.05)}<label>Slater 1s basis<select name="optimize"><option value="false">Fixed common exponent</option><option value="true">Optimize exponent for bonding energy</option></select></label>${numberField('exponent','Common Slater exponent ζ',1,.3,3,.01)}<label>Display grid<select name="quality"><option value="preview">Preview · 41³</option><option value="balanced" selected>Balanced · 65³</option><option value="high">High · 97³</option></select></label><label>Calculated orbital<select name="orbital"><option value="bonding">σ1s · bonding</option><option value="antibonding">σ*1s · antibonding</option><option value="atomic-a">Atomic 1s on A · before combination</option><option value="atomic-b">Atomic 1s on B · before combination</option></select></label>${numberField('threshold','Surface amplitude / grid peak',.12,.02,.4,.01)}<p class="lab-explanation">Use the same separation and threshold to compare signed orbitals. The antibonding state has a plane of zero amplitude between the nuclei. Its total energy is distinct from the bonding state.</p>`);
+  const session=new LabSession(host,'molecular','Molecular Lab','Calculate H₂⁺ molecular orbitals and a bond-energy curve from a two-center variational Hamiltonian.',`<label>System<select name="system"><option value="h2plus">H₂⁺ · one electron, two protons</option></select></label>${numberField('distance','Nuclear separation / a₀',2,.5,10,.05)}<label>Slater 1s basis<select name="optimize"><option value="false">Fixed common exponent</option><option value="true">Optimize exponent for bonding energy</option></select></label>${numberField('exponent','Common Slater exponent ζ',1,.3,3,.01)}<label>Display grid<select name="quality"><option value="preview" selected>Preview · 41³</option><option value="balanced">Balanced · 65³</option><option value="high">High · 97³</option></select></label><label>Calculated orbital<select name="orbital"><option value="bonding">σ1s · bonding</option><option value="antibonding">σ*1s · antibonding</option><option value="atomic-a">Atomic 1s on A · before combination</option><option value="atomic-b">Atomic 1s on B · before combination</option></select></label>${numberField('threshold','Surface amplitude / grid peak',.12,.02,.4,.01)}<p class="lab-explanation">Use the same separation and threshold to compare signed orbitals. The antibonding state has a plane of zero amplitude between the nuclei. Its total energy is distinct from the bonding state.</p>`);
   let viewer:OrbitalViewer|undefined;let closed=false;
   void chemistryCatalog().then(catalog=>{
     if(closed)return;
@@ -54,11 +55,12 @@ function mountLcao(host:HTMLElement,onSystem?:(name:string)=>void){
 
 export function mountMolecular(host:HTMLElement){
   host.innerHTML='<nav class="experiment-nav" aria-label="Molecular tools"><button data-molecular="lcao" aria-pressed="true">Calculated orbitals</button><button data-molecular="diagrams" aria-pressed="false">MO reference diagrams</button><button data-molecular="geometry" aria-pressed="false">Geometry optimization</button><button data-molecular="vibrations" aria-pressed="false">Vibrational analysis</button><button data-molecular="structures" aria-pressed="false">3D structures</button></nav><div data-molecular-host></div>';
-  const target=host.querySelector<HTMLElement>('[data-molecular-host]')!;let cleanup:()=>void;
-  const switchSystem=(name:string)=>{cleanup();cleanup=mountComputedMolecules(target,name);};
-  cleanup=mountLcao(target,switchSystem);
-  host.querySelectorAll<HTMLButtonElement>('[data-molecular]').forEach(b=>b.onclick=()=>{
-    cleanup();host.querySelectorAll('[data-molecular]').forEach(button=>button.setAttribute('aria-pressed',String(button===b)));
-    cleanup=b.dataset.molecular==='lcao'?mountLcao(target,switchSystem):b.dataset.molecular==='diagrams'?mountDiagrams(target):b.dataset.molecular==='geometry'?mountGeometry(target):b.dataset.molecular==='vibrations'?mountGeometry(target,true):mountStructures(target);
-  });return()=>cleanup();
+  const target=host.querySelector<HTMLElement>('[data-molecular-host]')!;
+  let replaceView:()=>void;
+  const switchSystem=(name:string)=>{replaceView();replaceView=mountComputedMolecules(target,name);};
+  return mountTools(host,'molecular',target,key=>{
+    const previous=savedParameters('computed-molecules');
+    replaceView=key==='lcao'&&previous?.system&&previous.system!=='h2plus'?mountComputedMolecules(target,previous.system):key==='lcao'?mountLcao(target,switchSystem):key==='diagrams'?mountDiagrams(target):key==='geometry'?mountGeometry(target):key==='vibrations'?mountGeometry(target,true):mountStructures(target);
+    return()=>replaceView();
+  },'lcao');
 }

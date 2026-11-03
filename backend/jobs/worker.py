@@ -42,9 +42,12 @@ def run(payload):
         result = dict(solution["result"])
     else:
         raise ValueError("Unsupported worker operation")
+    solve_seconds=time.perf_counter()-started
+    field_started=time.perf_counter()
     result = {**result, "field": field(solution, request, progress)}
+    field_seconds=time.perf_counter()-field_started
     after = resource.getrusage(resource.RUSAGE_SELF)
-    result["resources"] = {"wall_seconds": time.perf_counter()-started,
+    result["resources"] = {"solve_seconds":solve_seconds,"geometry_seconds":field_seconds,"wall_seconds": time.perf_counter()-started,
                            "cpu_seconds": after.ru_utime+after.ru_stime-before.ru_utime-before.ru_stime,
                            "peak_rss_mib": after.ru_maxrss/(1024**2 if sys.platform == "darwin" else 1024)}
     emit({"event": "result", "result": result, "solution": solution if payload["operation"] != "field" else None})

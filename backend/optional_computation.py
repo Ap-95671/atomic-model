@@ -1,4 +1,6 @@
 """Optional PySCF worker: fixed methods/data, subprocess timeout, no shell input."""
+from collections import OrderedDict
+import threading
 import importlib.util
 import json
 import os
@@ -9,6 +11,9 @@ from functools import lru_cache
 import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
+_states = OrderedDict()
+_state_lock = threading.Lock()
+
 SYSTEMS=('h2','he','water','ammonia','methane','carbon-dioxide','carbon-monoxide','benzene')
 
 
@@ -25,18 +30,26 @@ def compute(system='water',method='pbe',basis='sto-3g',view='homo'):
     if importlib.util.find_spec('pyscf') is None:
         raise RuntimeError('Optional PySCF is not installed. Install requirements-computation.txt; the atomic and in-house RHF labs remain available.')
     env=dict(os.environ,OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',VECLIB_MAXIMUM_THREADS='1')
+    key=(system,method,basis)
+    with _state_lock:
+        solution=_states.get(key)
     try:
-        result=subprocess.run([sys.executable,'-m','backend.optional_computation'],input=json.dumps([system,method,basis,view]),
+        result=subprocess.run([sys.executable,'-m','backend.optional_computation'],input=json.dumps([system,method,basis,view,solution]),
             text=True,capture_output=True,timeout=12,cwd=ROOT,env=env)
     except subprocess.TimeoutExpired as exc:raise RuntimeError('Optional computation exceeded 12 seconds and its worker was terminated. Try STO-3G or a smaller molecule.') from exc
     if result.returncode:raise RuntimeError('Optional computational worker failed; check the installed PySCF backend.')
     try:payload=json.loads(result.stdout)
     except json.JSONDecodeError as exc:raise RuntimeError('Optional backend returned invalid numerical output') from exc
     if 'error' in payload:raise ValueError(payload['error'])
+    solution=payload.pop('_solution',None)
+    if solution is not None:
+        with _state_lock:
+            _states[key]=solution;_states.move_to_end(key)
+            while len(_states)>4:_states.popitem(last=False)
     return payload
 
 
-def worker(system,method,basis,view):
+def worker(system,method,basis,view,solution=None):
     validate(system,method,basis,view)
     from pyscf import gto,scf,dft
     from skimage.measure import marching_cubes
@@ -51,14 +64,26 @@ def worker(system,method,basis,view):
     mol=gto.M(atom=[(z,tuple(v)) for z,v in zip(zs,centers)],basis=basis,unit='Bohr',spin=0,charge=0,verbose=0,max_memory=256)
     mf=scf.RHF(mol) if method=='hf' else dft.RKS(mol)
     if method!='hf':mf.xc=method;mf.grids.level=1
-    mf.chkfile=None;mf.conv_tol=1e-9;mf.max_cycle=80
+    mf.chkfile=None
+    temporary=getattr(mf,'_chkfile',None)
+    if temporary is not None:temporary.close();mf._chkfile=None
+    mf.conv_tol=1e-9;mf.max_cycle=80
     history=[]
     def callback(env):
         if 'e_tot' in env:history.append({'iteration':int(env.get('cycle',len(history)))+1,'total_energy_hartree':float(env['e_tot'])})
-    mf.callback=callback;energy=float(mf.kernel())
-    if not mf.converged:raise ValueError('PySCF did not converge in 80 cycles; no converged result returned')
-    density=mf.make_rdm1();s=mol.intor('int1e_ovlp');electron_count=float(np.trace(density@s))
-    if abs(electron_count-mol.nelectron)>1e-7:raise ValueError('PySCF electron-count check failed')
+    reused=solution is not None
+    if solution is None:
+        mf.callback=callback;energy=float(mf.kernel())
+        if not mf.converged:raise ValueError('PySCF did not converge in 80 cycles; no converged result returned')
+        density=mf.make_rdm1();s=mol.intor('int1e_ovlp');electron_count=float(np.trace(density@s))
+        if abs(electron_count-mol.nelectron)>1e-7:raise ValueError('PySCF electron-count check failed')
+        solution={'energy':energy,'density':density.tolist(),'mo_coeff':mf.mo_coeff.tolist(),
+                  'mo_occ':mf.mo_occ.tolist(),'mo_energy':mf.mo_energy.tolist(),
+                  'electron_count':electron_count,'history':history}
+    else:
+        energy=solution['energy'];density=np.asarray(solution['density']);history=solution['history']
+        mf.mo_coeff=np.asarray(solution['mo_coeff']);mf.mo_occ=np.asarray(solution['mo_occ']);mf.mo_energy=np.asarray(solution['mo_energy'])
+        electron_count=solution['electron_count']
     occupied=np.where(mf.mo_occ>0)[0];index=int(occupied[-1] if view=='homo' else occupied[-1]+1)
     if view!='density' and index>=mf.mo_coeff.shape[1]:raise ValueError('No virtual orbital in selected basis')
     extent=float(np.max(abs(centers))+5)
@@ -73,7 +98,7 @@ def worker(system,method,basis,view):
         if (field*sign).max()<=level:continue
         vertices,faces,_,_=marching_cubes(field*sign,level,spacing=(axis[1]-axis[0],)*3);vertices-=extent
         surfaces.append({'vertices':vertices,'faces':faces,'phases':np.full(len(vertices),0 if sign==1 else np.pi)})
-    return {'model':f'PySCF {__import__("pyscf").__version__} / {method.upper()} / {basis} / fixed geometry',
+    return {'_solution':solution,'scf_reused':reused,'model':f'PySCF {__import__("pyscf").__version__} / {method.upper()} / {basis} / fixed geometry',
         'units':{'energy':'Hartree','length':'a0','density':'electrons/a0^3'},'system':system,'method':method,'basis':basis,'basis_size':mol.nao,
         'total_energy_hartree':energy,'nuclear_repulsion_hartree':float(mol.energy_nuc()),'electron_count':electron_count,
         'converged':True,'scf_history':history,'orbital_energies_hartree':mf.mo_energy,'occupations':mf.mo_occ,
@@ -85,6 +110,6 @@ def worker(system,method,basis,view):
 
 if __name__=='__main__':
     try:
-        payload=worker(*json.loads(sys.stdin.read(4096)))
+        payload=worker(*json.loads(sys.stdin.read(2_000_000)))
         print(json.dumps(payload,allow_nan=False,default=lambda x:x.tolist() if isinstance(x,np.ndarray) else x.item(),separators=(',',':')))
     except Exception as exc:print(json.dumps({'error':str(exc)}))

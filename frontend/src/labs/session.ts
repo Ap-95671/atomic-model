@@ -1,3 +1,4 @@
+import {savedParameters,rememberParameters} from '../app/route';
 import {runtime,advancedMessage} from "../services/runtime";
 import { esc } from '../components/dom';
 import { api } from '../services/api';
@@ -12,6 +13,7 @@ export class LabSession {
   private original: Record<string,string>={};
   private media=matchMedia('(max-width:760px)');
   private responsive=()=>{const details=this.host.querySelector<HTMLDetailsElement>('.lab-settings');if(details)details.open=!this.media.matches;};
+  readonly hasRestoredParameters:boolean;
   readonly status: HTMLElement;
   readonly result: HTMLElement;
   constructor(readonly host: HTMLElement, readonly key: string, title: string, description: string, controls: string) {
@@ -28,6 +30,9 @@ export class LabSession {
     this.responsive();this.media.addEventListener("change",this.responsive);
     this.status=host.querySelector('.lab-status')!; this.result=host.querySelector('[data-result]')!;
     for(const el of this.inputs())this.original[el.name]=el.value;
+    const previous=savedParameters(key);this.hasRestoredParameters=!!previous;
+    if(previous)for(const el of this.inputs()){const value=previous[el.name];if(typeof value==='string'){const old=el.value;el.value=value;if(!el.checkValidity())el.value=old;}}
+    this.remember();
     host.querySelector('[data-save]')!.addEventListener('click',()=>{
       if(!this.form.reportValidity())return;
       try {localStorage.setItem(`quantum-lab:${key}:v1`,JSON.stringify(Object.fromEntries(this.inputs().map(i=>[i.name,i.value]))));this.status.textContent='Parameters saved on this device.';}
@@ -53,16 +58,19 @@ export class LabSession {
     }
     this.invalidate(); this.form.requestSubmit();
   }
+  private remember(){rememberParameters(this.key,Object.fromEntries(this.inputs().map(el=>[el.name,el.value])));}
   invalidate(){
+    this.remember();queueMicrotask(()=>{if(!this.closed)this.remember();});
     this.controller?.abort(); void this.jobs.cancel().catch(()=>{}); ++this.revision;
     this.status.setAttribute('role','status');
     this.status.textContent='Parameters changed. Calculate to update the results.';
+    this.host.querySelector<HTMLElement>('[data-cancel]')!.hidden=true;
     this.result.hidden=true;
     this.host.querySelector('.lab-results')?.setAttribute('aria-busy','false');
   }
   async run<T>(path: string, render: (data:T)=>void){
     void this.jobs.cancel().catch(()=>{}); this.controller?.abort(); this.controller=new AbortController();const id=++this.revision;
-    this.result.hidden=true;
+    this.remember();this.result.hidden=true;
     this.status.setAttribute('role','status');this.status.textContent='Calculating…';
     this.host.querySelector('.lab-results')?.setAttribute('aria-busy','true');
     try {
@@ -71,7 +79,7 @@ export class LabSession {
       render(data);this.result.hidden=false;this.status.textContent='Calculation complete.';
     } catch(error){
       if(this.closed || id!==this.revision || (error as Error).name==='AbortError')return;
-      this.status.setAttribute('role','alert');this.status.textContent=`Calculation failed: ${(error as Error).message}`;
+      this.status.setAttribute('role','alert');this.status.textContent=`Calculation failed: ${(error as Error).message}. Use Calculate to retry.`;
     } finally {
       if(!this.closed && id===this.revision)this.host.querySelector('.lab-results')?.setAttribute('aria-busy','false');
     }
@@ -87,7 +95,7 @@ export class LabSession {
       this.result.innerHTML=`<div class="result-heading"><h2>Advanced local calculation</h2><p>${esc(advancedMessage)}</p></div>`;
       this.result.hidden=false;this.status.textContent='Available in advanced local mode.';return;
     }
-    this.controller?.abort();const id=++this.revision;
+    this.remember();this.controller?.abort();const id=++this.revision;
     this.result.hidden=true;this.status.setAttribute('role','status');this.status.textContent='Starting calculation…';
     this.host.querySelector<HTMLElement>('[data-cancel]')!.hidden=false;
     this.host.querySelector('.lab-results')?.setAttribute('aria-busy','true');
@@ -101,7 +109,7 @@ export class LabSession {
       render(job.result!,job.calculation_id,job.id);this.result.hidden=false;this.status.textContent='Calculation complete.';
     }catch(error){
       if(this.closed||id!==this.revision||(error as Error).name==='AbortError')return;
-      this.status.setAttribute('role','alert');this.status.textContent=`Calculation failed: ${(error as Error).message}`;
+      this.status.setAttribute('role','alert');this.status.textContent=`Calculation failed: ${(error as Error).message}. Use Calculate to retry.`;
     }finally{
       if(!this.closed&&id===this.revision){this.host.querySelector<HTMLElement>('[data-cancel]')!.hidden=true;this.host.querySelector('.lab-results')?.setAttribute('aria-busy','false');}
     }
