@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('#loading')).toBeHidden();});
+test.beforeEach(async({page})=>{await page.goto('/#lab=atomic');await expect(page.locator('#loading')).toBeHidden();});
 test('Molecular Lab selects computed O2 and every spin orbital without another SCF',async({page})=>{
   await page.getByRole('button',{name:'Molecular Lab',exact:true}).click();
   await expect(page.locator('[name="system"] option[value="o2"]')).toHaveCount(1);
@@ -50,7 +50,7 @@ test('actual job cancellation terminates the worker and keeps inputs usable',asy
 });
 test('failed atomic parameters explicitly label the retained state',async({page})=>{
   await page.route('**/api/orbital?**',route=>route.fulfill({status:503,contentType:'application/json',body:'{"error":"Capacity test"}'}));
-  await page.locator('[data-family="1"]').click();
+ await page.locator('#orbital-scope').selectOption('explore');  await page.locator('[data-family="1"]').click();
   await expect(page.locator('#atomic-result-status')).toContainText('Requested result failed');
   await expect(page.locator('#atomic-result-status')).toContainText('1s');await expect(page.locator('#export')).toBeDisabled();
 });

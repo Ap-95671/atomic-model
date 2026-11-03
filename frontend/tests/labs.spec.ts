@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('#loading')).toBeHidden();});
+test.beforeEach(async({page})=>{await page.goto('/#lab=atomic');await expect(page.locator('#loading')).toBeHidden();});
 test('spectroscopy, selection rules, series, CSV and PNG',async({page})=>{
   await page.getByRole('button',{name:'Spectroscopy',exact:true}).click();
   await expect(page.locator('.result-heading h2')).toContainText('656.');

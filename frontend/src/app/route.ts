@@ -1,13 +1,13 @@
 /** Hash routes work on the local server and static hosts without rewrite rules. */
-export const labNames=['atomic','molecular','dynamics','spectroscopy','experiments','computation','materials'] as const;
+export const labNames=['home','periodic','compare','atomic','molecular','dynamics','spectroscopy','experiments','computation','materials','history'] as const;
 export type Lab=typeof labNames[number];
 const visited=new Map<string,string>();
-export function readRoute(){const p=new URLSearchParams(location.hash.slice(1));if(!labNames.includes(p.get('lab') as Lab))return new URLSearchParams({lab:'atomic'});return p;}
+export function readRoute(){const p=new URLSearchParams(location.hash.slice(1));if(!p.has('lab')&&!location.hash)return new URLSearchParams({lab:'home'});if(!labNames.includes(p.get('lab') as Lab))return new URLSearchParams({lab:'atomic'});return p;}
 export function writeRoute(p:URLSearchParams,push=false){const hash='#'+p.toString();if(location.hash!==hash)history[push?'pushState':'replaceState'](null,'',location.pathname+location.search+hash);rememberRoute();}
 export function rememberRoute(){const p=readRoute();visited.set(p.get('lab')!,p.toString());}
 export function routeForLab(lab:Lab){return new URLSearchParams(visited.get(lab)??`lab=${lab}`);}
 export function toolKey(scope:string){return scope==='qc'?'sub':'tool';}
-export function selectTool(scope:string,value:string,push=true){const p=readRoute();p.set(toolKey(scope),value);if(scope!=='qc')p.delete('sub');p.delete('session');p.delete('params');writeRoute(p,push);}
+export function selectTool(scope:string,value:string,push=true){const p=readRoute();p.set(toolKey(scope),value);if(scope!=='qc')p.delete('sub');p.delete('session');p.delete('params');p.delete('view');p.delete('rightCamera');writeRoute(p,push);}
 function parameterKey(key:string){const p=readRoute();return `qal-session-v1:${p.get('lab')}:${p.get('tool')??''}:${p.get('sub')??''}:${key}`;}
 export function savedParameters(key:string):Record<string,string>|undefined{
  try{const p=readRoute(),raw=p.get('session')===key?p.get('params'):sessionStorage.getItem(parameterKey(key));if(!raw||raw.length>8192)return;const value=JSON.parse(raw);if(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length<=40&&Object.values(value).every(v=>typeof v==='string'&&v.length<=8192))return value;}catch{/* Invalid route/storage: use defaults. */}

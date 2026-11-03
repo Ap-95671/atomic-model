@@ -1,0 +1,31 @@
+name: Independent public HTTPS verification
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/cloudflare-pages-demo]
+permissions:
+  contents: read
+concurrency:
+  group: public-site-verification
+  cancel-in-progress: true
+jobs:
+  public-https:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm --prefix frontend ci
+      - run: npx playwright install --with-deps chrome
+        working-directory: frontend
+      - name: Verify exact deployed source, HTTPS, CSP and immutable dataset hashes
+        run: node scripts/check_public_build.mjs https://quantum-atom-lab-ap95671.pages.dev/ ${{ github.sha }}
+      - name: Actual public scientific browser workflows from an independent runner
+        env:
+          QAL_STATIC_TEST: '1'
+          QAL_TEST_URL: https://quantum-atom-lab-ap95671.pages.dev
+        run: npm --prefix frontend run test:e2e

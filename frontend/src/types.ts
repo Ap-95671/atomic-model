@@ -2,6 +2,7 @@ export interface ElementData {
   z: number;
   symbol: string;
   name: string;
+  atomic_mass: string;
   category: string;
   period: number;
   group: number | null;
@@ -39,6 +40,7 @@ export interface Species extends ElementData {
   isotope: Isotope;
   isotopes: Isotope[];
   electronic: {
+    electrons?:number;
     text: string;
     status: string;
     configuration: Record<string, number> | null;

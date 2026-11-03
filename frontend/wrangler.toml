@@ -1,0 +1,4 @@
+# Cloudflare Pages static assets only. No Functions, bindings or paid services.
+name = "quantum-atom-lab-ap95671"
+pages_build_output_dir = "./dist-pages"
+compatibility_date = "2026-11-03"

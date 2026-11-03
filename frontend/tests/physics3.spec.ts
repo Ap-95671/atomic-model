@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('#loading')).toBeHidden();});
+test.beforeEach(async({page})=>{await page.goto('/#lab=atomic');await expect(page.locator('#loading')).toBeHidden();});
 test('general normalized superpositions edit coefficients and reject invalid bases',async({page})=>{
  await page.getByRole('button',{name:'Quantum Dynamics',exact:true}).click();await page.getByRole('button',{name:'General superpositions',exact:true}).click();await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');
  await expect(page.locator('.lab-results')).toContainText('Normalized finite-state evolution');await page.getByRole('button',{name:'Play',exact:true}).click();await expect(page.getByRole('button',{name:'Pause',exact:true})).toBeVisible();

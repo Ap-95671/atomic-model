@@ -1,0 +1,83 @@
+{
+  "base": "http://127.0.0.1:8770",
+  "https_verified": false,
+  "browser": "155.0.8059.85",
+  "build": {
+    "application": "Quantum Atom Lab",
+    "mode": "browser-static",
+    "source_commit": "6e0b672bfc483aa5d2d365011bcffd25af78f939",
+    "source_dirty": true,
+    "built_at": "2026-11-03T10:39:27.169Z",
+    "python_runtime": false,
+    "api_backend": false
+  },
+  "full_navigation_cycles": 50,
+  "navigation_changes": 350,
+  "worker_lifetimes_started": 10,
+  "samples": [
+    {
+      "cycle": 0,
+      "heap": {
+        "usedSize": 14243608,
+        "totalSize": 15302656,
+        "embedderHeapUsedSize": 2091264,
+        "backingStorageSize": 2215346
+      },
+      "dom": {
+        "documents": 2,
+        "nodes": 803,
+        "jsEventListeners": 105
+      },
+      "live_science_workers": 0
+    },
+    {
+      "cycle": 10,
+      "heap": {
+        "usedSize": 15097764,
+        "totalSize": 16351232,
+        "embedderHeapUsedSize": 3685520,
+        "backingStorageSize": 2215357
+      },
+      "dom": {
+        "documents": 4,
+        "nodes": 821,
+        "jsEventListeners": 105
+      },
+      "live_science_workers": 0
+    },
+    {
+      "cycle": 25,
+      "heap": {
+        "usedSize": 16277732,
+        "totalSize": 19759104,
+        "embedderHeapUsedSize": 3195280,
+        "backingStorageSize": 3722920
+      },
+      "dom": {
+        "documents": 2,
+        "nodes": 809,
+        "jsEventListeners": 105
+      },
+      "live_science_workers": 0
+    },
+    {
+      "cycle": 50,
+      "heap": {
+        "usedSize": 15587900,
+        "totalSize": 17137664,
+        "embedderHeapUsedSize": 3330384,
+        "backingStorageSize": 2215357
+      },
+      "dom": {
+        "documents": 4,
+        "nodes": 821,
+        "jsEventListeners": 105
+      },
+      "live_science_workers": 0
+    }
+  ],
+  "forbidden_requests": [],
+  "page_errors": [],
+  "mobile_width": 390,
+  "scope": "Actual Chrome, API routes blocked. Post-GC JS/DOM measurements exclude GPU/OS memory; transient worker memory is not part of parent-page heap."
+}

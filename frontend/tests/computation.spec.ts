@@ -1,5 +1,5 @@
 import { test,expect } from '@playwright/test';
-test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('#loading')).toBeHidden();await page.getByRole('button',{name:'Computational Chemistry',exact:true}).click();await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');});
+test.beforeEach(async({page})=>{await page.goto('/#lab=atomic');await expect(page.locator('#loading')).toBeHidden();await page.getByRole('button',{name:'Computational Chemistry',exact:true}).click();await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');});
 test('SCF energies, electron counts, basis expansion and density',async({page})=>{
   await expect(page.locator('.result-heading h2')).toContainText('-1.116714325');
   await expect(page.locator('[data-computation-view] canvas')).toBeVisible();

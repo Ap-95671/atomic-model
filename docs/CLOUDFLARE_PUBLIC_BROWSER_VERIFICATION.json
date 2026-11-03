@@ -1,0 +1,83 @@
+{
+  "base": "https://quantum-atom-lab-ap95671.pages.dev",
+  "https_verified": true,
+  "browser": "155.0.8059.85",
+  "build": {
+    "application": "Quantum Atom Lab",
+    "mode": "browser-static",
+    "source_commit": "f3b86d1207b493580b96d86410608d9ee704ca9e",
+    "source_dirty": false,
+    "built_at": "2026-11-03T10:55:00.094Z",
+    "python_runtime": false,
+    "api_backend": false
+  },
+  "full_navigation_cycles": 50,
+  "navigation_changes": 350,
+  "worker_lifetimes_started": 10,
+  "samples": [
+    {
+      "cycle": 0,
+      "heap": {
+        "usedSize": 14254000,
+        "totalSize": 15040512,
+        "embedderHeapUsedSize": 2243192,
+        "backingStorageSize": 2215409
+      },
+      "dom": {
+        "documents": 4,
+        "nodes": 815,
+        "jsEventListeners": 105
+      },
+      "live_science_workers": 0
+    },
+    {
+      "cycle": 10,
+      "heap": {
+        "usedSize": 15061380,
+        "totalSize": 16089088,
+        "embedderHeapUsedSize": 3702048,
+        "backingStorageSize": 2215420
+      },
+      "dom": {
+        "documents": 4,
+        "nodes": 821,
+        "jsEventListeners": 105
+      },
+      "live_science_workers": 0
+    },
+    {
+      "cycle": 25,
+      "heap": {
+        "usedSize": 15284148,
+        "totalSize": 16613376,
+        "embedderHeapUsedSize": 3017632,
+        "backingStorageSize": 2215420
+      },
+      "dom": {
+        "documents": 2,
+        "nodes": 809,
+        "jsEventListeners": 105
+      },
+      "live_science_workers": 0
+    },
+    {
+      "cycle": 50,
+      "heap": {
+        "usedSize": 15565524,
+        "totalSize": 16613376,
+        "embedderHeapUsedSize": 3265952,
+        "backingStorageSize": 2215420
+      },
+      "dom": {
+        "documents": 4,
+        "nodes": 821,
+        "jsEventListeners": 105
+      },
+      "live_science_workers": 0
+    }
+  ],
+  "forbidden_requests": [],
+  "page_errors": [],
+  "mobile_width": 390,
+  "scope": "Actual Chrome, API routes blocked. Post-GC JS/DOM measurements exclude GPU/OS memory; transient worker memory is not part of parent-page heap."
+}

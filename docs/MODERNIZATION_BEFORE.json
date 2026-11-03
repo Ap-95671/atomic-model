@@ -1,0 +1,144 @@
+{
+  "scope": "Local headless Chrome, 1440×1000, four passes, completed calculations; warmed server/cache; post-GC heap is not total process memory.",
+  "first_ready_ms": 156.26808399999993,
+  "passes": [
+    [
+      {
+        "name": "Molecular Lab",
+        "ready_ms": 127.17037500000004
+      },
+      {
+        "name": "Spectroscopy",
+        "ready_ms": 52.51091700000006
+      },
+      {
+        "name": "Quantum Dynamics",
+        "ready_ms": 50.78891599999997
+      },
+      {
+        "name": "Quantum Experiments",
+        "ready_ms": 51.39991700000007
+      },
+      {
+        "name": "Computational Chemistry",
+        "ready_ms": 327.48408300000006
+      },
+      {
+        "name": "Quantum Materials",
+        "ready_ms": 53.198708000000124
+      }
+    ],
+    [
+      {
+        "name": "Molecular Lab",
+        "ready_ms": 32.403708999999935
+      },
+      {
+        "name": "Spectroscopy",
+        "ready_ms": 32.93729200000007
+      },
+      {
+        "name": "Quantum Dynamics",
+        "ready_ms": 29.44145800000001
+      },
+      {
+        "name": "Quantum Experiments",
+        "ready_ms": 32.159167000000025
+      },
+      {
+        "name": "Computational Chemistry",
+        "ready_ms": 35.94137499999988
+      },
+      {
+        "name": "Quantum Materials",
+        "ready_ms": 38.31929200000013
+      }
+    ],
+    [
+      {
+        "name": "Molecular Lab",
+        "ready_ms": 35.94599999999991
+      },
+      {
+        "name": "Spectroscopy",
+        "ready_ms": 32.012833999999884
+      },
+      {
+        "name": "Quantum Dynamics",
+        "ready_ms": 31.946249999999964
+      },
+      {
+        "name": "Quantum Experiments",
+        "ready_ms": 31.31583300000011
+      },
+      {
+        "name": "Computational Chemistry",
+        "ready_ms": 35.950209000000086
+      },
+      {
+        "name": "Quantum Materials",
+        "ready_ms": 41.10620800000015
+      }
+    ],
+    [
+      {
+        "name": "Molecular Lab",
+        "ready_ms": 35.82300000000009
+      },
+      {
+        "name": "Spectroscopy",
+        "ready_ms": 35.37300000000005
+      },
+      {
+        "name": "Quantum Dynamics",
+        "ready_ms": 28.640540999999985
+      },
+      {
+        "name": "Quantum Experiments",
+        "ready_ms": 31.072959000000083
+      },
+      {
+        "name": "Computational Chemistry",
+        "ready_ms": 35.93570799999998
+      },
+      {
+        "name": "Quantum Materials",
+        "ready_ms": 40.72008300000016
+      }
+    ]
+  ],
+  "before": {
+    "heap": {
+      "usedSize": 5131664,
+      "totalSize": 6111232,
+      "embedderHeapUsedSize": 2945384,
+      "backingStorageSize": 1541038
+    },
+    "dom": {
+      "documents": 2,
+      "nodes": 746,
+      "jsEventListeners": 99
+    }
+  },
+  "after": {
+    "heap": {
+      "usedSize": 5249812,
+      "totalSize": 6111232,
+      "embedderHeapUsedSize": 2399312,
+      "backingStorageSize": 1541033
+    },
+    "dom": {
+      "documents": 2,
+      "nodes": 752,
+      "jsEventListeners": 99
+    }
+  },
+  "long_tasks_ms": [
+    52
+  ],
+  "mobile": {
+    "width": 390,
+    "scroll_width": 390
+  },
+  "errors": []
+}
