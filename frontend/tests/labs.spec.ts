@@ -44,6 +44,7 @@ test('lab input errors, in-flight cancellation, loading and server failure',asyn
   await page.route('**/api/spectroscopy?**',async route=>{
     await waiting;await route.fulfill({status:500,contentType:'application/json',body:'{"error":"Obsolete failure"}'}).catch(()=>{});
   });
+  await page.locator('[name="lower"]').selectOption('1');
   await page.getByRole('button',{name:'Calculate',exact:true}).click();
   await expect(page.locator('.lab-status')).toHaveText('Calculating…');
   await page.getByRole('button',{name:'Quantum Experiments',exact:true}).click();
@@ -51,6 +52,7 @@ test('lab input errors, in-flight cancellation, loading and server failure',asyn
   release();
   await expect(page.locator('.lab-status')).not.toContainText('Obsolete');
   await page.route('**/api/measurement?**',r=>r.fulfill({status:503,contentType:'application/json',body:'{"error":"Capacity reached"}'}));
+  await page.locator('[name="seed"]').fill('43');
   await page.getByRole('button',{name:'Calculate',exact:true}).click();
   await expect(page.locator('.lab-status')).toContainText('Capacity reached');
 });

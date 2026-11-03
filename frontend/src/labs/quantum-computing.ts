@@ -1,3 +1,4 @@
+import {mountTools} from '../app/route';
 import {LabSession,numberField,assumptions} from './session';
 import {plot} from '../components/plot';
 import {OrbitalViewer} from '../visualization/viewer';
@@ -30,5 +31,6 @@ function mountVQE(host:HTMLElement){
 }
 export function mountQuantumComputing(host:HTMLElement){
  host.innerHTML='<nav class="experiment-nav" aria-label="Quantum computing tools"><button data-qc="circuits" aria-pressed="true">Ideal circuits</button><button data-qc="vqe" aria-pressed="false">H₂ molecular VQE</button></nav><div data-qc-host></div>';
- const target=host.querySelector<HTMLElement>('[data-qc-host]')!;let cleanup=mountCircuit(target);host.querySelectorAll<HTMLButtonElement>('[data-qc]').forEach(button=>button.onclick=()=>{cleanup();host.querySelectorAll('[data-qc]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));cleanup=button.dataset.qc==='circuits'?mountCircuit(target):mountVQE(target);});return()=>cleanup();
+ const target=host.querySelector<HTMLElement>('[data-qc-host]')!;
+ return mountTools(host,'qc',target,key=>key==='circuits'?mountCircuit(target):mountVQE(target),'circuits');
 }

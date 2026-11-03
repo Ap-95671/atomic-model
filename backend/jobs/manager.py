@@ -111,6 +111,7 @@ class JobManager:
         return self.get(job_id)
 
     def _run(self, job_id: str, request: ChemistryRequest, solution: dict | None):
+        entered=time.monotonic()
         timer = None
         process = None
         timed_out = threading.Event()
@@ -170,6 +171,7 @@ class JobManager:
                             record.setdefault("error", "Scientific worker failed without a valid result")
                         else:
                             outcome.update(status="succeeded", stage="Calculation complete", result=final["result"])
+                            outcome["result"].setdefault("resources",{})["queue_wait_seconds"]=max(0.,entered-record["created"])
                             if final.get("solution"):
                                 self.solutions[job_id] = final["solution"]
                                 while len(self.solutions) > 4:

@@ -1,0 +1,40 @@
+{
+  "scope": "Separate direct legacy PySCF H2/HF/STO-3G three-view runs, same Python 3.14.7 environment; not universal timings.",
+  "before": [
+    {
+      "view": "homo",
+      "seconds": 0.435113417042885,
+      "energy": -1.116714325062552
+    },
+    {
+      "view": "lumo",
+      "seconds": 0.45956295798532665,
+      "energy": -1.116714325062552
+    },
+    {
+      "view": "density",
+      "seconds": 0.4439970410312526,
+      "energy": -1.116714325062552
+    }
+  ],
+  "after": [
+    {
+      "view": "homo",
+      "seconds": 0.343369708978571,
+      "energy": -1.116714325062552,
+      "scf_reused": false
+    },
+    {
+      "view": "lumo",
+      "seconds": 0.3330049170181155,
+      "energy": -1.116714325062552,
+      "scf_reused": true
+    },
+    {
+      "view": "density",
+      "seconds": 0.3284303330001421,
+      "energy": -1.116714325062552,
+      "scf_reused": true
+    }
+  ]
+}

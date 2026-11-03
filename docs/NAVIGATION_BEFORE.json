@@ -1,0 +1,206 @@
+{
+  "scope": "Local Chrome baseline; actual Python backend port 8771",
+  "refresh": {
+    "urlBefore": "http://127.0.0.1:8771/",
+    "selectedBefore": "Molecular Lab",
+    "after": "Atomic Explorer"
+  },
+  "timings": [
+    {
+      "lab": "Molecular Lab",
+      "tool": "",
+      "mount_ms": 77,
+      "complete_ms": 121
+    },
+    {
+      "lab": "Spectroscopy",
+      "tool": "",
+      "mount_ms": 33,
+      "complete_ms": 58
+    },
+    {
+      "lab": "Quantum Dynamics",
+      "tool": "",
+      "mount_ms": 39,
+      "complete_ms": 63
+    },
+    {
+      "lab": "Quantum Experiments",
+      "tool": "",
+      "mount_ms": 24,
+      "complete_ms": 48
+    },
+    {
+      "lab": "Quantum Materials",
+      "tool": "",
+      "mount_ms": 26,
+      "complete_ms": 51
+    },
+    {
+      "lab": "Computational Chemistry",
+      "tool": "",
+      "mount_ms": 27,
+      "complete_ms": 315
+    },
+    {
+      "lab": "Molecular Lab",
+      "tool": "MO reference diagrams",
+      "mount_ms": 84,
+      "complete_ms": 108
+    },
+    {
+      "lab": "Molecular Lab",
+      "tool": "",
+      "mount_ms": 25,
+      "complete_ms": 52
+    },
+    {
+      "lab": "Molecular Lab",
+      "tool": "",
+      "mount_ms": 30,
+      "complete_ms": 55
+    },
+    {
+      "lab": "Molecular Lab",
+      "tool": "",
+      "mount_ms": 27,
+      "complete_ms": 52
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/capabilities",
+      "duration_ms": 3.259,
+      "status": 200,
+      "bytes": 548
+    },
+    {
+      "path": "/api/elements",
+      "duration_ms": 1.135,
+      "status": 200,
+      "bytes": 33986
+    },
+    {
+      "path": "/api/species",
+      "duration_ms": 1.132,
+      "status": 200,
+      "bytes": 1098
+    },
+    {
+      "path": "/api/orbital",
+      "duration_ms": 19.656,
+      "status": 200,
+      "bytes": 572710
+    },
+    {
+      "path": "/api/chemistry/catalog",
+      "duration_ms": 0.942,
+      "status": 200,
+      "bytes": 1801
+    },
+    {
+      "path": "/api/molecular",
+      "duration_ms": 27.747,
+      "status": 200,
+      "bytes": 294672
+    },
+    {
+      "path": "/api/spectroscopy",
+      "duration_ms": 5.567,
+      "status": 200,
+      "bytes": 4411
+    },
+    {
+      "path": "/api/dynamics/superposition",
+      "duration_ms": 1.427,
+      "status": 200,
+      "bytes": 20765
+    },
+    {
+      "path": "/api/measurement",
+      "duration_ms": 2.036,
+      "status": 200,
+      "bytes": 3767
+    },
+    {
+      "path": "/api/physics",
+      "duration_ms": 6.424,
+      "status": 200,
+      "bytes": 29353
+    },
+    {
+      "path": "/api/computation/hartree-fock",
+      "duration_ms": 257.595,
+      "status": 200,
+      "bytes": 145716
+    },
+    {
+      "path": "/api/molecular",
+      "duration_ms": 5.655,
+      "status": 200,
+      "bytes": 294672
+    },
+    {
+      "path": "/api/molecular/diagram",
+      "duration_ms": 1.088,
+      "status": 200,
+      "bytes": 1530
+    },
+    {
+      "path": "/api/capabilities",
+      "duration_ms": 0.912,
+      "status": 200,
+      "bytes": 548
+    },
+    {
+      "path": "/api/elements",
+      "duration_ms": 1.057,
+      "status": 200,
+      "bytes": 33986
+    },
+    {
+      "path": "/api/species",
+      "duration_ms": 1.491,
+      "status": 200,
+      "bytes": 1098
+    },
+    {
+      "path": "/api/orbital",
+      "duration_ms": 17.28,
+      "status": 200,
+      "bytes": 572710
+    },
+    {
+      "path": "/api/chemistry/catalog",
+      "duration_ms": 0.911,
+      "status": 200,
+      "bytes": 1801
+    },
+    {
+      "path": "/api/molecular",
+      "duration_ms": 6.349,
+      "status": 200,
+      "bytes": 294672
+    },
+    {
+      "path": "/api/molecular",
+      "duration_ms": 5.47,
+      "status": 200,
+      "bytes": 294672
+    },
+    {
+      "path": "/api/molecular",
+      "duration_ms": 6.233,
+      "status": 200,
+      "bytes": 294672
+    }
+  ],
+  "long_tasks": [],
+  "heap": {
+    "usedSize": 11822032,
+    "totalSize": 26902528,
+    "embedderHeapUsedSize": 9768792,
+    "backingStorageSize": 2697195
+  },
+  "errors": []
+}
