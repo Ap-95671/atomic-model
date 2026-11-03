@@ -63,3 +63,17 @@ The sizable original atomic controller/styles are preserved with incremental
 extraction. No replacement framework, Kubernetes, remote account or paid API is
 required. Public-demo architecture is documented separately; local safeguards
 are not presented as multi-tenant production readiness.
+
+
+## Railway public-mode adapter
+
+`run.py` defaults to full local mode. `QAL_MODE=public` selects the new Uvicorn
+ASGI gateway (`backend/production.py`) with policy normalization, bounded request
+rates/response cache and one isolated core-science worker. It does not expose
+the development `http.server`. Runtime capabilities configure public preview
+controls and advanced-local availability messages. Catalog/element metadata do
+not compete with science, and busy/rate responses have bounded cancellable
+backoff. Docker copies built assets and core dependencies; PySCF is omitted.
+Every original local API remains implemented. See `RAILWAY_DEPLOYMENT.md` for
+exact resource limits and the cloud billing blocker; source readiness is not a
+claim of public deployment.

@@ -186,6 +186,27 @@ lobes and under-resolve tight cores. Many-electron Atomic Explorer Z_eff remains
 illustrative; source structures remain PubChem conformers unless separately
 optimized. See [limits](docs/LIMITATIONS.md) and the audit for the detailed scope.
 
-The app is **local only**. It is not exposed as a public production service;
-[public-demo architecture](docs/PUBLIC_DEMO.md) documents the remaining hosting
-work. License approval, PyPI publication and a stable 3.0 release remain pending.
+A resource-bounded **Railway public-demo image is implemented and container-tested**;
+cloud activation is currently blocked because the signed-in Railway account
+requires a paid upgrade while the approved budget is free/trial only. **No public
+HTTPS website is deployed.** See [Railway deployment status and instructions](docs/RAILWAY_DEPLOYMENT.md).
+The full advanced local app remains available. License approval, PyPI publication
+and a stable 3.0 release remain pending.
+
+
+## Railway / Docker public mode
+
+```sh
+docker build --platform linux/amd64 -t quantum-atom-lab:railway .
+docker run --rm --memory=512m --cpus=1 -p 127.0.0.1:8767:8080 -e PORT=8080 quantum-atom-lab:railway
+```
+
+This image independently builds Node/Python dependencies and serves frontend and
+APIs together. Public mode uses Uvicorn, one isolated scientific worker, bounded
+preview grids, time/RSS/rate/response/cache limits, and honest explanations for
+advanced-local-only calculations. It contains no PySCF. Runtime binds 0.0.0.0
+inside the container and reads Railway's `PORT`; ordinary `python run.py` keeps
+full local mode on localhost. No Render project, tunnel or Mac-hosted sharing is
+used. The [deployment guide](docs/RAILWAY_DEPLOYMENT.md) lists exact supported
+features, environment variables, costs, tests, redeployment and the current
+billing blocker. A successful container is not a successful public deployment.

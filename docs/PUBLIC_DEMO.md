@@ -1,8 +1,13 @@
-# Optional public-demo architecture
+# Public-demo architecture and current Railway status
 
-The implemented server is a **loopback-only local application**, not a hosted
-production service. This milestone does not publish a demo or change its bind
-address. Static frontend publishing alone does not provide the Python APIs.
+The advanced local application remains loopback-only by default. A separate
+bounded public ASGI/Docker mode is now implemented and container-tested; Railway
+activation is blocked by the signed-in account's paid-upgrade requirement and
+the owner's free/trial-only budget. **No HTTPS service is deployed.** See
+[deployment status](RAILWAY_DEPLOYMENT.md) for implemented controls, tests and
+exact next steps. The architecture discussion below remains background for
+future live chemistry/multi-user expansion. Static frontend hosting alone does
+not provide Python APIs.
 
 A suitable future public demo can serve a built frontend and precomputed,
 provenance-preserving scientific examples from a CDN. Route inexpensive,

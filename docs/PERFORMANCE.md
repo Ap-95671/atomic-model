@@ -112,3 +112,25 @@ versus 2.0 JS 629.48 / 169.68 gzip. More working labs add bundle weight;
 code splitting remains a useful follow-up. The >500 kB Vite advisory remains
 visible, with no warning-threshold suppression. No all-overlay GPU-memory,
 frame-time distribution or adversarial concurrent load claim is made.
+
+## Railway public-container checkpoint
+
+Independent Linux/amd64 runtime on Docker Desktop (macOS/arm64 emulation), Python
+3.14.7, one CPU and hard 512 MiB memory. Image size **140,406,699 bytes** (~140 MB,
+134 MiB), runtime UID/GID 10001, read-only filesystem and 32 MiB tmpfs in tests.
+Observed working set after requests: ~35–45 MiB; representative cgroup peaks
+~129–151 MiB. One process remains after scientific workers exit. These limits
+are appropriate evidence for the bounded public preview, not the full local
+PySCF app or all traffic/worst cases. Emulated timings are not native Railway
+benchmarks. See `RAILWAY_CONTAINER_RESOURCES.json` for exact settings/measurements.
+
+24 actual HTTP/science checks pass; eight dedicated public Chromium workflows
+pass (26.6 s), including f surfaces, rotation/zoom, element selection, PNG exports
+under CSP, spectroscopy/measurement/dynamics and mobile layouts. All 85 full
+local browser regressions also pass (~1.2 min); 136 Python tests pass (17.607 s).
+Metadata no longer competes for the single scientific worker; bounded backoff
+handles transient public busy/rate responses without unbounded server queues.
+
+No Railway service is running: the authenticated account requires paid upgrade
+while the allowed budget is free/trial only. Container measurements and localhost
+success do not demonstrate public HTTPS reachability or deployment completion.

@@ -1,0 +1,29 @@
+{
+  "container": "qal-railway-check",
+  "source_commit": "0547c8899a16b6cd3d464b3b00c2b0d72900a6e7",
+  "image_id": "sha256:c7c12637d36959b4e538f33c3913f0369301878e9bda46ffce9c72fbb936363c",
+  "image_bytes": 140406699,
+  "hard_memory_limit_bytes": 536870912,
+  "cpu_nanocpus": 1000000000,
+  "pid_limit": 64,
+  "read_only_filesystem": true,
+  "user": "10001:10001",
+  "health": "healthy",
+  "docker_usage": {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.43%",
+    "Container": "qal-railway-check",
+    "ID": "aa64d024b946",
+    "MemPerc": "8.54%",
+    "MemUsage": "43.75MiB / 512MiB",
+    "Name": "qal-railway-check",
+    "NetIO": "78.1kB / 10.4MB",
+    "PIDs": "1"
+  },
+  "cgroup": {
+    "memory.current": "55943168",
+    "memory.peak": "132960256",
+    "cpu.stat": "usage_usec 17040848\nuser_usec 16320573\nsystem_usec 720275\nnice_usec 0\nnr_periods 726\nnr_throttled 52\nthrottled_usec 552980\nnr_bursts 0\nburst_usec 0"
+  },
+  "scope": "Measured Linux/amd64 container on macOS/arm64 Docker emulation, not native Railway performance or a deployed public service. Representative workload, not a universal peak/traffic guarantee."
+}

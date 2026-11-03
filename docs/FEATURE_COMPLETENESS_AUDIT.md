@@ -145,3 +145,20 @@ This table supersedes the starting-state matrix where changed. Limitations in
 | Source conformers/diagrams | Limited/validated provenance/reference labels preserved | Original source/data/model tests | Not measured equilibrium data; P0 |
 | Reaction pathways / nuclear MD | Missing, no placeholder output | No solver/controller shipped | Validated forces/integration/path/TS workflows still required; P2 |
 | Public demo / licensing | Not deployed / pending owner decision | `PUBLIC_DEMO.md`, `LICENSE_REVIEW.md` | Isolation/hosting and explicit license approval; P3 |
+
+
+## Railway deployment-readiness milestone
+
+- **Implemented/validated locally:** independent multi-stage Linux image,
+  production ASGI gateway, PORT/host configuration, readiness, same-origin assets,
+  public capabilities/limits, rate/caching/worker cleanup and honest advanced-mode
+  messages. Original 85 local browser workflows remain; eight public-container
+  workflows and ten new gateway/policy tests exercise the new mode.
+- **Blocked externally:** the authenticated Railway workspace has no projects and
+  reports that trials are paused and a paid upgrade is needed. Owner allows only
+  free/trial credits, no paid charges. No project/service/domain/deploy was created.
+  There is no deployed HTTPS URL or externally verified hosted commit.
+- **Unchanged remaining science:** the still-missing general 3D/laser solver,
+  nuclear MD/reaction paths, derivative intensities, periodic materials data and
+  broader adaptive research above are not represented as completed by this
+  deployment-readiness work.
