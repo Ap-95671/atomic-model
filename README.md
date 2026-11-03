@@ -1,38 +1,85 @@
-# Quantum Atom Lab 3.0 alpha · validated milestones
+# Quantum Atom Lab
 
-A local scientific workspace for atomic orbitals, molecular bonding, spectroscopy,
-quantum dynamics and small-system computational chemistry. Python calculates the
-states and surfaces; TypeScript and Three.js provide the interface. The original
-Pygame simulator and Git history are preserved.
+An interactive scientific workspace for atomic orbitals, molecular bonding,
+spectroscopy, quantum dynamics and small-system computational chemistry.
+Explore all 118 elements, compare orbital shapes and investigate quantum models
+with explicit units, data sources and scientific assumptions.
 
-![Calculated triplet O₂ molecular orbital](docs/quantum-lab-3-molecular.png)
+**[Open the live website →](https://quantum-atom-lab-ap95671.pages.dev/)**
 
-Incremental development on unmerged 2.0 PR #2. This alpha implements tested
-chemistry, dynamics and quantum-model milestones; it does **not** complete every
-item in the 3.0 specification. The [current audit](docs/FEATURE_COMPLETENESS_AUDIT.md)
-and [implementation report](docs/QUANTUM_LAB_3_COMPLETION.md) distinguish working
-calculations from remaining work. Project licensing awaits owner approval.
+No sign-in or installation is needed for the public browser edition. It runs
+independently of the developer’s computer. The full Python application provides
+additional local research solvers.
 
-Laboratories and internal tools now have shareable URL routes that survive
-refresh and Back/Forward navigation. See the [navigation repair report](docs/NAVIGATION_REPAIRS.md)
-for cancellation, renderer-memory fixes and measured regression results.
+![Quantum Atom Lab homepage](docs/MODERNIZATION_HOME.png)
 
-## Public website · Cloudflare Pages Free
+## Explore in your browser
 
-**[Open Quantum Atom Lab](https://quantum-atom-lab-ap95671.pages.dev/)**
+| Tool | Open the public workspace |
+| --- | --- |
+| Atomic Explorer | [Occupied orbitals, allowed states and prepared configurations](https://quantum-atom-lab-ap95671.pages.dev/#lab=atomic) |
+| Periodic Table | [118 elements, reference properties and quantitative trends](https://quantum-atom-lab-ap95671.pages.dev/#lab=periodic) |
+| Orbital Comparison | [Independent 3D views with a common physical scale](https://quantum-atom-lab-ap95671.pages.dev/#lab=compare) |
+| Molecular Lab | [Bonding, molecular structures and recorded HF examples](https://quantum-atom-lab-ap95671.pages.dev/#lab=molecular) |
+| Spectroscopy | [Hydrogenic transitions, selection rules and spectral lines](https://quantum-atom-lab-ap95671.pages.dev/#lab=spectroscopy) |
+| Quantum Experiments | [Born-rule measurements and supported circuit experiments](https://quantum-atom-lab-ap95671.pages.dev/#lab=experiments) |
+| Atomic Theory | [Historical timeline and model comparison](https://quantum-atom-lab-ap95671.pages.dev/#lab=history) |
 
-The independent public demo runs lightweight scientific calculations in your
-browser and serves clearly labeled, reproducible HF molecular datasets. No
-account, card or paid API is needed to use it; the Mac can be offline. Advanced
-fresh HF/DFT, correlation and other research solvers remain in the full local
-Python application. See the [deployment and model report](docs/CLOUDFLARE_PAGES.md)
-for the complete feature matrix, source provenance, tests and limitations.
+The browser edition calculates lightweight scientific models on your device and
+serves clearly labeled, reproducible H₂, N₂, triplet O₂ and water HF datasets.
+Fresh HF/DFT, correlation, geometry optimization and other advanced research
+methods require the full local Python application. Unsupported browser tools
+explain their scope; recorded results are identified as precomputed.
+See the [public model and deployment guide](docs/CLOUDFLARE_PAGES.md).
+
+The production source branch is
+[`codex/cloudflare-pages-demo`](https://github.com/Ap-95671/atomic-model/tree/codex/cloudflare-pages-demo).
+[Deployment provenance](https://quantum-atom-lab-ap95671.pages.dev/build-info.json)
+reports the exact source commit served by the website. A GitHub commit or
+successful local build alone is not proof of deployment.
+
+## Workspace features
+
+- **Ground state by default:** element-specific controls show occupied reference
+  orbitals, including partially filled subshells and documented configuration
+  exceptions. Neutral hydrogen starts in 1s¹.
+- **Explicit exploration and preparation:** view other allowed orbital states
+  without claiming excitation, or prepare an electron assignment with validated
+  electron count, quantum numbers and Pauli exclusion. State preparation is
+  distinct from simulating a transition.
+- **Periodic reference trends:** filter by element, period or category; explore
+  seven source-backed properties; inspect unknown values; export CSV data.
+- **Independent orbital comparison:** two camera panes share one WebGL renderer,
+  with common-scale or independently fitted clouds and amplitude surfaces.
+- **Presentation and export:** camera presets, rotation controls, display quality,
+  fullscreen and bounded 1×/2× PNG exports across the 3D laboratories.
+- **A consistent workspace:** light/dark themes, responsive controls, Ctrl/Cmd+K
+  command search, guided activities, local experiment presets and shareable URLs
+  that restore applicable selections, cameras and display settings.
+
+![Independent orbital comparison](docs/MODERNIZATION_COMPARISON.png)
+
+The application is **3.0 alpha**. Its implemented scientific models have stated
+limits; it does not claim to complete every research feature in the broader 3.0
+roadmap. Many-electron Atomic Explorer shapes remain illustrative hydrogenic
+Z_eff models. Exact one-electron solutions, prepared occupancies, molecular
+calculations and historical sketches are identified separately. Very heavy
+reference configurations retain uncertainty labels. See the
+[modernization report](docs/MODERNIZATION.md),
+[scientific methods](docs/SCIENTIFIC_METHODS.md) and
+[research feature audit](docs/FEATURE_COMPLETENESS_AUDIT.md).
+
+The original Pygame simulator and Git history are preserved. Project licensing
+and a stable release remain separate owner decisions.
 
 ## Working laboratories
 
 | Laboratory | Implemented calculation | Scope |
 | --- | --- | --- |
 | **Atomic Explorer** | Hydrogenic s/p/d/f clouds, surfaces, nodes, real/complex harmonics, radial/angular plots, overlays, isotopes/ions, all 118 elements | Analytic one-electron model; multi-electron Z_eff shapes remain illustrative |
+| **Periodic Explorer** | Seven PubChem reference properties, filters, point plots and CSV export | Source definitions and missing values are retained; compiled values can include estimates |
+| **Orbital Comparison** | Two independently controlled atomic-orbital views, shared scale, phase/density and cloud/surface modes | Individually normalized hydrogenic functions; illustrative Z_eff for many-electron atoms |
+| **Atomic Theory** | Sourced timeline and side-by-side historical model explanations | Original conceptual diagrams, not trajectory simulations |
 | **Molecular Lab** | H₂⁺ generalized LCAO eigenproblem, bonding/antibonding and original atomic orbitals, overlap/matrices, total-energy curve and minimum | Shared fixed/optimized Slater exponent, measured mesh convergence; nuclear repulsion included |
 | **MO diagrams** | H₂⁺, H₂, He₂, Li₂, B₂, C₂, N₂, O₂, F₂, Ne₂ occupations, spin, frontier levels, bond order and magnetism | Reference-based ordinal diagrams; no calculated many-electron energies or shapes |
 | **3D structures** | H₂O, NH₃, CH₄, CO₂, CO, benzene; atoms, connectivity, coordinates, derived bond lengths/angles | Source-preserved PubChem3D conformers; schematic ball sizes, no equilibrium-optimization claim |
@@ -56,9 +103,16 @@ probability density remains stationary; changing global phase does not animate
 an electron trajectory. A surface threshold is a fraction of a sampled peak,
 not an enclosed probability or electron count.
 
-## Run locally · macOS / Python 3.14
+## Run locally
+
+Validated with Python 3.14.7 and Node.js 24. A WebGL2-capable browser is needed
+for 3D rendering; textual scientific results remain available without WebGL.
+Use the production branch for the complete application described here:
 
 ```sh
+git clone --branch codex/cloudflare-pages-demo https://github.com/Ap-95671/atomic-model.git
+cd atomic-model
+
 python3.14 -m venv .venv                 # only if no environment exists
 source .venv/bin/activate
 python -m pip install -r requirements.txt
@@ -67,9 +121,7 @@ npm --prefix frontend run build
 python run.py
 ```
 
-Open [Quantum Atom Lab](http://127.0.0.1:8765/). Node 20.19+ or 22.12+ and a
-WebGL2-capable browser are needed for building/3D viewing. Textual results remain
-available if WebGL fails. After installation/build, the app runs offline. No API
+Open [the local application](http://127.0.0.1:8765/). After installation/build, the app runs offline. No API
 keys or paid/cloud services are needed. Change port with `python run.py --port 8766`.
 
 Optional computational backend, validated on this Mac with **Python 3.14.7**:
@@ -99,6 +151,8 @@ prints Bohr physics; Escape exits. No original Pygame module was changed.
 ## Use the workspace
 
 - Choose a laboratory from the navigation; specialized tools have local subnav.
+- Use **Prepare an excited configuration** to edit occupancies. Use **Explore
+  allowed orbital states** to inspect shapes without changing the reference atom.
 - Rotate by dragging; scroll to zoom; right-drag or Shift-drag to pan. Focus a
   3D canvas to pan with arrows or reset with R. Image exports include model/units.
 - Parameter changes hide obsolete lab results; **Calculate** updates them.
@@ -109,28 +163,75 @@ prints Bohr physics; Escape exits. No original Pygame module was changed.
   tunneling, interference and Stark mixing.
 - Export scientific CSV/JSON and graph/3D PNG where supplied. Graph axes/legends
   distinguish density, amplitude, potential and total versus orbital energy.
-- Mobile controls collapse under **Experiment parameters**. Navigation, graphs
+- Atomic mobile controls collapse under **Atom & orbital controls**; other
+  laboratory settings use **Experiment parameters**. Navigation, graphs
   and wide tables scroll inside their containers. Tested widths span 320–1920 px.
 - Keyboard tabs, visible focus, native named dialogs, textual scientific results
   and reduced-motion behavior support accessible exploration.
 
 ## Validation
 
+The modernization source checkpoint
+[`c7e1d53`](https://github.com/Ap-95671/atomic-model/commit/c7e1d534ae5ef0231cab39d98267adea1c659c1c)
+passed all four [GitHub Actions validation jobs](https://github.com/Ap-95671/atomic-model/actions/runs/41670469380):
+core science, chemistry/browser, public container and static browser build.
+
+| Validation | Observed result |
+| --- | --- |
+| Python science/API tests | 139 passed |
+| Existing browser-science reference checks | 5,356 passed |
+| Preparation and periodic-property checks | 2,457 passed |
+| Full local Chrome workflows | 155 passed |
+| Final UI/contrast regression checks | 46 passed |
+| API-free static browser workflows | 16 passed |
+| Linux container public-mode browser workflows | 8 passed |
+| TypeScript, local/static builds, dependency consistency | Passed |
+
+Run the relevant checks locally:
+
 ```sh
 .venv/bin/python -m unittest discover -s tests -v
+npm --prefix frontend run test:science
+node scripts/test_frontend_lifecycle.mjs
 npm --prefix frontend run build
 npm --prefix frontend run test:e2e
+npm --prefix frontend run build:pages
+QAL_STATIC_TEST=1 npm --prefix frontend run test:e2e
 .venv/bin/python -m pip check
 ```
 
-Browser tests use installed Google Chrome through Playwright. The suite includes
-actual WebGL controls, laboratory switching, exports, local presets, request
-failure/cancellation, responsive widths, GPU buffer reuse, idle rendering and
-axe WCAG 2.2 AA rule checks. Optional PySCF science tests skip explicitly if the
-backend is absent; install the optional requirements to exercise DFT end to end.
-See [validation](docs/SCIENTIFIC_VALIDATION.md) and the [release audit](docs/RELEASE_AUDIT.md)
-for final counts, measurements and actual screenshots. Automated accessibility
-checks are not a formal accessibility certification.
+Browser tests require Google Chrome through Playwright. Install it with
+`npx playwright install chrome` from `frontend` if it is not already available.
+Optional PySCF tests explicitly skip when that engine is absent.
+
+Coverage includes real WebGL interaction, exports, configuration validation,
+refresh/history, cancellation, saved settings, responsive layouts, phase/density
+labels, bounded memory/context use and axe WCAG rule checks. Original laboratory
+navigation is stressed for 50 cycles; comparison/periodic views have additional
+memory and context regressions. These checks are not an accessibility certification
+or a claim about every browser, screen reader or physical phone.
+
+The [modernization report](docs/MODERNIZATION.md) records the measured performance,
+source provenance and model limits. The main JS gzip size changed from 190.74 to
+171.18 kB; local repeat-switch median was 34.2 ms before and 34.9 ms after. These
+observations do not establish a universal speedup.
+
+## Build the public browser edition
+
+```sh
+npm --prefix frontend ci
+npm --prefix frontend run test:science
+npm --prefix frontend run build:pages
+npm --prefix frontend run preview:pages
+```
+
+Open [the static preview](http://127.0.0.1:8770/). The output is
+`frontend/dist-pages`; it has no Python runtime, server API or paid cloud bindings.
+Publishing updates to `codex/cloudflare-pages-demo` triggers the existing
+Cloudflare Pages Git integration. Verify the source SHA in
+[build-info.json](https://quantum-atom-lab-ap95671.pages.dev/build-info.json) and run
+the public HTTPS checks before recording a deployment as complete. Full details
+are in the [Cloudflare deployment guide](docs/CLOUDFLARE_PAGES.md).
 
 ## Scientific methods and architecture
 
@@ -150,6 +251,8 @@ filesystem writes or remote-execution API.
 
 | Documentation | Contents |
 | --- | --- |
+| [Frontend modernization](docs/MODERNIZATION.md) | Current interface, prepared configurations, trends, comparison, tests and measured performance |
+| [Public browser deployment](docs/CLOUDFLARE_PAGES.md) | Live-site architecture, model availability, provenance and deployment configuration |
 | [Baseline audit](docs/BASELINE_AUDIT.md) | Starting state, reproduced issues, original tests/performance |
 | [Architecture](docs/ARCHITECTURE.md) | Engine/API/UI/rendering boundaries and concurrency |
 | [Scientific methods](docs/SCIENTIFIC_METHODS.md) | Equations, algorithms, units, assumptions and references |
@@ -195,16 +298,16 @@ periodic DFT; a generalizable accuracy-aware research router with independent
 large benchmarks and calibrated uncertainty. Current exact-condition benchmark
 lookup is a transparent baseline, not a learned or general-purpose predictor.
 
-Named portable workspaces, every camera/overlay/GPU/device combination and a
-full controller refactor are also incomplete. Finite meshes may omit small
+Device-local experiment presets and applicable camera/overlay restoration are
+implemented. Portable account-backed workspaces, exhaustive device coverage and
+a full controller refactor remain outside this release. Finite meshes may omit small
 lobes and under-resolve tight cores. Many-electron Atomic Explorer Z_eff remains
 illustrative; source structures remain PubChem conformers unless separately
 optimized. See [limits](docs/LIMITATIONS.md) and the audit for the detailed scope.
 
 A resource-bounded **Railway public-demo image is implemented and container-tested**;
 cloud activation is currently blocked because the signed-in Railway account
-requires a paid upgrade while the approved budget is free/trial only. **No public
-HTTPS website is deployed.** See [Railway deployment status and instructions](docs/RAILWAY_DEPLOYMENT.md).
+requires a paid upgrade while the approved budget is free/trial only. **Railway is not deployed; the separate Cloudflare Pages demo is linked above.** See [Railway deployment status and instructions](docs/RAILWAY_DEPLOYMENT.md).
 The full advanced local app remains available. License approval, PyPI publication
 and a stable 3.0 release remain pending.
 

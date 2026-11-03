@@ -1,5 +1,5 @@
 import { test,expect } from '@playwright/test';
-test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('#loading')).toBeHidden();});
+test.beforeEach(async({page})=>{await page.goto('/#lab=atomic');await expect(page.locator('#loading')).toBeHidden();});
 test('zero fields, genuine Stark mixing and angular-momentum constraints',async({page})=>{
   await page.getByRole('button',{name:'Quantum Experiments',exact:true}).click();await page.getByRole('button',{name:'Fields & Spin',exact:true}).click();
   await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');

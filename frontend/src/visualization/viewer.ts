@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import type { MeshData, OrbitalData, Species } from "../types";
+import {viewportTools,type CameraState} from './viewport-tools';
 
 const positive = new THREE.Color("#59c8e8");
 const negative = new THREE.Color("#efad79");
@@ -31,6 +32,9 @@ export class OrbitalViewer {
   complex = false;
   opacity = 0.6;
   rotation = false;
+  rotationSpeed=.55;
+  private customRender?:()=>void;
+  private cleanupTools?:()=>void;
   private frame = 0;
   private disposed = false;
   private nucleusKey='';
@@ -75,7 +79,7 @@ export class OrbitalViewer {
       this.container.classList.add("interacting"),
     );
     this.controls.addEventListener("end", () =>
-      this.container.classList.remove("interacting"),
+      {this.container.classList.remove("interacting");this.container.dispatchEvent(new Event('qal-camera-change'));},
     );
     this.scene.add(this.orbitals, this.nucleus, this.nodes, this.axes);
     this.scene.add(new THREE.HemisphereLight(0xd7eaff, 0x283543, 2.5));
@@ -112,6 +116,10 @@ export class OrbitalViewer {
         this.reset();
     };
     window.addEventListener("keydown", this.onKey);
+    if(container.id!=='viewport')this.cleanupTools=viewportTools(container,{
+      preset:view=>this.cameraPreset(view),quality:value=>this.setQuality(value),camera:()=>this.cameraState(),restore:value=>this.restoreCamera(value),rotate:(active,speed)=>{this.rotation=active;this.rotationSpeed=speed;this.invalidate();},
+      screenshot:scale=>{const root=container.closest('.lab-results')??container.parentElement;const title=root?.querySelector('h2')?.textContent??document.querySelector('#lab-workspace h1')?.textContent??'Quantum Atom Lab';const model=root?.querySelector('.method-badge')?.textContent??'Scientific visualization';return this.screenshot(`${title} · ${model}`,'Units and model assumptions: see the laboratory results · schematic marker/bond sizes','Laboratory annotations define atomic colors, amplitude phase, density, and physical units.',scale);},
+    });
     this.invalidate();
   }
   reset() {
@@ -122,6 +130,29 @@ export class OrbitalViewer {
       this.controls.update();
       this.invalidate();
     }
+  }
+  cameraPreset(view:string) {
+    const distance=this.camera.position.distanceTo(this.controls.target);
+    const direction=view==='x'?new THREE.Vector3(1,0,0):view==='y'?new THREE.Vector3(0,-1,0):view==='z'?new THREE.Vector3(0,-.001,1):new THREE.Vector3(8,-12,7).normalize();
+    this.camera.position.copy(this.controls.target).add(direction.multiplyScalar(distance));
+    this.controls.update();this.invalidate();this.container.dispatchEvent(new Event('qal-camera-change'));
+  }
+  cameraState():CameraState {return{position:this.camera.position.toArray(),target:this.controls.target.toArray()};}
+  restoreCamera(value:unknown){
+    if(!value||typeof value!=='object')return false;
+    const {position,target}=value as CameraState;
+    if(![position,target].every(v=>Array.isArray(v)&&v.length===3&&v.every(x=>typeof x==='number'&&Number.isFinite(x)&&Math.abs(x)<=10000)))return false;
+    const distance=Math.hypot(...position.map((v,i)=>v-target[i]));if(distance<.8||distance>50)return false;
+    this.camera.position.fromArray(position);this.controls.target.fromArray(target);this.controls.update();this.invalidate();return true;
+  }
+  setRenderOverride(draw?:()=>void){this.customRender=draw;this.invalidate();}
+  private draw(){if(this.customRender)this.customRender();else this.renderer.render(this.scene,this.camera);}
+  clearState(atom:Species) {
+    this.clear(this.orbitals);this.clear(this.nodes);this.makeNucleus(atom);this.data=null;this.invalidate();
+  }
+  setQuality(quality:string) {
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='high'?2:quality==='balanced'?1.5:1.25));
+    this.resize();
   }
   resize() {
     const { clientWidth: w, clientHeight: h } = this.container;
@@ -479,7 +510,7 @@ export class OrbitalViewer {
     this.frame = 0;
     if (this.disposed || document.hidden || !this.container.getClientRects().length) return;
     this.controls.autoRotate = this.rotation && !matchMedia("(prefers-reduced-motion: reduce)").matches;
-    this.controls.autoRotateSpeed = 0.55;
+    this.controls.autoRotateSpeed = this.rotationSpeed;
     const changed = this.controls.update();
     if (this.container.classList.contains("interacting")) {
       for (const obj of this.orbitals.children)
@@ -492,27 +523,33 @@ export class OrbitalViewer {
       for (const obj of this.orbitals.children)
         if (obj instanceof THREE.Points) obj.geometry.setDrawRange(0, Infinity);
     }
-    this.renderer.render(this.scene, this.camera);
+    this.draw();
     if (changed || this.controls.autoRotate) this.invalidate();
   };
-  screenshot(model = "Quantum Atom Lab", units = "Lengths in a₀; nucleus schematic", legend?:string) {
-    this.renderer.render(this.scene, this.camera);
+  screenshot(model = "Quantum Atom Lab", units = "Lengths in a₀; nucleus schematic", legend?:string,scale=1) {
+    const size=this.renderer.getSize(new THREE.Vector2()),ratio=this.renderer.getPixelRatio();
+    const factor=Math.max(1,Math.min(scale,8192/(size.x*ratio),8192/(size.y*ratio),Math.sqrt(8_000_000/(size.x*size.y*ratio*ratio))));
+    try{
+    if(factor>1){this.renderer.setPixelRatio(ratio*factor);this.renderer.setSize(size.x,size.y,false);}
+    this.draw();
     const source = this.renderer.domElement;
     const canvas = document.createElement("canvas");
-    canvas.width = source.width; canvas.height = source.height + 100;
+    canvas.width = source.width; canvas.height = source.height + Math.round(100*factor);
     const ctx = canvas.getContext("2d")!;
     ctx.fillStyle = "#0a1017"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(source, 0, 100);
+    ctx.drawImage(source, 0,100*factor);ctx.scale(factor,factor);
     ctx.fillStyle = "#e3e9ef"; ctx.font = "16px sans-serif";
-    ctx.fillText(model, 20, 32, canvas.width - 40);
+    ctx.fillText(model, 20, 32, canvas.width/factor - 40);
     ctx.fillStyle = "#a5b6c5"; ctx.font = "14px sans-serif";
-    ctx.fillText(units, 20, 62, canvas.width - 40);
-    ctx.fillText(legend ?? (this.phase ? "Cyan: +ψ; amber: −ψ in real phase view. Complex view: cyclic phase hue." : "Density view: nonnegative density, without phase coloring."), 20, 84, canvas.width - 40);
+    ctx.fillText(units, 20, 62, canvas.width/factor - 40);
+    ctx.fillText(legend ?? (this.phase ? "Cyan: +ψ; amber: −ψ in real phase view. Complex view: cyclic phase hue." : "Density view: nonnegative density, without phase coloring."), 20, 84, canvas.width/factor - 40);
     return canvas.toDataURL("image/png");
+    }finally{if(factor>1){this.renderer.setPixelRatio(ratio);this.renderer.setSize(size.x,size.y,false);this.draw();}}
   }
   dispose() {
     if(this.disposed)return;
     this.disposed = true;this.data=null;this.blochArrow=undefined;this.structureFrame=undefined;
+    this.cleanupTools?.();this.customRender=undefined;
     cancelAnimationFrame(this.frame);
     this.intersectionObserver.disconnect();
     document.removeEventListener("visibilitychange", this.onVisibility);
