@@ -11,6 +11,25 @@ No sign-in or installation is needed for the public browser edition. It runs
 independently of the developer’s computer. The full Python application provides
 additional local research solvers.
 
+## Public website or full local application?
+
+| Version | Address | Advanced Python calculations |
+| --- | --- | --- |
+| Public browser edition | [Open the deployed website](https://quantum-atom-lab-ap95671.pages.dev/) | Unavailable: this deployment has no Python server. Recorded molecular datasets are labeled. |
+| Full local application | [http://127.0.0.1:8765/](http://127.0.0.1:8765/) | Available while the local server is running; HF/DFT and other optional methods also require `requirements-computation.txt`. |
+
+**Already installed?** Start the full application from the repository folder:
+
+```sh
+QAL_MODE=local .venv/bin/python run.py --port 8765
+```
+
+Leave that terminal running, then open **http://127.0.0.1:8765/**.
+`localhost` without `:8765` uses a different port. The hosted website does not
+start your local server or provide the advanced Python backend. For a new
+installation, follow [Run locally](#run-locally) below, including the optional
+computation dependencies if you need research solvers.
+
 ![Quantum Atom Lab homepage](docs/MODERNIZATION_HOME.png)
 
 ## Explore in your browser
@@ -124,7 +143,9 @@ python run.py
 Open [the local application](http://127.0.0.1:8765/). After installation/build, the app runs offline. No API
 keys or paid/cloud services are needed. Change port with `python run.py --port 8766`.
 
-Optional computational backend, validated on this Mac with **Python 3.14.7**:
+Install the optional computational backend **before starting the server** to enable
+PySCF HF/DFT, geometry, vibrations and other supported research calculations.
+Validated on this Mac with **Python 3.14.7**:
 
 ```sh
 .venv/bin/python -m pip install -r requirements-computation.txt
@@ -137,7 +158,13 @@ or automatic backend install is performed by the application.
 
 For development, run Python in one terminal and `npm --prefix frontend run dev`
 in another. Vite proxies `/api` to Python on 8765. Rebuild before using Python's
-compiled frontend. Backend changes require restarting Python.
+compiled frontend. Backend changes require restarting Python. If localhost refuses the connection, run
+`QAL_MODE=local .venv/bin/python run.py --port 8765` and keep it running. Check
+[server health](http://127.0.0.1:8765/api/health) and
+[capabilities](http://127.0.0.1:8765/api/capabilities); the latter must report
+`"mode": "local"` and `"advanced_computation": true`. A static Pages preview
+cannot run those Python methods. After installing optional dependencies, restart
+Python and reload the page.
 
 Original classical comparison remains:
 
