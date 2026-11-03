@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('#loading')).toBeHidden();});
+test.beforeEach(async({page})=>{await page.goto('/#lab=atomic');await expect(page.locator('#loading')).toBeHidden();});
 test('superposition playback, pause, stationary eigenstate and export',async({page})=>{
   await page.getByRole('button',{name:'Quantum Dynamics',exact:true}).click();
   await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');

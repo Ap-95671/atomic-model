@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('.public-demo-notice')).toContainText('Resource-bounded public demo');});
+test.beforeEach(async({page})=>{await page.goto('/#lab=atomic');await expect(page.locator('#loading')).toBeHidden();await page.locator('#orbital-scope').selectOption('explore');await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('.public-demo-notice')).toContainText('Resource-bounded public demo');});
 test('public atomic s/p/d/f preview, camera, periodic table and image export',async({page})=>{
  await expect(page.locator('#quality')).toHaveValue('preview');await expect(page.locator('#quality option[value="high"]')).toHaveJSProperty('disabled',true);
  for(const family of [1,2,3]){await page.locator(`[data-family="${family}"]`).click();await expect(page.locator('#loading')).toBeHidden();}

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('#loading')).toBeHidden();await page.getByRole('button',{name:'Molecular Lab',exact:true}).click();await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');});
+test.beforeEach(async({page})=>{await page.goto('/#lab=atomic');await expect(page.locator('#loading')).toBeHidden();await page.getByRole('button',{name:'Molecular Lab',exact:true}).click();await expect(page.locator('.lab-status')).toHaveText('Calculation complete.');});
 test('calculated molecular surfaces, separation, energies and exports',async({page})=>{
   await expect(page.locator('[data-molecular-view] canvas')).toBeVisible();
   await expect(page.locator('.result-metrics')).toContainText('0.586453');

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 test.beforeEach(async ({page}) => {
-  await page.goto('/');
-  await expect(page.locator('#loading')).toBeHidden();
+  await page.goto('/#lab=atomic');
+  await expect(page.locator('#loading')).toBeHidden();await page.locator('#orbital-scope').selectOption('explore');await expect(page.locator('#loading')).toBeHidden();
 });
 for (const width of [320, 390, 768, 1024, 1440, 1920]) {
   test(`atomic layout fits ${width}px`, async ({page}) => {

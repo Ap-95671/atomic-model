@@ -2,19 +2,36 @@ import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 test.beforeEach(async({page})=>{
  await page.route('**/api/**',r=>r.abort());
- await page.goto('/');await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('.public-demo-notice')).toContainText('BROWSER DEMO');
+ await page.goto('/#lab=atomic');await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('.public-demo-notice')).toContainText('BROWSER DEMO');
+});
+test('modernized home, carbon occupancy and explicit exploration work without an API',async({page})=>{
+ await page.goto('/#lab=home');await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('#home-scene canvas')).toBeVisible();
+ await page.getByRole('link',{name:'Enter the laboratory'}).click();await expect(page.locator('#orbital-scope')).toHaveValue('ground');await expect(page.locator('[data-family="1"]')).toBeHidden();
+ await page.locator('#command-search').click();await page.locator('#command-input').fill('carbon');await page.keyboard.press('Enter');await expect(page.locator('#element-name')).toHaveText('Carbon');await page.locator('[data-ground="2,1"]').click();await expect(page.locator('#orbital-shortcuts button')).toHaveCount(2);
+ await page.locator('#orbital-scope').selectOption('explore');await page.locator('[data-family="3"]').click();await expect(page.locator('#orbital-title')).toContainText('4f');await expect(page.locator('#occupancy-note')).toContainText('Unoccupied');await page.reload();await expect(page.locator('#orbital-scope')).toHaveValue('explore');await expect(page.locator('#orbital-title')).toContainText('4f');
+});
+test('historical comparison restores in the API-free artifact',async({page})=>{
+ await page.goto('/#lab=history&model=dalton&compare=quantum');await expect(page.locator('.history-card h2')).toHaveText(['Dalton','Quantum mechanics']);await page.reload();await expect(page.locator('.history-card h2')).toHaveText(['Dalton','Quantum mechanics']);
+});
+test('prepared occupancy and quantitative periodic references work without Python',async({page})=>{
+ await page.locator('#prepare-configuration').click();await page.getByRole('button',{name:'Move electron',exact:true}).click();await page.getByRole('button',{name:'Use prepared configuration',exact:true}).click();await expect(page.locator('#orbital-title')).toHaveText('2p_z');await page.reload();await expect(page.locator('#orbital-scope')).toHaveValue('prepared');await expect(page.locator('#e-count')).toHaveText('1');
+ await page.getByRole('button',{name:'Periodic Table',exact:true}).click();await expect(page.locator('#periodic-page-grid button')).toHaveCount(118);await page.locator('#periodic-property').selectOption('electronegativity');await page.locator('#periodic-period').selectOption('1');await expect(page.locator('#periodic-range')).toContainText('1 unknown');
+});
+test('independent orbital comparison and high-resolution export work in the browser worker build',async({page})=>{
+ await page.getByRole('button',{name:'Orbital Comparison',exact:true}).click();await expect(page.locator('.lab-status')).toHaveText('Browser result ready.');await expect(page.locator('[data-comparison-view] canvas')).toHaveCount(1);await expect(page.locator('[data-pane="b"]')).toContainText('0 reference electrons');
+ const image=page.waitForEvent('download');await page.locator('[data-v-export2]').click();expect(await(await image).failure()).toBeNull();await page.locator('[data-v-presentation]').click();await expect(page.locator('[data-comparison-view]')).toHaveClass(/viewport-presenting/);await page.keyboard.press('Escape');await expect(page.locator('[data-comparison-view]')).not.toHaveClass(/viewport-presenting/);
 });
 test('static build performs real s/p/d/f calculations, camera actions and labeled PNG export',async({page})=>{
  const calls:string[]=[];page.on('request',r=>{if(new URL(r.url()).pathname.startsWith('/api/'))calls.push(r.url());});
  await expect(page.locator('#quality')).toHaveValue('preview');await expect(page.locator('#points')).toHaveAttribute('max','8000');
- for(const family of [1,2,3]){await page.locator(`[data-family="${family}"]`).click();await expect(page.locator('#loading')).toBeHidden();await page.locator('#surface').click();await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('#viewport-caption')).toContainText('41³');}
+ await page.locator('#orbital-scope').selectOption('explore'); for(const family of [1,2,3]){await page.locator(`[data-family="${family}"]`).click();await expect(page.locator('#loading')).toBeHidden();await page.locator('#surface').click();await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('#viewport-caption')).toContainText('41³');}
  await page.locator('#basis').selectOption('complex');await page.locator('#orientation').selectOption('3');await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('#legend')).toContainText('arg(ψ)');
  const canvas=page.locator('#viewport canvas'),box=(await canvas.boundingBox())!;await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);await page.mouse.down();await page.mouse.move(box.x+box.width*.6,box.y+box.height*.6,{steps:5});await page.mouse.up();await page.mouse.wheel(0,-200);
  const download=page.waitForEvent('download');await page.locator('#export').click();expect(await(await download).failure()).toBeNull();expect(calls).toEqual([]);
 });
 test('elements, isotopes, ions and atomic URL state work without an API',async({page})=>{
  await page.locator('#isotope').selectOption('2');await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('#neutron-info')).toContainText('1');
- await page.locator('#open-table').click();await page.getByLabel('Search element').fill('Iron');await page.getByRole('button',{name:/Fe.*Iron/}).click();await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('#element-name')).toHaveText('Iron');
+ await page.locator('#open-table').click();await page.getByRole('dialog').getByLabel('Search elements',{exact:true}).fill('Iron');await page.getByRole('button',{name:/Fe.*Iron/}).click();await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('#element-name')).toHaveText('Iron');
  await page.locator('#charge').fill('2');await page.locator('#charge').press('Enter');await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('#electron-info')).toContainText('24');await page.reload();await expect(page.locator('#loading')).toBeHidden();await expect(page.locator('#element-name')).toHaveText('Iron');await expect(page.locator('#charge')).toHaveValue('2');
 });
 test('interactive H2+ energies, exponent optimization, antibonding surface and CSV',async({page})=>{

@@ -1,17 +1,17 @@
+import {configurationEditor} from "./components/configuration-editor";
+import {preparedSpecies,validateConfiguration,type SpinOrbital} from "./science/prepared-configuration";
+import {homeMarkup} from "./app/home";
+import {initializeWorkspaceTools,initializePresentation} from "./app/workspace-tools";
+import {occupiedStates,occupancyAt,groundSelection,type OrbitalScope} from "./science/occupancy";
 import {readRoute,savedParameters,rememberParameters} from './app/route';
 import {initializeRuntime,runtime} from "./services/runtime";
-import {mountMaterials} from "./labs/materials";
 import "./styles.css";
+import "./modern.css";
 import { $, esc } from "./components/dom";
 import { graph } from "./components/graph";
 import { modal, closeModal, initializeDialog } from "./components/dialog";
 import { api } from "./services/api";
-import { mountSpectroscopy } from "./labs/spectroscopy";
-import { mountExperiments } from "./labs/experiments";
-import { mountComputation } from "./labs/computation";
-import { mountMolecular } from "./labs/molecular";
-import { mountDynamics } from "./labs/dynamics";
-import { registerLab, initializeNavigation } from "./app/navigation";
+import { registerLazyLab, initializeNavigation } from "./app/navigation";
 import { OrbitalViewer,disposeIdleRenderers } from "./visualization/viewer";
 import type { ElementData, Species, OrbitalData } from "./types";
 
@@ -35,6 +35,9 @@ const descriptions: Record<number, string> = {
   2: "Five independent angular states. The z² orbital has two axial lobes and an opposite-phase equatorial torus; the others have four lobes.",
   3: "Seven independent real angular states, with planar and conical nodal surfaces. Each geometry comes from a distinct normalized spherical harmonic.",
 };
+let prepared:SpinOrbital[]|undefined;
+let preparedKey="";
+let scope:OrbitalScope="ground";
 let elements: ElementData[] = [];
 let atom: Species;
 let orbital: OrbitalData;
@@ -70,7 +73,9 @@ let renderedAtomicLabel = "No successful calculation yet";
 
 const atomIcon = `<svg width="27" height="27" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="2.2" fill="currentColor"/><ellipse cx="16" cy="16" rx="14" ry="5.5" stroke="currentColor"/><ellipse cx="16" cy="16" rx="14" ry="5.5" stroke="currentColor" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" stroke="currentColor" transform="rotate(120 16 16)"/></svg>`;
 $("app").innerHTML = `
-<header class="topbar"><a class="brand" href="/">${atomIcon}<div>QUANTUM <b>ATOM LAB</b><small>A LOCAL SCIENTIFIC WORKSPACE</small></div></a><nav class="main-nav" aria-label="Application mode"><button class="nav-item" id="classical" aria-label="Classical comparison" title="Classical comparison"><span class="classical-label">Classical comparison</span> <span>↗</span></button></nav><div class="local-status"><i></i> LOCAL COMPUTATION</div><button class="icon-button" id="help" title="Scientific guide and controls" aria-label="Scientific guide and controls">?</button></header>
+<header class="topbar"><a class="brand" href="#lab=home" aria-label="Quantum Atom Lab overview">${atomIcon}<div>QUANTUM <b>ATOM LAB</b><small>AN INTERACTIVE STUDY OF MATTER</small></div></a><nav class="main-nav" aria-label="Application mode"><button class="nav-item" id="classical" aria-label="Classical comparison" title="Classical comparison"><span class="classical-label">Compare models</span> <span>↗</span></button></nav><div class="local-status"><i></i> LOCAL COMPUTATION</div><button class="search-trigger" id="command-search" aria-label="Search elements and laboratories">⌕ <span>Search anything</span><kbd>⌘ K</kbd></button><button class="icon-button" id="theme-toggle" aria-label="Switch theme">◐</button><button class="icon-button" id="help" title="Scientific guide and controls" aria-label="Scientific guide and controls">?</button></header>
+${homeMarkup}
+<div class="workspace-utilities"><span class="eyebrow">THE SCIENTIFIC WORKSPACE</span><div><button id="experiment-presets">Saved experiments</button><button id="share-experiment">Share ↗</button></div></div>
 <a class="skip-link" href="#viewport">Skip to visualization</a>
 <main class="workspace" id="atomic-workspace" aria-label="Atomic Explorer">
 <aside class="left-panel panel">
@@ -82,12 +87,15 @@ $("app").innerHTML = `
 <p class="isotope-note" id="isotope-note"></p>
 <div class="divider"></div>
 <div class="section-heading"><span>02 / ORBITAL STATE</span><button class="text-button" id="gallery">Gallery ↗</button></div>
+<label class="field">Orbital mode<select id="orbital-scope"><option value="ground">Ground state · occupied orbitals</option><option value="explore">Explore allowed orbital states</option><option value="prepared" disabled>Prepared / excited configuration</option></select></label>
+<button class="secondary prepare-trigger" id="prepare-configuration">Prepare an excited configuration</button>
+<div id="occupied-picker" class="occupied-picker" aria-label="Occupied ground-state subshells"></div>
 <div class="family-tabs" role="group" aria-label="Orbital family">${["s", "p", "d", "f"].map((f, i) => `<button data-family="${i}" class="${i === 0 ? "selected" : ""}">${f}<small>${[1, 3, 5, 7][i]} orbital${i ? "s" : ""}</small></button>`).join("")}</div>
 <div class="two-fields"><label>Principal shell · n<select id="n">${Array.from({ length: 8 }, (_, i) => `<option>${i + 1}</option>`).join("")}</select></label><label>Spin · mₛ<select id="spin"><option value="0.5">+½ ↑</option><option value="-0.5">−½ ↓</option></select></label></div>
 <label class="field">Angular basis<select id="basis"><option value="real">Real orbitals · chemistry basis</option><option value="complex">Complex Yₗᵐ · definite mₗ</option></select></label>
 <label class="field"><span id="orientation-label">Orientation · real basis index</span><select id="orientation"></select></label>
 <div class="orbital-picker" id="orbital-shortcuts"></div>
-<div class="state-note"><span class="tiny-icon">↗</span><p>Explore any valid state, including excited states outside this atom’s ground configuration.</p></div>
+<div class="state-note"><span class="tiny-icon">↗</span><p id="occupancy-note" role="status">Only reference ground-state occupied orbitals are shown. Explore mode opens other allowed states.</p></div>
 <div class="divider"></div>
 <div class="section-heading"><span>03 / DISPLAY</span><span class="subtle">3D</span></div>
 <label class="field">Composition<select id="overlay"><option value="single">One orbital</option><option value="subshell">All orbitals in this subshell</option><option value="occupied">Selected occupied orbitals</option></select></label>
@@ -101,13 +109,13 @@ $("app").innerHTML = `
 <section class="center-panel">
 <div class="viewport" id="viewport"><div class="viewport-heading"><div><div class="eyebrow">WAVEFUNCTION EXPLORER</div><h2><span id="orbital-title">1s</span> <span class="title-divider">/</span> <span id="viewport-element">Hydrogen</span></h2><p id="state-subtitle">n = 1 · l = 0 · real basis</p></div><span class="model-badge" id="model-badge">ONE-ELECTRON MODEL</span></div>
 <div class="view-toolbar"><div class="segmented" role="group" aria-label="Rendering mode"><button id="cloud" class="selected">⋮ Electron cloud</button><button id="surface">◇ Isosurface</button></div><div class="segmented" role="group" aria-label="Color view"><button id="phase" class="selected">Phase</button><button id="density">Density</button></div></div>
-<div class="view-actions"><button class="icon-button" id="reset" title="Reset camera (R)" aria-label="Reset camera">⟲</button><button class="icon-button" id="export" title="Save viewport image" aria-label="Save viewport image">↓</button></div>
-<div id="atomic-result-status" class="atomic-result-status" role="status" hidden></div><div id="loading" class="loading" role="status"><span class="spinner"></span><span>Computing wavefunction…</span></div>
+<div class="view-actions"><button class="icon-button" id="presentation" aria-label="Enter presentation mode" aria-pressed="false" title="Presentation mode · Escape to exit">⛶</button><button class="icon-button" id="reset" title="Reset camera (R)" aria-label="Reset camera">⟲</button><button class="icon-button" id="export" title="Save viewport image" aria-label="Save viewport image">↓</button></div>
+<div id="atomic-result-status" class="atomic-result-status" role="status" hidden></div><button class="secondary retry-orbital" id="retry-orbital" hidden>Retry current calculation</button><div id="loading" class="loading" role="status"><span class="spinner"></span><span>Computing wavefunction…</span></div>
 <div class="viewport-bottom"><div class="legend" id="legend"><span><i class="positive"></i>+ψ</span><span><i class="negative"></i>−ψ</span><small>Wavefunction sign</small></div><div class="scale-readout" id="scale-readout"></div></div>
 <div class="mouse-help">DRAG TO ROTATE <span>·</span> SCROLL TO ZOOM <span>·</span> RIGHT-DRAG TO PAN</div>
 <div class="viewport-caption" id="viewport-caption">Points are possible position measurements, not electrons following paths.</div>
 </div>
-<div class="visual-controls"><label>QUALITY<select id="quality"><option value="preview">Preview</option><option value="balanced" selected>Balanced</option><option value="high">High detail</option></select></label><label class="slider-label">OPACITY <input id="opacity" type="range" min="0.1" max="1" step="0.05" value="0.6"><output id="opacity-value">60%</output></label><label class="slider-label" id="point-control">POINTS <input id="points" type="range" min="1000" max="60000" step="1000" value="18000"><output id="points-value">18k</output></label><label class="slider-label" id="threshold-control" hidden>AMPLITUDE LEVEL <input id="threshold" type="range" min="0.005" max="0.4" step="0.005" value="0.06"><output id="threshold-value">6%</output></label></div>
+<div class="visual-controls"><label>PNG<select id="export-scale" aria-label="PNG export resolution"><option value="1">1×</option><option value="2">2×</option></select></label><label>CAMERA<select id="camera-preset"><option value="default">Perspective</option><option value="x">Along x</option><option value="y">Along y</option><option value="z">Along z</option></select></label><label>QUALITY<select id="quality"><option value="preview">Preview</option><option value="balanced" selected>Balanced</option><option value="high">High detail</option></select></label><label class="slider-label">OPACITY <input id="opacity" type="range" min="0.1" max="1" step="0.05" value="0.6"><output id="opacity-value">60%</output></label><label class="slider-label" id="point-control">POINTS <input id="points" type="range" min="1000" max="60000" step="1000" value="18000"><output id="points-value">18k</output></label><label class="slider-label" id="threshold-control" hidden>AMPLITUDE LEVEL <input id="threshold" type="range" min="0.005" max="0.4" step="0.005" value="0.06"><output id="threshold-value">6%</output></label></div>
 <section class="analysis-panel"><div class="analysis-tabs" role="tablist" aria-label="Scientific analysis"><button data-tab="occupancy" class="active" role="tab" aria-selected="true">Electron configuration</button><button data-tab="radial" role="tab" aria-selected="false">Radial probability</button><button data-tab="energy" role="tab" aria-selected="false">Energy levels</button><button data-tab="angular" role="tab" aria-selected="false">Angular probability</button></div><div id="analysis-content" class="analysis-content" role="tabpanel"></div></section>
 </section>
 <aside class="right-panel panel"><div class="section-heading"><span>STATE INSPECTOR</span><i class="status-dot"></i></div><div class="orbital-name"><span id="inspector-title">1s</span><small id="orbital-family">s ORBITAL</small></div><div class="quantum-grid"><div><span>Principal</span><strong id="qn-n">n = 1</strong></div><div><span>Angular</span><strong id="qn-l">l = 0</strong></div><div><span id="qn-m-label">Basis index</span><strong id="qn-m">m = 0</strong></div><div><span>Spin</span><strong id="qn-spin">mₛ = +½</strong></div></div><p class="basis-note" id="basis-note"></p><div class="divider"></div><div class="section-heading"><span>THE WAVEFUNCTION</span></div><div class="equation">ψₙₗₘ = Rₙₗ(r) Yₗᵐ(θ,φ)</div><p class="body-copy" id="shape-explanation"></p><p class="body-copy">The wavefunction has phase. Its squared magnitude, <b>|ψ|²</b>, is a nonnegative probability density.</p><div class="node-grid"><div><strong id="radial-nodes">0</strong><span>Radial nodes</span></div><div><strong id="angular-nodes">0</strong><span id="angular-node-caption">Angular nodes</span></div><div><strong id="total-nodes">0</strong><span>Total nodes</span></div></div><p class="node-formula">n − l − 1 <span>+</span> l <span>=</span> n − 1</p><div class="divider"></div><div class="section-heading"><span>MODEL & UNITS</span></div><div class="energy-readout"><span id="energy-value">−13.5983 <small>eV</small></span><small id="energy-label">NONRELATIVISTIC STATE ENERGY</small></div><label class="field" id="zeff-field" hidden>Demonstration Z_eff<input id="zeff" type="number" min="0.1" max="118" step="0.1" value="1"></label><div class="model-note" id="model-note"></div><div class="unit-key"><span>1 a₀</span><span>0.0529177 nm</span></div><div class="normalization"><i></i><span id="normalization">∫ |ψ|² dV = 1.000000</span></div><button class="guide-button" id="science-guide">Read the scientific guide ↗</button></aside>
@@ -123,13 +131,68 @@ function notify(message: string) {
   setTimeout(() => ($("toast").hidden = true), 6500);
 }
 initializeDialog();
+// Native disclosure on touch widths; desktop controls remain open.
+const atomicSettings=document.createElement('details');atomicSettings.className='atomic-settings';
+const settingsSummary=document.createElement('summary');settingsSummary.textContent='Atom & orbital controls';atomicSettings.append(settingsSummary);
+const settingsBody=document.createElement('div');settingsBody.className='atomic-settings-body';
+const leftPanel=document.querySelector('.left-panel')!;while(leftPanel.firstChild)settingsBody.append(leftPanel.firstChild);atomicSettings.append(settingsBody);leftPanel.append(atomicSettings);
+const atomicMedia=matchMedia('(max-width:760px)');const adaptAtomic=()=>{atomicSettings.open=!atomicMedia.matches;};adaptAtomic();atomicMedia.addEventListener('change',adaptAtomic);
+initializePresentation();
+initializeWorkspaceTools(()=>elements,z=>{
+ const select=()=>{scope="ground";void selectSpecies(z,undefined,0);};
+ if(readRoute().get('lab')==='atomic')select();
+ else{const p=new URLSearchParams({lab:'atomic',session:'atomic',params:JSON.stringify({z:String(z),a:String(elements[z-1].default_a),charge:'0',scope:'ground'})});location.hash=p.toString();}
+});
+document.querySelector<HTMLButtonElement>('[data-home-guide]')!.onclick=()=>scienceGuide();
+$('camera-preset').onchange=()=>{viewer?.cameraPreset($<HTMLSelectElement>('camera-preset').value);rememberAtomic();};
+$('orbital-scope').onchange=()=>{
+ scope=$<HTMLSelectElement>('orbital-scope').value==='explore'?'explore':'ground';
+ overlayMode='single';$<HTMLSelectElement>('overlay').value=overlayMode;
+ quantumControls();void loadOrbital();
+};
 
-function quantumControls() {
+function configurationAtom(){return atom&&scope==='prepared'&&prepared?preparedSpecies(atom,prepared):atom;}
+$('prepare-configuration').onclick=()=>{
+ if(!atom){notify('Choose a species first.');return;}
+ configurationEditor(atom,prepared,states=>{
+  prepared=states;preparedKey=`${atom.z},${atom.charge}`;scope=states?'prepared':'ground';basis='real';
+  overlayMode='single';$<HTMLSelectElement>('overlay').value='single';
+  quantumControls();showSpecies();void loadOrbital();
+ });
+};
+$('viewport').addEventListener('qal-camera-change',()=>rememberAtomic());
+$('export-scale').onchange=()=>rememberAtomic();
+function quantumControls(reconcile=true) {
+  if(reconcile&&atom&&scope!=='explore'){
+    const selected=groundSelection(configurationAtom(),n,l,m,spin);
+    if(selected)({n,l,m,spin}=selected);
+  }
+  $<HTMLSelectElement>('orbital-scope').value=scope;
+  $<HTMLSelectElement>('basis').value=basis;
+  $<HTMLSelectElement>('spin').value=String(spin);
+  const occupied=atom?occupiedStates(configurationAtom()):[];
+  const ground=scope!=='explore';
+  $<HTMLSelectElement>('basis').disabled=scope==='prepared';
+  $<HTMLSelectElement>('orbital-scope').querySelector<HTMLOptionElement>('[value=prepared]')!.disabled=!prepared;
+  [...$<HTMLSelectElement>('n').options].forEach(o=>o.disabled=ground&&!occupied.some(s=>s.n===Number(o.value)));
+  [...$<HTMLSelectElement>('spin').options].forEach(o=>o.disabled=ground&&(!atom||!occupancyAt(configurationAtom(),n,l,m)?.spins.includes(Number(o.value))));
+  $('occupied-picker').hidden=!ground;
+  $('occupied-picker').innerHTML=atom?configurationAtom().electronic.occupancy.filter(s=>s.electrons>0).map(s=>`<button data-ground="${s.n},${s.l}" aria-pressed="${s.n===n&&s.l===l}">${s.subshell}<sup>${s.electrons}</sup></button>`).join(''):'';
+  document.querySelectorAll<HTMLButtonElement>('[data-ground]').forEach(button=>button.onclick=()=>{[n,l]=button.dataset.ground!.split(',').map(Number);m=configurationAtom().electronic.occupancy.find(s=>s.n===n&&s.l===l)!.orbitals.find(o=>o.spins.length)!.m;quantumControls();void loadOrbital();});
+  const current=atom?occupancyAt(configurationAtom(),n,l,m):undefined;
+  $('occupancy-note').textContent=ground
+    ? occupied.length?`${scope==='prepared'?'Prepared occupancy':'Reference ground state'} · ${current?.spins.length??0} electron(s) in this spatial orbital ${scope==='prepared'?'in the prepared real-basis assignment':'under the conventional Hund assignment'}. Only occupied orientations are selectable.${scope==='prepared'?' Preparation is not a simulated transition.':''}`:'No verified occupied orbitals for this species. Use Explore mode to inspect mathematical states without claiming occupancy.'
+    : `${current?`${current.spins.length} electron(s) in the reference ground-state box`:atom?.electronic.configuration?'Unoccupied in the reference ground configuration':'Ground-state occupancy is not verified for this species'}. Viewing a state does not excite an electron or simulate a transition.`;
+  const composition=$<HTMLSelectElement>('overlay');
+  composition.querySelector<HTMLOptionElement>('[value="subshell"]')!.disabled=ground;
+  if(ground&&overlayMode==='subshell'){overlayMode='single';composition.value='single';}
   $<HTMLSelectElement>("n").value = String(n);
   document
     .querySelectorAll<HTMLButtonElement>("[data-family]")
     .forEach((button) => {
       const family = Number(button.dataset.family);
+      button.hidden=ground&&!occupied.some(s=>s.l===family);
+      button.querySelector('small')!.textContent=ground?`${occupied.filter(s=>s.l===family).length} occupied`:`${[1,3,5,7][family]} orbital${family?'s':''}`;
       button.classList.toggle("selected", family === l);
       button.setAttribute("aria-pressed",String(family===l));
       button.title = `${"spdf"[family]} orbitals require n ≥ ${family + 1}; selecting this family adjusts n if needed.`;
@@ -140,14 +203,14 @@ function quantumControls() {
       : "Magnetic quantum number · mₗ";
   $("orientation").innerHTML = Array.from({ length: 2 * l + 1 }, (_, i) => {
     const value = i - l;
-    return `<option value="${value}">${basis === "real" ? esc(names[l][value]) : `mₗ = ${value}`}</option>`;
+    return `<option value="${value}" ${ground&&!occupied.some(s=>s.n===n&&s.l===l&&s.m===value)?"disabled":""}>${basis === "real" ? esc(names[l][value]) : `mₗ = ${value}`}</option>`;
   }).join("");
   $<HTMLSelectElement>("orientation").value = String(m);
   $("orbital-shortcuts").innerHTML = Array.from(
     { length: 2 * l + 1 },
     (_, i) => {
       const value = i - l;
-      return `<button data-m="${value}" class="${value === m ? "selected" : ""}" aria-pressed="${value===m}">${basis === "real" ? esc(names[l][value]) : `m=${value}`}</button>`;
+      return ground&&!occupied.some(s=>s.n===n&&s.l===l&&s.m===value)?"":`<button data-m="${value}" class="${value === m ? "selected" : ""}" aria-pressed="${value===m}">${basis === "real" ? esc(names[l][value]) : `m=${value}`}</button>`;
     },
   ).join("");
   document.querySelectorAll<HTMLButtonElement>("[data-m]").forEach(
@@ -198,7 +261,7 @@ function showSpecies() {
     : "HYDROGENIC APPROXIMATION";
   $("zeff-field").hidden = atom.one_electron;
   overlayChoices.clear();
-  const occupied = atom.electronic.occupancy.flatMap((s) =>
+  const occupied = configurationAtom().electronic.occupancy.flatMap((s) =>
     s.orbitals
       .filter((o) => o.spins.length)
       .map((o) => ({ n: s.n, l: s.l, m: o.m })),
@@ -207,12 +270,12 @@ function showSpecies() {
   updateOverlayList();
   renderAnalysis();
 }
-async function selectSpecies(z: number, a?: number, q = charge) {
+async function selectSpecies(z: number, a?: number, q = charge, restore?:Record<string,string>) {
   const id = ++speciesId;
   speciesController?.abort();speciesController=new AbortController();
   ++requestId;
   controller?.abort();
-  $("loading").hidden = false;
+  $("loading").hidden = false;$("retry-orbital").hidden=true;
   $("atomic-result-status").hidden=false;
   $("atomic-result-status").textContent=`Calculating current inputs. Displayed state: ${renderedAtomicLabel}.`;
   $<HTMLButtonElement>("export").disabled = true;
@@ -225,7 +288,26 @@ async function selectSpecies(z: number, a?: number, q = charge) {
     activeZ = z;
     activeA = atom.a;
     charge = q;
+    if(preparedKey!==`${z},${q}`){prepared=undefined;preparedKey=`${z},${q}`;}
+    if(scope==='prepared'){
+      try{prepared=validateConfiguration(restore?.prepared?JSON.parse(restore.prepared):prepared,atom.electrons);}
+      catch(error){prepared=undefined;scope='ground';notify((error as Error).message);}
+    }
+    quantumControls();
     showSpecies();
+    if(restore){
+      try{const selected:unknown=JSON.parse(restore.overlays??'[]');if(Array.isArray(selected))overlayChoices=new Set(selected.filter((s):s is string=>typeof s==='string'&&occupiedStates(configurationAtom()).some(o=>`${o.n},${o.l},${o.m}`===s)).slice(0,8));}catch{/* Invalid optional layers use defaults. */}
+      for(const key of ['axes','nucleus','rotate'] as const){
+        const checked=restore[key]===undefined?key!=='rotate':restore[key]==='true';$<HTMLInputElement>(key).checked=checked;
+        if(viewer){if(key==='rotate')viewer.rotation=checked;else viewer[key].visible=checked;}
+      }
+      const opacity=Number(restore.opacity??'.6');if(Number.isFinite(opacity)&&opacity>=.1&&opacity<=1){$<HTMLInputElement>('opacity').value=String(opacity);$('opacity-value').textContent=`${Math.round(opacity*100)}%`;viewer?.setOpacity(opacity);}
+      const camera=['x','y','z'].includes(restore.camera)?restore.camera:'default';$<HTMLSelectElement>('camera-preset').value=camera;
+      let cameraRestored=false;try{cameraRestored=viewer?.restoreCamera(JSON.parse(restore.cameraState??'null'))??false;}catch{/* Use the camera preset. */}if(!cameraRestored)viewer?.cameraPreset(camera);
+      $<HTMLSelectElement>('export-scale').value=restore.exportScale==='2'?'2':'1';
+      try{const selected:unknown=JSON.parse(restore.subshells??'null');if(Array.isArray(selected))subshellChoices=new Set(selected.filter((key):key is string=>typeof key==='string'&&Array.from({length:2*l+1},(_,i)=>`${n},${l},${i-l}`).includes(key)).slice(0,8));}catch{/* Optional layer defaults. */}
+      updateOverlayList();
+    }
     await loadOrbital();
   } catch (error) {
     if (id === speciesId && (error as Error).name!=='AbortError') {
@@ -233,6 +315,7 @@ async function selectSpecies(z: number, a?: number, q = charge) {
       notify((error as Error).message);
       $("atomic-result-status").hidden=false;
       $("atomic-result-status").textContent=`Species request failed. Displayed state: ${renderedAtomicLabel}.`;
+      $("retry-orbital").hidden=false;$("retry-orbital").onclick=()=>void selectSpecies(z,a,q);
       if (atom) showSpecies();
     }
   }
@@ -257,11 +340,19 @@ function queryFor(on = n, ol = l, om = m) {
 }
 async function loadOrbital() {
   if (!atom) return;
+  quantumControls();
   rememberAtomic();
   const id = ++requestId;
   controller?.abort();
   controller = new AbortController();
-  $("loading").hidden = false;
+  if(scope!=='explore'&&!occupiedStates(configurationAtom()).length){
+    viewer?.clearState(atom);$('loading').hidden=true;$('atomic-result-status').hidden=false;
+    $('atomic-result-status').textContent=atom.electrons===0?'Bare nucleus: no electrons occupy any orbital.':'No verified ground-state configuration is bundled for this ion. Explore mode is available for mathematical states.';
+    $('orbital-title').textContent='No occupied state';$('inspector-title').textContent='No occupied state';$('orbital-family').textContent='REFERENCE CONFIGURATION';$('normalization').textContent='No occupied electron density';$('energy-value').textContent='—';$('energy-label').textContent='NO OCCUPIED STATE';$('viewport-caption').textContent='No occupied orbital density is displayed.';
+    $('model-note').textContent=configurationAtom().electronic.status;$<HTMLButtonElement>('export').disabled=true;renderAnalysis();return;
+  }
+  viewer?.setQuality(quality);
+  $("loading").hidden = false;$("retry-orbital").hidden=true;
   $("atomic-result-status").hidden=false;
   $("atomic-result-status").textContent=`Calculating current inputs. Displayed state: ${renderedAtomicLabel}.`;
   $<HTMLButtonElement>("export").disabled = true;
@@ -286,6 +377,7 @@ async function loadOrbital() {
       $("atomic-result-status").hidden=false;
       $("atomic-result-status").textContent=`Requested result failed or is incomplete. Displayed state: ${renderedAtomicLabel}.`;
       $<HTMLButtonElement>("export").disabled=true;
+      $("retry-orbital").hidden=false;$("retry-orbital").onclick=()=>void loadOrbital();
     }
   } finally {
     if (id === requestId) $("loading").hidden = true;
@@ -412,7 +504,7 @@ function updateOverlayList() {
             })),
           },
         ]
-      : atom.electronic.occupancy;
+      : configurationAtom().electronic.occupancy;
   $("overlay-list").innerHTML =
     subshells
       .map(
@@ -444,18 +536,18 @@ function renderAnalysis() {
   if (!atom) return;
   if (activeTab === "occupancy") {
     $("analysis-content").innerHTML =
-      `<div class="config-heading"><div><span class="eyebrow">${atom.z > 103 ? "PREDICTED / UNVERIFIED CONFIGURATION" : "REFERENCE GROUND CONFIGURATION"} · ${atom.electrons} ELECTRONS</span><p class="configuration">${atom.electronic.text.replace(/([spdf])(\d+)/g, "$1<sup>$2</sup>")}</p></div><span class="config-status">${esc(atom.electronic.status)}</span></div><div class="occupancy-scroll">${atom.electronic.occupancy.map((s) => `<button class="subshell-diagram" data-occupied="${s.n},${s.l}" title="Inspect ${s.subshell}"><span>${s.subshell}</span><div>${s.orbitals.map((o) => `<span class="orbital-box ${o.spins.length ? "filled" : ""}">${o.spins.map((v) => (v > 0 ? "↑" : "↓")).join("")}</span>`).join("")}</div></button>`).join("")}</div><p class="analysis-note">${Object.entries(
-        atom.electronic.shells,
+      `<div class="config-heading"><div><span class="eyebrow">${scope==="prepared"?`PREPARED OCCUPANCY / ${atom.one_electron?"ONE-ELECTRON STATE":"MANY-ELECTRON ENERGIES UNSOLVED"}`:atom.z > 103 ? "PREDICTED / UNVERIFIED CONFIGURATION" : "REFERENCE GROUND CONFIGURATION"} · ${atom.electrons} ELECTRONS</span><p class="configuration">${configurationAtom().electronic.text.replace(/([spdf])(\d+)/g, "$1<sup>$2</sup>")}</p></div><span class="config-status">${esc(configurationAtom().electronic.status)}</span></div><div class="occupancy-scroll">${configurationAtom().electronic.occupancy.map((s) => `<button class="subshell-diagram" data-occupied="${s.n},${s.l}" title="Inspect ${s.subshell}"><span>${s.subshell}</span><div>${s.orbitals.map((o) => `<span class="orbital-box ${o.spins.length ? "filled" : ""}">${o.spins.map((v) => (v > 0 ? "↑" : "↓")).join("")}</span>`).join("")}</div></button>`).join("")}</div><p class="analysis-note">${Object.entries(
+        configurationAtom().electronic.shells,
       )
         .map(([shell, count]) => `n=${shell}: ${count}`)
         .join(
           " · ",
-        )}${atom.electronic.configuration ? " · Hund / Pauli box diagram; individual orientations are a basis convention, not a measured microstate." : ""}</p>`;
+        )}${configurationAtom().electronic.configuration ? ` · ${scope==="prepared"?"Prepared Pauli-validated boxes":"Hund / Pauli box diagram"}; individual orientations are a basis convention, not a measured microstate.` : ""}</p>`;
     document.querySelectorAll<HTMLButtonElement>("[data-occupied]").forEach(
       (button) =>
         (button.onclick = () => {
           [n, l] = button.dataset.occupied!.split(",").map(Number);
-          m = 0;
+          m = configurationAtom().electronic.occupancy.find(s=>s.n===n&&s.l===l)!.orbitals.find(o=>o.spins.length)!.m;
           quantumControls();
           void loadOrbital();
         }),
@@ -555,7 +647,7 @@ async function renderEnergy() {
 function periodicTable() {
   modal(
     "The periodic table",
-    `<div class="table-search"><span>⌕</span><input id="element-search" placeholder="Search name, symbol, or atomic number…" aria-label="Search elements" autofocus><span>118 ELEMENTS</span></div><div class="periodic-scroll"><div class="periodic-grid">${elements.map((e) => `<button class="periodic-cell category-${e.category.toLowerCase().replaceAll(" ", "-")} ${e.z === activeZ ? "current" : ""}" data-z="${e.z}" style="grid-column:${e.table_column};grid-row:${e.table_row}" title="${esc(e.name)} · ${e.category}"><small>${e.z}</small><strong>${e.symbol}</strong><span>${e.name}</span></button>`).join("")}<span class="periodic-placeholder" style="grid-row:6;grid-column:3">57–71</span><span class="periodic-placeholder" style="grid-row:7;grid-column:3">89–103</span></div></div><div class="table-legend"><span><i style="background:#6ca6bf"></i>Metals</span><span><i style="background:#91baa0"></i>Nonmetals</span><span><i style="background:#baad83"></i>Metalloids</span><span><i style="background:#9f9ebd"></i>Noble gases</span></div><p class="body-copy">Select any element. Isotope defaults use the largest listed natural abundance when available. Entries without verified isotope data are explicitly labeled schematic. Superheavy electron assignments carry uncertainty labels.</p>`,
+    `<div class="table-search"><span>⌕</span><input id="element-search" placeholder="Search name, symbol, or atomic number…" aria-label="Search elements" autofocus><span>118 ELEMENTS</span></div><div class="periodic-scroll"><div class="periodic-grid">${elements.map((e) => `<button class="periodic-cell category-${e.category.toLowerCase().replaceAll(" ", "-")} ${e.z === activeZ ? "current" : ""}" data-z="${e.z}" style="grid-column:${e.table_column};grid-row:${e.table_row}" title="${esc(e.name)} · ${e.category}"><small>${e.z}</small><strong>${e.symbol}</strong><span>${e.name}</span></button>`).join("")}<span class="periodic-placeholder" style="grid-row:6;grid-column:3">57–71</span><span class="periodic-placeholder" style="grid-row:7;grid-column:3">89–103</span></div></div><div id="element-preview" class="element-preview" aria-live="polite"></div><div class="table-legend"><span><i style="background:#6ca6bf"></i>Metals</span><span><i style="background:#91baa0"></i>Nonmetals</span><span><i style="background:#baad83"></i>Metalloids</span><span><i style="background:#9f9ebd"></i>Noble gases</span></div><p class="body-copy">Select any element. Isotope defaults use the largest listed natural abundance when available. Entries without verified isotope data are explicitly labeled schematic. Superheavy electron assignments carry uncertainty labels.</p>`,
     "01 / ATOMIC SPECIES",
   );
   document.querySelectorAll<HTMLButtonElement>("[data-z]").forEach(
@@ -563,9 +655,13 @@ function periodicTable() {
       (button.onclick = () => {
         closeModal();
         const z = Number(button.dataset.z);
+        scope="ground";
         void selectSpecies(z, undefined, 0);
       }),
   );
+  const preview=(e:ElementData)=>{$('element-preview').innerHTML=`<div><strong>${esc(e.symbol)} / ${esc(e.name)}</strong><span>${esc(e.category)} · Z = ${e.z} · Period ${e.period}${e.group?` · Group ${e.group}`:''}</span></div><div><strong>${esc(e.configuration)}</strong><span>Relative atomic mass: ${esc(e.atomic_mass)} · ${esc(e.configuration_status)}</span></div>`;};
+  preview(elements[activeZ-1]);
+  document.querySelectorAll<HTMLButtonElement>('[data-z]').forEach(button=>{button.onfocus=button.onmouseenter=()=>preview(elements[Number(button.dataset.z)-1]);});
   $("element-search").oninput = () => {
     const term = $<HTMLInputElement>("element-search")
       .value.toLowerCase()
@@ -601,6 +697,7 @@ function gallery() {
     document.querySelectorAll<HTMLButtonElement>("[data-gallery-m]").forEach(
       (button) =>
         (button.onclick = () => {
+          scope="explore";
           n = shell;
           l = family;
           m = Number(button.dataset.galleryM);
@@ -663,6 +760,7 @@ function scienceGuide() {
     ["spectroscopy","Calculate a Balmer wavelength"],["measurement","Repeat position measurements"],
     ["tunneling","Change a tunneling barrier"],["dynamics","Watch quantum interference"],
     ["scf","Compare contracted and expanded RHF"],["fields","Inspect Stark state mixing"],
+    ["compare","Compare independent 1s and 2p views"],["periodic","Investigate periodic reference trends"],["prepare","Prepare hydrogen 2p occupancy"],
   ];
   modal(
     "A guide to the quantum model",
@@ -674,6 +772,7 @@ function scienceGuide() {
     const key = button.dataset.tour!; closeModal();
     if (key === "1s" || key === "2p") {
       document.querySelector<HTMLButtonElement>('[data-lab="atomic"]')!.click();
+      scope=key==="1s"?"ground":"explore";
       n = key === "1s" ? 1 : 2; l = key === "1s" ? 0 : 1; m = 0;
       basis = "real"; showNodes = key === "2p"; mode = key === "2p" ? "surface" : "cloud";
       overlayMode = "single"; quality = runtime.mode==='public'?"preview":"balanced"; points = runtime.mode==='public'?5000:18000; threshold = .06;
@@ -685,18 +784,16 @@ function scienceGuide() {
       for(const value of ["cloud","surface"]) { $(value).classList.toggle("selected",mode===value); $(value).setAttribute("aria-pressed",String(mode===value)); }
       quantumControls(); void selectSpecies(1,1,0); return;
     }
+    if(key==='prepare'){
+      location.hash=new URLSearchParams({lab:'atomic',session:'atomic',params:JSON.stringify({z:'1',a:'1',charge:'0',n:'2',l:'1',m:'0',scope:'prepared',prepared:JSON.stringify([[2,1,0,.5]])})}).toString();return;
+    }
     const lab = key === "bond" || key === "molecular" ? "molecular"
       : key === "scf" ? "computation" : key === "measurement" || key === "tunneling" || key === "fields" ? "experiments" : key;
-    document.querySelector<HTMLButtonElement>(`[data-lab="${lab}"]`)!.click();
-    if(key === "tunneling" || key === "fields") document.querySelector<HTMLButtonElement>(`[data-experiment="${key}"]`)!.click();
-    const form = document.querySelector<HTMLFormElement>("#lab-workspace form");
-    const values:Record<string,string> = key === "bond" ? {distance:"2.5"} : key === "molecular" ? {orbital:"antibonding"}
-      : key === "fields" ? {electric:"0.000001"} : key === "scf" ? {basis:"uncontracted-sto-3g"} : {};
-    for(const [name,value] of Object.entries(values)) {
-      const input=form?.querySelector<HTMLInputElement|HTMLSelectElement>(`[name="${name}"]`);
-      if(input) { input.value=value; input.dispatchEvent(new Event("input",{bubbles:true})); }
-    }
-    if(Object.keys(values).length)form?.requestSubmit();
+    const tool=key==='bond'||key==='molecular'?'lcao':key==='scf'?'foundation':['measurement','tunneling','fields'].includes(key)?key:undefined;
+    const sessionKey=key==='bond'||key==='molecular'?'molecular':key==='scf'?'hartree-fock':key==='compare'?'orbital-comparison':key;
+    const values:Record<string,string> = key === "bond" ? {distance:"2.5",system:'h2plus'} : key === "molecular" ? {system:'h2plus',orbital:"antibonding"}
+      : key === "fields" ? {electric:"0.000001"} : key === "scf" ? {basis:"uncontracted-sto-3g"} : key==='periodic'?{property:'ionization',period:'2'}:{};
+    location.hash=new URLSearchParams({lab,...tool?{tool}:{},session:sessionKey,params:JSON.stringify(values)}).toString();
   });
 }
 
@@ -705,7 +802,7 @@ $("open-table").onclick = periodicTable;
 // Keep the keyboard skip action separate from the fragment-based router.
 document.querySelector<HTMLAnchorElement>('.skip-link')!.onclick=event=>{
   event.preventDefault();
-  const root=$('atomic-workspace').hidden?$('lab-workspace'):$('viewport');
+  const root=readRoute().get('lab')==='home'?$('home-scene'):$('atomic-workspace').hidden?$('lab-workspace'):$('viewport');
   const target=root.querySelector<HTMLElement>('canvas,.lab-results,h1')??root;
   if(!target.hasAttribute('tabindex'))target.tabIndex=-1;
   target.focus();target.scrollIntoView({block:'start'});
@@ -752,6 +849,7 @@ $("basis").onchange = () => {
 };
 $("spin").onchange = () => {
   spin = Number($<HTMLSelectElement>("spin").value);
+  rememberAtomic();
   if (orbital) updateInspector();
 };
 $("isotope").onchange = () =>
@@ -810,21 +908,21 @@ function changePhase(value: boolean) {
 }
 $("phase").onclick = () => changePhase(true);
 $("density").onclick = () => changePhase(false);
-$("reset").onclick = () => viewer?.reset();
+$("reset").onclick = () => {viewer?.reset();$<HTMLSelectElement>('camera-preset').value='default';rememberAtomic();};
 $("axes").onchange = () =>
-  { if (viewer) { viewer.axes.visible = $<HTMLInputElement>("axes").checked; viewer.invalidate(); } };
+  { if (viewer) { viewer.axes.visible = $<HTMLInputElement>("axes").checked; viewer.invalidate(); } rememberAtomic(); };
 $("nucleus").onchange = () =>
-  { if (viewer) { viewer.nucleus.visible = $<HTMLInputElement>("nucleus").checked; viewer.invalidate(); } };
+  { if (viewer) { viewer.nucleus.visible = $<HTMLInputElement>("nucleus").checked; viewer.invalidate(); } rememberAtomic(); };
 $("nodes").onchange = () => {
   showNodes = $<HTMLInputElement>("nodes").checked;
   void loadOrbital();
 };
 $("rotate").onchange = () =>
-  { if (viewer) { viewer.rotation = $<HTMLInputElement>("rotate").checked; viewer.invalidate(); } };
+  { if (viewer) { viewer.rotation = $<HTMLInputElement>("rotate").checked; viewer.invalidate(); } rememberAtomic(); };
 $("opacity").oninput = () => {
   const value = Number($<HTMLInputElement>("opacity").value);
   $("opacity-value").textContent = `${Math.round(value * 100)}%`;
-  viewer?.setOpacity(value);
+  viewer?.setOpacity(value);rememberAtomic();
 };
 $("points").oninput = () => {
   $("points-value").textContent =
@@ -869,7 +967,7 @@ $("export").onclick = () => {
   if (!viewer || !orbital) { notify("No rendered orbital available to export."); return; }
   const link = document.createElement("a");
   link.download = `quantum-${n}${"spdf"[l]}-${m}.png`;
-  link.href = viewer.screenshot(`${atom.symbol}-${atom.a} · ${orbital.label} · ${orbital.model}`, `Length: a₀ · ${mode} · ${basis} basis · nucleus schematic${mode === "surface" ? ` · amplitude threshold ${threshold}` : ""}`);
+  link.href = viewer.screenshot(`${atom.symbol}-${atom.a} · ${orbital.label} · ${orbital.model}`, `Length: a₀ · ${mode} · ${basis} basis · nucleus schematic${mode === "surface" ? ` · amplitude threshold ${threshold}` : ""}`,undefined,Number($<HTMLSelectElement>("export-scale").value));
   link.click();
   notify(
     "Viewport image saved with model and unit labels.",
@@ -878,23 +976,37 @@ $("export").onclick = () => {
 
 function rememberAtomic(){
  if(readRoute().get('lab')!=='atomic'||!atom)return;
- rememberParameters('atomic',{...Object.fromEntries(queryFor()),phase:String(phase),tab:activeTab});
+ rememberParameters('atomic',{...Object.fromEntries(queryFor()),scope,prepared:prepared?JSON.stringify(prepared):"",cameraState:viewer?JSON.stringify(viewer.cameraState()):"",subshells:JSON.stringify([...subshellChoices]),exportScale:$<HTMLSelectElement>("export-scale").value,phase:String(phase),tab:activeTab,overlay:overlayMode,overlays:JSON.stringify([...overlayChoices]),axes:String($<HTMLInputElement>('axes').checked),nucleus:String($<HTMLInputElement>('nucleus').checked),opacity:$<HTMLInputElement>('opacity').value,rotate:String($<HTMLInputElement>('rotate').checked),camera:$<HTMLSelectElement>('camera-preset').value});
 }
 function navigateAtomic(active:boolean){
  if(!active){controller?.abort();speciesController?.abort();++requestId;++speciesId;++energyRevision;return;}
  if(!atomicReady)return;
+ if(readRoute().get('lab')==='home'){
+  scope='ground';n=1;l=0;m=0;spin=.5;basis='real';mode='cloud';overlayMode='single';phase=true;
+  $<HTMLSelectElement>('overlay').value='single';
+  $('cloud').classList.add('selected');$('surface').classList.remove('selected');
+  $('cloud').setAttribute('aria-pressed','true');$('surface').setAttribute('aria-pressed','false');
+  $('phase').classList.add('selected');$('density').classList.remove('selected');
+  showNodes=false;$<HTMLInputElement>('nodes').checked=false;
+  $('point-control').hidden=false;$('threshold-control').hidden=true;
+  void selectSpecies(1,1,0);return;
+ }
  const saved=savedParameters('atomic');
  if(!saved){if(!atom)void selectSpecies(1,1,0);return;}
  const value=(key:string,fallback:number,min:number,max:number,integer=true)=>{const v=Number(saved[key]);return Number.isFinite(v)&&v>=min&&v<=max&&(!integer||Number.isInteger(v))?v:fallback;};
+ scope=saved.scope==='prepared'?'prepared':saved.scope==='explore'||(!saved.scope&&saved.n!==undefined)?'explore':'ground';
  n=value('n',1,1,8);l=value('l',0,0,Math.min(n-1,3));m=value('m',0,-l,l);spin=saved.spin==='-0.5'?-.5:.5;
  basis=saved.basis==='complex'?'complex':'real';mode=saved.mode==='surface'?'surface':'cloud';quality=runtime.mode==='public'?'preview':['preview','balanced','high'].includes(saved.quality)?saved.quality:'preview';
  points=value('points',5000,1000,runtime.atomic_max_points);threshold=value('threshold',.06,.005,.4,false);effectiveZ=value('zeff',1,.1,118,false);showNodes=saved.nodes==='true';phase=saved.phase!=='false';
- quantumControls();$<HTMLSelectElement>('quality').value=quality;$<HTMLInputElement>('points').value=String(points);$('points-value').textContent=`${points/1000}k`;
+ quantumControls(false);$<HTMLSelectElement>('quality').value=quality;$<HTMLInputElement>('points').value=String(points);$('points-value').textContent=`${points/1000}k`;
  $<HTMLInputElement>('threshold').value=String(threshold);$('threshold-value').textContent=`${(threshold*100).toFixed(1)}%`;$<HTMLInputElement>('nodes').checked=showNodes;$<HTMLInputElement>('zeff').value=String(effectiveZ);
- for(const key of ['cloud','surface'])$(key).setAttribute('aria-pressed',String(key===mode));for(const key of ['phase','density'])$(key).setAttribute('aria-pressed',String((key==='phase')===phase));
- const tab=document.querySelector<HTMLButtonElement>(`[data-tab="${['occupancy','radial','angular','energy'].includes(saved.tab)?saved.tab:'occupancy'}"]`);tab?.click();
+ for(const key of ['cloud','surface']){$(key).setAttribute('aria-pressed',String(key===mode));$(key).classList.toggle('selected',key===mode);}for(const key of ['phase','density']){$(key).setAttribute('aria-pressed',String((key==='phase')===phase));$(key).classList.toggle('selected',(key==='phase')===phase);}
+ $('point-control').hidden=mode!=='cloud';$('threshold-control').hidden=mode!=='surface';
+ overlayMode=['single','occupied','subshell'].includes(saved.overlay)?saved.overlay:'single';$<HTMLSelectElement>('overlay').value=overlayMode;
+ activeTab=['occupancy','radial','angular','energy'].includes(saved.tab)?saved.tab:'occupancy';
+ document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(tab=>{const selected=tab.dataset.tab===activeTab;tab.classList.toggle('active',selected);tab.setAttribute('aria-selected',String(selected));tab.tabIndex=selected?0:-1;if(selected)$('analysis-content').setAttribute('aria-labelledby',tab.id);});
  const z=value('z',1,1,118),a=value('a',z,z,350),q=value('charge',0,z-118,z);
- void selectSpecies(z,a,q);
+ void selectSpecies(z,a,q,saved);
 }
 async function start() {
   await initializeRuntime();
@@ -909,6 +1021,7 @@ async function start() {
     viewer = new OrbitalViewer($("viewport"), particleInfo);
   } catch (error) {
     $("loading").hidden = true;
+    const fallback=document.createElement('div');fallback.className='webgl-fallback';fallback.setAttribute('role','status');fallback.innerHTML='<strong>3D rendering is unavailable</strong><p>Enable WebGL2 / hardware acceleration and reload. Element configurations, state information and numerical analysis remain available below.</p>';$('viewport').append(fallback);
     notify(
       "WebGL could not initialize. Enable hardware acceleration and reload. " +
         (error as Error).message,
@@ -917,21 +1030,26 @@ async function start() {
   try {
     elements = await api<ElementData[]>("/api/elements");
     atomicReady=true;initializeNavigation({guide:scienceGuide,atomic:navigateAtomic});
-    if(readRoute().get('lab')!=='atomic')$('loading').hidden=true;
+    if(!['atomic','home'].includes(readRoute().get('lab')!))$('loading').hidden=true;
   } catch (error) {
     $("loading").hidden = true;
+    $('atomic-result-status').hidden=false;$('atomic-result-status').textContent='Reference data could not load. Check the local server or your connection, then retry.';
+    $('retry-orbital').hidden=false;$('retry-orbital').onclick=()=>location.reload();
     notify(
       (runtime.mode==='public'?"The public demo is temporarily unavailable. Retry shortly. ":"Cannot reach the Python backend. Start .venv/bin/python run.py. ") +
         (error as Error).message,
     );
   }
 }
-registerLab("spectroscopy", mountSpectroscopy);
-registerLab("experiments", mountExperiments);
-registerLab("dynamics", mountDynamics);
-registerLab("materials",mountMaterials);
-registerLab("molecular", mountMolecular);
-registerLab("computation", mountComputation);
+registerLazyLab("spectroscopy",async()=>(await import("./labs/spectroscopy")).mountSpectroscopy);
+registerLazyLab("experiments",async()=>(await import("./labs/experiments")).mountExperiments);
+registerLazyLab("dynamics",async()=>(await import("./labs/dynamics")).mountDynamics);
+registerLazyLab("materials",async()=>(await import("./labs/materials")).mountMaterials);
+registerLazyLab("periodic",async()=>{const module=await import("./labs/periodic");return host=>module.mountPeriodic(host,elements);});
+registerLazyLab("compare",async()=>{const module=await import("./labs/orbital-comparison");return host=>module.mountOrbitalComparison(host,elements);});
+registerLazyLab("history",async()=>(await import("./labs/history")).mountHistory);
+registerLazyLab("molecular",async()=>(await import("./labs/molecular")).mountMolecular);
+registerLazyLab("computation",async()=>(await import("./labs/computation")).mountComputation);
 
 for (const [key,selected] of [["phase",true],["density",false],["cloud",true],["surface",false]] as const) $(key).setAttribute("aria-pressed",String(selected));
 // The tablist follows the keyboard interaction specified by its ARIA role.

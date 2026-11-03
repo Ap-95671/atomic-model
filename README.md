@@ -5,6 +5,14 @@ quantum dynamics and small-system computational chemistry. Python calculates the
 states and surfaces; TypeScript and Three.js provide the interface. The original
 Pygame simulator and Git history are preserved.
 
+The [frontend modernization report](docs/MODERNIZATION.md) covers the new live
+homepage, light/dark workspace, occupied ground-state orbital mode, explicit
+allowed-state exploration, command search, local experiment shelf and atomic
+theory comparison, validated prepared configurations, quantitative periodic
+trends and independent orbital comparison. Open `#lab=atomic` for the workspace
+directly, `#lab=periodic` for reference trends, or `#lab=compare` for two orbitals.
+Existing laboratories and their shareable URLs remain available.
+
 ![Calculated triplet O₂ molecular orbital](docs/quantum-lab-3-molecular.png)
 
 Incremental development on unmerged 2.0 PR #2. This alpha implements tested
@@ -203,8 +211,7 @@ optimized. See [limits](docs/LIMITATIONS.md) and the audit for the detailed scop
 
 A resource-bounded **Railway public-demo image is implemented and container-tested**;
 cloud activation is currently blocked because the signed-in Railway account
-requires a paid upgrade while the approved budget is free/trial only. **No public
-HTTPS website is deployed.** See [Railway deployment status and instructions](docs/RAILWAY_DEPLOYMENT.md).
+requires a paid upgrade while the approved budget is free/trial only. **Railway is not deployed; the separate Cloudflare Pages demo is linked above.** See [Railway deployment status and instructions](docs/RAILWAY_DEPLOYMENT.md).
 The full advanced local app remains available. License approval, PyPI publication
 and a stable 3.0 release remain pending.
 

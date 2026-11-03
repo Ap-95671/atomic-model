@@ -2,6 +2,7 @@ export interface ElementData {
   z: number;
   symbol: string;
   name: string;
+  atomic_mass: string;
   category: string;
   period: number;
   group: number | null;
