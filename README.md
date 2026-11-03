@@ -17,13 +17,16 @@ Laboratories and internal tools now have shareable URL routes that survive
 refresh and Back/Forward navigation. See the [navigation repair report](docs/NAVIGATION_REPAIRS.md)
 for cancellation, renderer-memory fixes and measured regression results.
 
-## Free browser demo · Cloudflare Pages
+## Public website · Cloudflare Pages Free
 
-A separate `build:pages` artifact runs lightweight calculations in browser workers
-and serves labeled, reproducible recorded chemistry datasets. The full Python
-application and Railway Docker option remain separate. Deployment activation is
-in progress; see the [Cloudflare deployment report](docs/CLOUDFLARE_PAGES.md) for
-current status, supported features, model limits and verification.
+**[Open Quantum Atom Lab](https://quantum-atom-lab-ap95671.pages.dev/)**
+
+The independent public demo runs lightweight scientific calculations in your
+browser and serves clearly labeled, reproducible HF molecular datasets. No
+account, card or paid API is needed to use it; the Mac can be offline. Advanced
+fresh HF/DFT, correlation and other research solvers remain in the full local
+Python application. See the [deployment and model report](docs/CLOUDFLARE_PAGES.md)
+for the complete feature matrix, source provenance, tests and limitations.
 
 ## Working laboratories
 

@@ -2,11 +2,28 @@
 
 ## Status
 
-The static build is validated locally. Public deployment and external HTTPS
-verification are pending; no public URL is claimed by this preparation record.
-Cloudflare is authenticated. Its Pages GitHub connection is the next account
-step. No paid resource, card, Worker function, database, R2 bucket or domain
-purchase has been selected. Railway remains a separate future Docker option.
+**Live website: https://quantum-atom-lab-ap95671.pages.dev/**
+
+Cloudflare Pages project **quantum-atom-lab-ap95671** is deployed from the GitHub
+production branch below. The first public deployment used source commit
+`f3b86d1207b493580b96d86410608d9ee704ca9e`; `/build-info.json` is the authoritative
+current deployment SHA after later commits/redeploys. Actual HTTPS returned 200,
+correct CSP/cache headers and matching SHA-256 hashes for all five data assets.
+All 12 browser workflows passed against the real HTTPS URL (24.4 s), then 50
+full cycles/350 navigation changes passed with zero API/cross-origin requests,
+page errors or remaining science workers. The public site runs independently of
+the Mac and has no Python backend.
+
+The GitHub app was authorized by the owner for only `Ap-95671/atomic-model`.
+No paid resource, card, Worker function, database, R2 bucket or domain purchase
+was selected. Automatic builds use only the production branch; unrelated branch
+previews are disabled. The Railway Docker option remains separate and undeployed.
+
+Public evidence: `CLOUDFLARE_PUBLIC_HTTP_VERIFICATION.json`,
+`CLOUDFLARE_PUBLIC_BROWSER_VERIFICATION.json` and the public desktop/mobile PNGs.
+The independent GitHub-runner verification workflow additionally checks the
+exact deployed commit and exercises real public HTTPS scientific workflows from
+outside the Mac. Its hosted result is reported only once observed.
 
 Branch: `codex/cloudflare-pages-demo`, incorporating all validated navigation
 repairs from `eab2212` (PR #9) by an ordinary branch merge. Main and PRs #2–#9
@@ -114,17 +131,18 @@ ion restoration, H₂⁺ minimization, all recorded molecular fields, spectrosco
 PNG/CSV, measurement accumulation/reset, Bell circuits, well playback, materials,
 unavailable solvers, direct links/refresh/history and build provenance.
 
-The static audit completed 50 full cycles / 350 laboratory changes with zero
+The local static audit completed 50 full cycles / 350 laboratory changes with zero
 API/cross-origin requests, zero page errors and zero live science workers at the
 recorded checkpoints. Post-GC parent-page heap remains bounded; this excludes
 transient worker, GPU and OS memory. See `CLOUDFLARE_STATIC_LOCAL_VERIFICATION.json`
 and local desktop/mobile PNGs. These are local static checks, not public HTTPS
 verification. The preserved local application passes 139 Python tests and all 116 browser
-workflows. Hosted CI is reported only once observed.
+workflows. All four initial hosted CI jobs passed at `f3b86d1`: core, chemistry/
+browser, Docker/public-container and static Pages.
 
-## Cloudflare Pages Git settings (Free)
+## Configured Cloudflare Pages Git settings (Free)
 
-- Project: `quantum-atom-lab-ap95671` (subject to actual name availability).
+- Project: `quantum-atom-lab-ap95671`.
 - Repository: `Ap-95671/atomic-model`; authorize **only this repository**.
 - Production branch: `codex/cloudflare-pages-demo`; do not merge main to deploy.
 - Root directory: **frontend**, so cloud autodetection does not install Python.

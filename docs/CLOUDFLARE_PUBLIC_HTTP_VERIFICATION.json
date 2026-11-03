@@ -1,0 +1,39 @@
+{
+  "url": "https://quantum-atom-lab-ap95671.pages.dev/",
+  "https_verified": true,
+  "source_commit": "f3b86d1207b493580b96d86410608d9ee704ca9e",
+  "built_at": "2026-11-03T10:55:00.094Z",
+  "python_runtime": false,
+  "api_backend": false,
+  "home_status": 200,
+  "csp_verified": true,
+  "immutable_datasets": [
+    {
+      "file": "reference.json",
+      "bytes": 551436,
+      "sha256_verified": true
+    },
+    {
+      "file": "chemistry-h2.json",
+      "bytes": 607023,
+      "sha256_verified": true
+    },
+    {
+      "file": "chemistry-n2.json",
+      "bytes": 730663,
+      "sha256_verified": true
+    },
+    {
+      "file": "chemistry-o2.json",
+      "bytes": 671769,
+      "sha256_verified": true
+    },
+    {
+      "file": "chemistry-water.json",
+      "bytes": 468934,
+      "sha256_verified": true
+    }
+  ],
+  "api_probe_status": 404,
+  "verification": "Actual public HTTPS responses and SHA-256 checks; not localhost or a fabricated deployment."
+}
