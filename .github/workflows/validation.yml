@@ -54,3 +54,41 @@ jobs:
       - run: npx playwright install --with-deps chrome
         working-directory: frontend
       - run: npm --prefix frontend run test:e2e
+  public-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build independent Linux runtime
+        run: docker build --platform linux/amd64 -t quantum-atom-lab:ci .
+      - name: Start resource-limited public demo
+        run: |
+          docker run -d --name qal-public-ci --memory=512m --cpus=1 --pids-limit=64 --read-only --tmpfs /tmp:rw,noexec,nosuid,size=32m -p 127.0.0.1:8767:8080 -e PORT=8080 -e RAILWAY_GIT_COMMIT_SHA=${{ github.sha }} quantum-atom-lab:ci
+          python scripts/wait_public.py http://127.0.0.1:8767/api/health
+          python scripts/public_smoke.py http://127.0.0.1:8767
+      - run: npm --prefix frontend ci
+      - run: npx playwright install --with-deps chrome
+        working-directory: frontend
+      - name: Reset smoke-test quota before independent browser suite
+        run: |
+          docker restart qal-public-ci
+          python scripts/wait_public.py http://127.0.0.1:8767/api/health
+      - name: Actual public browser workflows
+        env:
+          QAL_TEST_URL: http://127.0.0.1:8767
+          QAL_PUBLIC_TEST: '1'
+        run: npm --prefix frontend run test:e2e
+      - name: Container logs and resource evidence
+        if: always()
+        run: |
+          docker logs qal-public-ci || true
+          docker stats --no-stream qal-public-ci || true
+          docker inspect qal-public-ci --format '{{json .State.Health}}' || true

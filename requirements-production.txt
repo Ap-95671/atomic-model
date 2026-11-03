@@ -1,0 +1,6 @@
+-c constraints-production.txt
+-r requirements.txt
+# Minimal ASGI server; optional PySCF is deliberately absent in the public image.
+uvicorn==0.54.0
+h11==0.16.0
+click==8.5.0

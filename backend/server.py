@@ -2,6 +2,7 @@
 import argparse
 import json
 import mimetypes
+import os
 import threading
 import traceback
 import numpy as np
@@ -138,6 +139,9 @@ class Handler(BaseHTTPRequestHandler):
         url = urlsplit(self.path)
         q = parse_qs(url.query)
         try:
+            if url.path == "/api/capabilities":
+                from .public_policy import capabilities
+                return self.send_data(200, capabilities(public=False))
             if url.path == "/api/physics":
                 from .api.physics import from_query
                 if not COMPUTE.acquire(blocking=False):
@@ -243,12 +247,15 @@ class Handler(BaseHTTPRequestHandler):
 
 def serve():
     parser = argparse.ArgumentParser(description="Quantum Atom Lab — local API and frontend")
-    parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--port", type=int, default=int(os.getenv("PORT", "8765")))
+    parser.add_argument("--host", default=os.getenv("QAL_HOST", "127.0.0.1"))
     args = parser.parse_args()
-    server = LocalHTTPServer(("127.0.0.1", args.port), Handler)
+    if not 1 <= args.port <= 65535:
+        parser.error("port must be 1…65535")
+    server = LocalHTTPServer((args.host, args.port), Handler)
     server.daemon_threads = True
-    print(f"Quantum Atom Lab: http://127.0.0.1:{args.port}", flush=True)
-    print("Local-only; Ctrl+C to stop. Legacy comparison: python main.py", flush=True)
+    print(f"Quantum Atom Lab: http://{args.host}:{args.port}", flush=True)
+    print("Advanced development mode; Ctrl+C to stop. Legacy comparison: python main.py", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

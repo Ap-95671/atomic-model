@@ -1,3 +1,4 @@
+import {runtime,advancedMessage} from "../services/runtime";
 import { esc } from '../components/dom';
 import { api } from '../services/api';
 import { JobClient } from '../services/jobs';
@@ -15,6 +16,15 @@ export class LabSession {
   readonly result: HTMLElement;
   constructor(readonly host: HTMLElement, readonly key: string, title: string, description: string, controls: string) {
     host.innerHTML=`<div class="lab-heading"><div><span class="eyebrow">QUANTUM ATOM LAB / ${esc(key.toUpperCase())}</span><h1 tabindex="-1">${esc(title)}</h1><p>${esc(description)}</p></div></div><div class="lab-layout"><aside class="lab-controls"><details class="lab-settings" open><summary>Experiment parameters</summary><form>${controls}<div class="lab-actions"><button type="submit" class="primary">Calculate</button><button type="button" data-cancel hidden>Cancel calculation</button><button type="button" data-save>Save parameters</button><button type="button" data-restore>Restore saved</button><button type="button" data-defaults>Defaults</button></div></form></details><p class="lab-status" role="status" aria-live="polite">Ready.</p></aside><section class="lab-results" aria-label="Scientific results"><div data-result></div></section></div>`;
+    if(runtime.mode==='public'){
+      const quality=host.querySelector<HTMLSelectElement>('[name="quality"]');
+      if(quality&&key==='molecular'){quality.value='preview';[...quality.options].forEach(option=>option.disabled=option.value!=='preview');}
+      const count=host.querySelector<HTMLInputElement>('[name="count"]');if(count)count.max='10000';
+      const grid=host.querySelector<HTMLSelectElement>('[name="grid"]');
+      if(grid)[...grid.options].forEach(option=>option.disabled=(key==='tunneling'?Number(option.value)>1024:key==='materials'?Number(option.value)>81:key==='general-well'?Number(option.value)>257:false));
+      const qubits=host.querySelector<HTMLInputElement>('[name="qubits"]');if(qubits)qubits.max='4';
+      const shots=host.querySelector<HTMLInputElement>('[name="shots"]');if(shots)shots.max='5000';
+    }
     this.responsive();this.media.addEventListener("change",this.responsive);
     this.status=host.querySelector('.lab-status')!; this.result=host.querySelector('[data-result]')!;
     for(const el of this.inputs())this.original[el.name]=el.value;
@@ -73,6 +83,10 @@ export class LabSession {
     if(!this.closed && id===this.revision){this.host.querySelector<HTMLElement>('[data-cancel]')!.hidden=true;this.host.querySelector('.lab-results')?.setAttribute('aria-busy','false');}
   }
   async runJob<T>(body:unknown,render:(data:T,calculationId:string,jobId:string)=>void){
+    if(!runtime.advanced_computation){
+      this.result.innerHTML=`<div class="result-heading"><h2>Advanced local calculation</h2><p>${esc(advancedMessage)}</p></div>`;
+      this.result.hidden=false;this.status.textContent='Available in advanced local mode.';return;
+    }
     this.controller?.abort();const id=++this.revision;
     this.result.hidden=true;this.status.setAttribute('role','status');this.status.textContent='Starting calculation…';
     this.host.querySelector<HTMLElement>('[data-cancel]')!.hidden=false;

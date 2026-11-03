@@ -1,0 +1,11 @@
+# Resource/billing plan is an account setting, not selected by this file.
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 90
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 2
+numReplicas = 1

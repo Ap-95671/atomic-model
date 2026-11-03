@@ -1,3 +1,4 @@
+import {initializeRuntime,runtime} from "./services/runtime";
 import {mountMaterials} from "./labs/materials";
 import "./styles.css";
 import { $, esc } from "./components/dom";
@@ -670,10 +671,10 @@ function scienceGuide() {
       document.querySelector<HTMLButtonElement>('[data-lab="atomic"]')!.click();
       n = key === "1s" ? 1 : 2; l = key === "1s" ? 0 : 1; m = 0;
       basis = "real"; showNodes = key === "2p"; mode = key === "2p" ? "surface" : "cloud";
-      overlayMode = "single"; quality = "balanced"; points = 18000; threshold = .06;
+      overlayMode = "single"; quality = runtime.mode==='public'?"preview":"balanced"; points = runtime.mode==='public'?5000:18000; threshold = .06;
       $<HTMLSelectElement>("basis").value = basis; $<HTMLSelectElement>("quality").value = quality;
       $<HTMLSelectElement>("overlay").value = overlayMode; $<HTMLInputElement>("nodes").checked = showNodes;
-      $<HTMLInputElement>("points").value = String(points); $("points-value").textContent="18k";
+      $<HTMLInputElement>("points").value = String(points); $("points-value").textContent=`${points/1000}k`;
       $<HTMLInputElement>("threshold").value=String(threshold); $("threshold-value").textContent="6%";
       $("point-control").hidden=mode!=="cloud"; $("threshold-control").hidden=mode!=="surface";
       for(const value of ["cloud","surface"]) { $(value).classList.toggle("selected",mode===value); $(value).setAttribute("aria-pressed",String(mode===value)); }
@@ -863,6 +864,13 @@ $("export").onclick = () => {
 };
 
 async function start() {
+  await initializeRuntime();
+  if(runtime.mode==='public'){
+    quality='preview';points=5000;
+    const select=$<HTMLSelectElement>('quality');select.value='preview';
+    [...select.options].forEach(option=>option.disabled=option.value!=='preview');
+    $<HTMLInputElement>('points').max=String(runtime.atomic_max_points);$<HTMLInputElement>('points').value='5000';$('points-value').textContent='5k';
+  }
   quantumControls();
   try {
     viewer = new OrbitalViewer($("viewport"), particleInfo);
@@ -879,7 +887,7 @@ async function start() {
   } catch (error) {
     $("loading").hidden = true;
     notify(
-      "Cannot reach the Python backend. Start .venv/bin/python run.py. " +
+      (runtime.mode==='public'?"The public demo is temporarily unavailable. Retry shortly. ":"Cannot reach the Python backend. Start .venv/bin/python run.py. ") +
         (error as Error).message,
     );
   }
