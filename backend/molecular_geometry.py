@@ -35,9 +35,15 @@ def molecule_payload(distance=2.,orbital='bonding',threshold=.12,exponent=1.,opt
 
 
 @lru_cache(maxsize=8)
+def _hartree_fock_solution(system,distance,basis):
+    from quantum_engine.hartree_fock import solve
+    return solve(system,distance,basis)
+
+
+@lru_cache(maxsize=8)
 def hartree_fock_payload(system='h2',distance=1.4,basis='sto-3g',view='density'):
     from quantum_engine.hartree_fock import solve,evaluate,energy_curve
-    d=solve(system,distance,basis)
+    d=_hartree_fock_solution(system,distance,basis)
     extent=(distance/2 if system=='h2' else 0)+5
     axis=np.linspace(-extent,extent,65)
     grid=np.stack(np.meshgrid(axis,axis,axis,indexing='ij'),axis=-1)

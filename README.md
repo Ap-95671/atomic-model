@@ -13,6 +13,10 @@ item in the 3.0 specification. The [current audit](docs/FEATURE_COMPLETENESS_AUD
 and [implementation report](docs/QUANTUM_LAB_3_COMPLETION.md) distinguish working
 calculations from remaining work. Project licensing awaits owner approval.
 
+Laboratories and internal tools now have shareable URL routes that survive
+refresh and Back/Forward navigation. See the [navigation repair report](docs/NAVIGATION_REPAIRS.md)
+for cancellation, renderer-memory fixes and measured regression results.
+
 ## Working laboratories
 
 | Laboratory | Implemented calculation | Scope |

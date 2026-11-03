@@ -15,6 +15,8 @@ test('orbital families, nodes, complex phase and rendering controls', async ({pa
   await expect(page.locator('#orbital-title')).toHaveText('2p_z');
   await page.locator('#nodes').check();
   await page.locator('#surface').click();
+  await expect(page.locator('#viewport-caption')).toContainText('49³');
+  await page.locator('#quality').selectOption('balanced');
   await expect(page.locator('#viewport-caption')).toContainText('73³');
   await page.locator('[data-family="3"]').click();
   await expect(page.locator('#orbital-title')).toHaveText('4f_z³');

@@ -1,0 +1,31 @@
+{
+  "scope": "Intermediate repair build, before renderer reuse; actual 50-cycle weak-context profile observed during investigation. Initial baseline separately recorded in NAVIGATION_BEFORE.json. Snapshot retainers identified Three r181 shared DFG LUT disposal listeners retaining discarded contexts and detached views. Not a production-host measurement.",
+  "samples": [
+    {
+      "cycle": 0,
+      "js_heap_bytes": 6715916,
+      "embedder_heap_bytes": 4769432
+    },
+    {
+      "cycle": 10,
+      "js_heap_bytes": 15147084,
+      "embedder_heap_bytes": 17737296,
+      "dom_nodes": 41151,
+      "listeners": 715
+    },
+    {
+      "cycle": 25,
+      "js_heap_bytes": 26363636,
+      "embedder_heap_bytes": 36253760,
+      "dom_nodes": 90111,
+      "listeners": 1480
+    },
+    {
+      "cycle": 50,
+      "js_heap_bytes": 44794552,
+      "embedder_heap_bytes": 67519392,
+      "dom_nodes": 171711,
+      "listeners": 2755
+    }
+  ]
+}

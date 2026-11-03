@@ -36,6 +36,8 @@ test('optional DFT convergence, same-geometry HF comparison, export and unavaila
   await expect(page.locator('.lab-results')).toContainText('HF total: -1.116714325');
   const file=page.waitForEvent('download');await page.getByRole('button',{name:'Export orbital CSV'}).click();expect(await(await file).failure()).toBeNull();
   await page.route('**/api/computation/pyscf?**',r=>r.fulfill({status:503,contentType:'application/json',body:'{"error":"Optional PySCF not installed"}'}));
+  // A new scientific key must hit the unavailable backend; identical successes are cached.
+  await page.locator('[name="view"]').selectOption('density');
   await page.getByRole('button',{name:'Calculate',exact:true}).click();await expect(page.locator('.lab-status')).toContainText('not installed');
   await page.getByRole('button',{name:'Atomic Explorer',exact:true}).click();await expect(page.locator('#viewport canvas')).toBeVisible();
 });

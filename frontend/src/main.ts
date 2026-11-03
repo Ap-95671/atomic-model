@@ -1,3 +1,4 @@
+import {readRoute,savedParameters,rememberParameters} from './app/route';
 import {initializeRuntime,runtime} from "./services/runtime";
 import {mountMaterials} from "./labs/materials";
 import "./styles.css";
@@ -11,7 +12,7 @@ import { mountComputation } from "./labs/computation";
 import { mountMolecular } from "./labs/molecular";
 import { mountDynamics } from "./labs/dynamics";
 import { registerLab, initializeNavigation } from "./app/navigation";
-import { OrbitalViewer } from "./visualization/viewer";
+import { OrbitalViewer,disposeIdleRenderers } from "./visualization/viewer";
 import type { ElementData, Species, OrbitalData } from "./types";
 
 const names: Record<number, Record<number, string>> = {
@@ -43,10 +44,10 @@ let n = 1,
   spin = 0.5,
   basis = "real",
   mode = "cloud",
-  quality = "balanced",
+  quality = "preview",
   phase = true,
   showNodes = false;
-let points = 18000,
+let points = 5000,
   threshold = 0.06,
   effectiveZ = 1;
 let activeZ = 1,
@@ -56,6 +57,8 @@ let viewer: OrbitalViewer;
 let requestId = 0,
   speciesId = 0;
 let controller: AbortController | null = null;
+let speciesController:AbortController|undefined;
+let atomicReady=false;
 let activeTab = "occupancy";
 let overlayMode = "single";
 let overlayChoices = new Set<string>();
@@ -206,6 +209,7 @@ function showSpecies() {
 }
 async function selectSpecies(z: number, a?: number, q = charge) {
   const id = ++speciesId;
+  speciesController?.abort();speciesController=new AbortController();
   ++requestId;
   controller?.abort();
   $("loading").hidden = false;
@@ -214,7 +218,7 @@ async function selectSpecies(z: number, a?: number, q = charge) {
   $<HTMLButtonElement>("export").disabled = true;
   try {
     const result = await api<Species>(
-      `/api/species?z=${z}&charge=${q}${a === undefined ? "" : `&a=${a}`}`,
+      `/api/species?z=${z}&charge=${q}${a === undefined ? "" : `&a=${a}`}`,speciesController.signal,
     );
     if (id !== speciesId) return;
     atom = result;
@@ -224,7 +228,7 @@ async function selectSpecies(z: number, a?: number, q = charge) {
     showSpecies();
     await loadOrbital();
   } catch (error) {
-    if (id === speciesId) {
+    if (id === speciesId && (error as Error).name!=='AbortError') {
       $("loading").hidden = true;
       notify((error as Error).message);
       $("atomic-result-status").hidden=false;
@@ -253,6 +257,7 @@ function queryFor(on = n, ol = l, om = m) {
 }
 async function loadOrbital() {
   if (!atom) return;
+  rememberAtomic();
   const id = ++requestId;
   controller?.abort();
   controller = new AbortController();
@@ -697,6 +702,14 @@ function scienceGuide() {
 
 // Wire all controls once; dynamic panels install their own scoped handlers.
 $("open-table").onclick = periodicTable;
+// Keep the keyboard skip action separate from the fragment-based router.
+document.querySelector<HTMLAnchorElement>('.skip-link')!.onclick=event=>{
+  event.preventDefault();
+  const root=$('atomic-workspace').hidden?$('lab-workspace'):$('viewport');
+  const target=root.querySelector<HTMLElement>('canvas,.lab-results,h1')??root;
+  if(!target.hasAttribute('tabindex'))target.tabIndex=-1;
+  target.focus();target.scrollIntoView({block:'start'});
+};
 $("element-select").onclick = periodicTable;
 $("gallery").onclick = gallery;
 $("help").onclick = scienceGuide;
@@ -792,7 +805,7 @@ function changePhase(value: boolean) {
   $("density").classList.toggle("selected", !phase);
   $("phase").setAttribute("aria-pressed",String(phase));
   $("density").setAttribute("aria-pressed",String(!phase));
-  viewer?.setColor(phase);
+  viewer?.setColor(phase);rememberAtomic();
   updateLegend();
 }
 $("phase").onclick = () => changePhase(true);
@@ -849,7 +862,7 @@ document.querySelectorAll<HTMLButtonElement>("[data-tab]").forEach(
         b.classList.toggle("active", b === button);
         b.setAttribute("aria-selected", String(b === button));
       });
-      renderAnalysis();
+      renderAnalysis();rememberAtomic();
     }),
 );
 $("export").onclick = () => {
@@ -863,6 +876,26 @@ $("export").onclick = () => {
   );
 };
 
+function rememberAtomic(){
+ if(readRoute().get('lab')!=='atomic'||!atom)return;
+ rememberParameters('atomic',{...Object.fromEntries(queryFor()),phase:String(phase),tab:activeTab});
+}
+function navigateAtomic(active:boolean){
+ if(!active){controller?.abort();speciesController?.abort();++requestId;++speciesId;++energyRevision;return;}
+ if(!atomicReady)return;
+ const saved=savedParameters('atomic');
+ if(!saved){if(!atom)void selectSpecies(1,1,0);return;}
+ const value=(key:string,fallback:number,min:number,max:number,integer=true)=>{const v=Number(saved[key]);return Number.isFinite(v)&&v>=min&&v<=max&&(!integer||Number.isInteger(v))?v:fallback;};
+ n=value('n',1,1,8);l=value('l',0,0,Math.min(n-1,3));m=value('m',0,-l,l);spin=saved.spin==='-0.5'?-.5:.5;
+ basis=saved.basis==='complex'?'complex':'real';mode=saved.mode==='surface'?'surface':'cloud';quality=runtime.mode==='public'?'preview':['preview','balanced','high'].includes(saved.quality)?saved.quality:'preview';
+ points=value('points',5000,1000,runtime.atomic_max_points);threshold=value('threshold',.06,.005,.4,false);effectiveZ=value('zeff',1,.1,118,false);showNodes=saved.nodes==='true';phase=saved.phase!=='false';
+ quantumControls();$<HTMLSelectElement>('quality').value=quality;$<HTMLInputElement>('points').value=String(points);$('points-value').textContent=`${points/1000}k`;
+ $<HTMLInputElement>('threshold').value=String(threshold);$('threshold-value').textContent=`${(threshold*100).toFixed(1)}%`;$<HTMLInputElement>('nodes').checked=showNodes;$<HTMLInputElement>('zeff').value=String(effectiveZ);
+ for(const key of ['cloud','surface'])$(key).setAttribute('aria-pressed',String(key===mode));for(const key of ['phase','density'])$(key).setAttribute('aria-pressed',String((key==='phase')===phase));
+ const tab=document.querySelector<HTMLButtonElement>(`[data-tab="${['occupancy','radial','angular','energy'].includes(saved.tab)?saved.tab:'occupancy'}"]`);tab?.click();
+ const z=value('z',1,1,118),a=value('a',z,z,350),q=value('charge',0,z-118,z);
+ void selectSpecies(z,a,q);
+}
 async function start() {
   await initializeRuntime();
   if(runtime.mode==='public'){
@@ -871,7 +904,7 @@ async function start() {
     [...select.options].forEach(option=>option.disabled=option.value!=='preview');
     $<HTMLInputElement>('points').max=String(runtime.atomic_max_points);$<HTMLInputElement>('points').value='5000';$('points-value').textContent='5k';
   }
-  quantumControls();
+  quantumControls();$<HTMLSelectElement>('quality').value=quality;$<HTMLInputElement>('points').value=String(points);$('points-value').textContent=`${points/1000}k`;
   try {
     viewer = new OrbitalViewer($("viewport"), particleInfo);
   } catch (error) {
@@ -883,7 +916,8 @@ async function start() {
   }
   try {
     elements = await api<ElementData[]>("/api/elements");
-    await selectSpecies(1, 1, 0);
+    atomicReady=true;initializeNavigation({guide:scienceGuide,atomic:navigateAtomic});
+    if(readRoute().get('lab')!=='atomic')$('loading').hidden=true;
   } catch (error) {
     $("loading").hidden = true;
     notify(
@@ -898,7 +932,7 @@ registerLab("dynamics", mountDynamics);
 registerLab("materials",mountMaterials);
 registerLab("molecular", mountMolecular);
 registerLab("computation", mountComputation);
-initializeNavigation({ guide: scienceGuide });
+
 for (const [key,selected] of [["phase",true],["density",false],["cloud",true],["surface",false]] as const) $(key).setAttribute("aria-pressed",String(selected));
 // The tablist follows the keyboard interaction specified by its ARIA role.
 const tabs = [...document.querySelectorAll<HTMLButtonElement>("[data-tab]")];
@@ -919,5 +953,5 @@ tabs.forEach((button, index) => {
   });
 });
 $("analysis-content").setAttribute("aria-labelledby", tabs[0].id);
-window.addEventListener("pagehide", () => { controller?.abort(); viewer?.dispose(); });
+window.addEventListener("pagehide", () => { controller?.abort(); speciesController?.abort(); viewer?.dispose(); queueMicrotask(disposeIdleRenderers); });
 void start();
