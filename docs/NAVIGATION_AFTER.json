@@ -1,0 +1,743 @@
+{
+  "scope": "Actual local Chrome + Python, port 8771; post-GC JS heap and live GL object counts, not total GPU/OS memory. Driver draw-call CPU time is not GPU execution time.",
+  "refresh": {
+    "urlBefore": "http://127.0.0.1:8771/#lab=molecular&tool=diagrams&session=mo-diagrams&params=%7B%22name%22%3A%22o2%22%7D",
+    "selectedBefore": "Molecular Lab",
+    "after": "Molecular Lab"
+  },
+  "timings": [
+    {
+      "lab": "Molecular Lab",
+      "tool": "",
+      "mount_ms": 30.632417000000032,
+      "complete_ms": 110.14895899999999
+    },
+    {
+      "lab": "Spectroscopy",
+      "tool": "",
+      "mount_ms": 35.29695800000002,
+      "complete_ms": 58.73762499999998
+    },
+    {
+      "lab": "Quantum Dynamics",
+      "tool": "",
+      "mount_ms": 26.597415999999953,
+      "complete_ms": 48.80062499999997
+    },
+    {
+      "lab": "Quantum Experiments",
+      "tool": "",
+      "mount_ms": 27.95983299999989,
+      "complete_ms": 52.60708299999999
+    },
+    {
+      "lab": "Quantum Materials",
+      "tool": "",
+      "mount_ms": 25.01395799999989,
+      "complete_ms": 47.66154099999994
+    },
+    {
+      "lab": "Computational Chemistry",
+      "tool": "",
+      "mount_ms": 27.82387499999993,
+      "complete_ms": 51.71958299999994
+    },
+    {
+      "lab": "Molecular Lab",
+      "tool": "MO reference diagrams",
+      "mount_ms": 62.975374999999985,
+      "complete_ms": 87.42575000000011
+    }
+  ],
+  "repeated": [
+    {
+      "lab": "Molecular Lab",
+      "tool": "",
+      "mount_ms": 64.70908299999996,
+      "complete_ms": 66.80504199999996
+    },
+    {
+      "lab": "Molecular Lab",
+      "tool": "",
+      "mount_ms": 35.40829199999985,
+      "complete_ms": 36.556458999999904
+    },
+    {
+      "lab": "Molecular Lab",
+      "tool": "",
+      "mount_ms": 30.656750000000102,
+      "complete_ms": 31.83533299999999
+    }
+  ],
+  "repeated_requests": [
+    {
+      "path": "/api/species",
+      "duration_ms": 0.951,
+      "status": 200,
+      "bytes": 1098
+    },
+    {
+      "path": "/api/orbital",
+      "duration_ms": 6.734,
+      "status": 200,
+      "bytes": 167538
+    }
+  ],
+  "stress": {
+    "full_cycles": 50,
+    "navigation_changes": 350,
+    "wall_ms": 11763.183708,
+    "samples": [
+      {
+        "cycle": 0,
+        "dom": {
+          "documents": 2,
+          "nodes": 747,
+          "jsEventListeners": 98
+        },
+        "heap": {
+          "usedSize": 5064692,
+          "totalSize": 6111232,
+          "embedderHeapUsedSize": 2826696,
+          "backingStorageSize": 1539987
+        },
+        "gpu": {
+          "buffers": 11,
+          "textures": 13,
+          "programs": 4,
+          "draw_cpu_ms": 0.10000002384185791,
+          "draw_calls": 268
+        }
+      },
+      {
+        "cycle": 10,
+        "dom": {
+          "documents": 4,
+          "nodes": 764,
+          "jsEventListeners": 98
+        },
+        "heap": {
+          "usedSize": 5825288,
+          "totalSize": 6897664,
+          "embedderHeapUsedSize": 2638448,
+          "backingStorageSize": 1539987
+        },
+        "gpu": {
+          "buffers": 11,
+          "textures": 13,
+          "programs": 4,
+          "draw_cpu_ms": 0.3999999761581421,
+          "draw_calls": 1728
+        }
+      },
+      {
+        "cycle": 25,
+        "dom": {
+          "documents": 2,
+          "nodes": 752,
+          "jsEventListeners": 98
+        },
+        "heap": {
+          "usedSize": 6036772,
+          "totalSize": 7159808,
+          "embedderHeapUsedSize": 2602680,
+          "backingStorageSize": 1539987
+        },
+        "gpu": {
+          "buffers": 11,
+          "textures": 13,
+          "programs": 4,
+          "draw_cpu_ms": 1.4000000357627869,
+          "draw_calls": 3918
+        }
+      },
+      {
+        "cycle": 50,
+        "dom": {
+          "documents": 2,
+          "nodes": 752,
+          "jsEventListeners": 98
+        },
+        "heap": {
+          "usedSize": 6561092,
+          "totalSize": 7421952,
+          "embedderHeapUsedSize": 2776832,
+          "backingStorageSize": 1540000
+        },
+        "gpu": {
+          "buffers": 11,
+          "textures": 13,
+          "programs": 4,
+          "draw_cpu_ms": 2.399999976158142,
+          "draw_calls": 7568
+        }
+      }
+    ]
+  },
+  "requests": [
+    {
+      "path": "/api/capabilities",
+      "duration_ms": 1.859,
+      "status": 200,
+      "bytes": 548
+    },
+    {
+      "path": "/api/elements",
+      "duration_ms": 1.035,
+      "status": 200,
+      "bytes": 33986
+    },
+    {
+      "path": "/api/species",
+      "duration_ms": 1.012,
+      "status": 200,
+      "bytes": 1098
+    },
+    {
+      "path": "/api/orbital",
+      "duration_ms": 7.132,
+      "status": 200,
+      "bytes": 167538
+    },
+    {
+      "path": "/api/chemistry/catalog",
+      "duration_ms": 0.824,
+      "status": 200,
+      "bytes": 1801
+    },
+    {
+      "path": "/api/molecular",
+      "duration_ms": 3.684,
+      "status": 200,
+      "bytes": 165750
+    },
+    {
+      "path": "/api/spectroscopy",
+      "duration_ms": 0.988,
+      "status": 200,
+      "bytes": 4411
+    },
+    {
+      "path": "/api/dynamics/superposition",
+      "duration_ms": 1.448,
+      "status": 200,
+      "bytes": 20765
+    },
+    {
+      "path": "/api/measurement",
+      "duration_ms": 1.971,
+      "status": 200,
+      "bytes": 3767
+    },
+    {
+      "path": "/api/physics",
+      "duration_ms": 2.173,
+      "status": 200,
+      "bytes": 29353
+    },
+    {
+      "path": "/api/computation/hartree-fock",
+      "duration_ms": 3.181,
+      "status": 200,
+      "bytes": 145716
+    },
+    {
+      "path": "/api/molecular/diagram",
+      "duration_ms": 0.866,
+      "status": 200,
+      "bytes": 1530
+    },
+    {
+      "path": "/api/capabilities",
+      "duration_ms": 0.788,
+      "status": 200,
+      "bytes": 548
+    },
+    {
+      "path": "/api/elements",
+      "duration_ms": 0.975,
+      "status": 200,
+      "bytes": 33986
+    },
+    {
+      "path": "/api/molecular/diagram",
+      "duration_ms": 0.637,
+      "status": 200,
+      "bytes": 1530
+    },
+    {
+      "path": "/api/chemistry/catalog",
+      "duration_ms": 3.713,
+      "status": 200,
+      "bytes": 1801
+    },
+    {
+      "path": "/api/molecular",
+      "duration_ms": 3.754,
+      "status": 200,
+      "bytes": 165750
+    },
+    {
+      "path": "/api/species",
+      "duration_ms": 0.951,
+      "status": 200,
+      "bytes": 1098
+    },
+    {
+      "path": "/api/orbital",
+      "duration_ms": 6.734,
+      "status": 200,
+      "bytes": 167538
+    },
+    {
+      "path": "/api/spectroscopy",
+      "duration_ms": 0.873,
+      "status": 200,
+      "bytes": 4411
+    },
+    {
+      "path": "/api/dynamics/superposition",
+      "duration_ms": 1.377,
+      "status": 200,
+      "bytes": 20765
+    },
+    {
+      "path": "/api/measurement",
+      "duration_ms": 2.661,
+      "status": 200,
+      "bytes": 3767
+    },
+    {
+      "path": "/api/physics",
+      "duration_ms": 2.799,
+      "status": 200,
+      "bytes": 29353
+    },
+    {
+      "path": "/api/computation/hartree-fock",
+      "duration_ms": 3.534,
+      "status": 200,
+      "bytes": 145716
+    },
+    {
+      "path": "/api/jobs",
+      "duration_ms": 1.362,
+      "status": 202,
+      "bytes": 427
+    },
+    {
+      "path": "/api/jobs/cfe3fecff86f4136a7b9223495d96510",
+      "duration_ms": 0.934,
+      "status": 200,
+      "bytes": 487
+    },
+    {
+      "path": "/api/jobs/cfe3fecff86f4136a7b9223495d96510",
+      "duration_ms": 4.971,
+      "status": 200,
+      "bytes": 110803
+    },
+    {
+      "path": "/api/jobs",
+      "duration_ms": 2.924,
+      "status": 202,
+      "bytes": 427
+    },
+    {
+      "path": "/api/jobs/c7910c5600c147828e6304b2a3a92ff5",
+      "duration_ms": 1.121,
+      "status": 200,
+      "bytes": 488
+    },
+    {
+      "path": "/api/jobs/c7910c5600c147828e6304b2a3a92ff5",
+      "duration_ms": 5.346,
+      "status": 200,
+      "bytes": 111295
+    }
+  ],
+  "worker_resources": [
+    {
+      "solve_seconds": 0.08493529102997854,
+      "geometry_seconds": 0.00623674999224022,
+      "wall_seconds": 0.09117750002769753,
+      "cpu_seconds": 0.08942899999999998,
+      "peak_rss_mib": 95.078125,
+      "queue_wait_seconds": 0.0005977909895591438
+    }
+  ],
+  "long_tasks": [],
+  "errors": [],
+  "follow_up_profile": {
+    "scope": "Actual local Chrome + Python, port 8771; post-GC JS heap and live GL object counts, not total GPU/OS memory. Driver draw-call CPU time is not GPU execution time.",
+    "refresh": {
+      "urlBefore": "http://127.0.0.1:8771/#lab=molecular&tool=diagrams&session=mo-diagrams&params=%7B%22name%22%3A%22o2%22%7D",
+      "selectedBefore": "Molecular Lab",
+      "after": "Molecular Lab"
+    },
+    "timings": [
+      {
+        "lab": "Molecular Lab",
+        "tool": "",
+        "mount_ms": 47.02045899999996,
+        "complete_ms": 125.787917
+      },
+      {
+        "lab": "Spectroscopy",
+        "tool": "",
+        "mount_ms": 30.91829199999995,
+        "complete_ms": 55.34604200000001
+      },
+      {
+        "lab": "Quantum Dynamics",
+        "tool": "",
+        "mount_ms": 25.610624999999914,
+        "complete_ms": 47.70987500000001
+      },
+      {
+        "lab": "Quantum Experiments",
+        "tool": "",
+        "mount_ms": 27.622250000000008,
+        "complete_ms": 50.524374999999964
+      },
+      {
+        "lab": "Quantum Materials",
+        "tool": "",
+        "mount_ms": 27.062250000000063,
+        "complete_ms": 50.69387500000005
+      },
+      {
+        "lab": "Computational Chemistry",
+        "tool": "",
+        "mount_ms": 26.826958999999988,
+        "complete_ms": 51.00741700000003
+      },
+      {
+        "lab": "Molecular Lab",
+        "tool": "MO reference diagrams",
+        "mount_ms": 61.75512499999991,
+        "complete_ms": 84.78783399999998
+      }
+    ],
+    "repeated": [
+      {
+        "lab": "Molecular Lab",
+        "tool": "",
+        "mount_ms": 67.20795799999996,
+        "complete_ms": 69.13237499999991
+      },
+      {
+        "lab": "Molecular Lab",
+        "tool": "",
+        "mount_ms": 35.20499999999993,
+        "complete_ms": 36.28795799999989
+      },
+      {
+        "lab": "Molecular Lab",
+        "tool": "",
+        "mount_ms": 30.229166000000077,
+        "complete_ms": 31.400833000000148
+      }
+    ],
+    "repeated_requests": [
+      {
+        "path": "/api/species",
+        "duration_ms": 0.957,
+        "status": 200,
+        "bytes": 1098
+      },
+      {
+        "path": "/api/orbital",
+        "duration_ms": 6.712,
+        "status": 200,
+        "bytes": 167538
+      }
+    ],
+    "stress": {
+      "full_cycles": 50,
+      "navigation_changes": 350,
+      "wall_ms": 11897.399583,
+      "samples": [
+        {
+          "cycle": 0,
+          "dom": {
+            "documents": 2,
+            "nodes": 747,
+            "jsEventListeners": 98
+          },
+          "heap": {
+            "usedSize": 5064944,
+            "totalSize": 5849088,
+            "embedderHeapUsedSize": 2786616,
+            "backingStorageSize": 1539987
+          },
+          "gpu": {
+            "buffers": 11,
+            "textures": 13,
+            "programs": 4,
+            "draw_cpu_ms": 0.30000007152557373,
+            "draw_calls": 268
+          }
+        },
+        {
+          "cycle": 10,
+          "dom": {
+            "documents": 2,
+            "nodes": 752,
+            "jsEventListeners": 98
+          },
+          "heap": {
+            "usedSize": 5825860,
+            "totalSize": 7159808,
+            "embedderHeapUsedSize": 2533336,
+            "backingStorageSize": 1539987
+          },
+          "gpu": {
+            "buffers": 11,
+            "textures": 13,
+            "programs": 4,
+            "draw_cpu_ms": 0.9000000953674316,
+            "draw_calls": 1728
+          }
+        },
+        {
+          "cycle": 25,
+          "dom": {
+            "documents": 2,
+            "nodes": 752,
+            "jsEventListeners": 98
+          },
+          "heap": {
+            "usedSize": 6040428,
+            "totalSize": 6897664,
+            "embedderHeapUsedSize": 2598872,
+            "backingStorageSize": 1539987
+          },
+          "gpu": {
+            "buffers": 11,
+            "textures": 13,
+            "programs": 4,
+            "draw_cpu_ms": 1.2000001668930054,
+            "draw_calls": 3918
+          }
+        },
+        {
+          "cycle": 50,
+          "dom": {
+            "documents": 2,
+            "nodes": 752,
+            "jsEventListeners": 98
+          },
+          "heap": {
+            "usedSize": 6398196,
+            "totalSize": 7684096,
+            "embedderHeapUsedSize": 2299064,
+            "backingStorageSize": 1539987
+          },
+          "gpu": {
+            "buffers": 11,
+            "textures": 13,
+            "programs": 4,
+            "draw_cpu_ms": 2.600000262260437,
+            "draw_calls": 7578
+          }
+        }
+      ],
+      "long_tasks": []
+    },
+    "requests": [
+      {
+        "path": "/api/capabilities",
+        "duration_ms": 1.459,
+        "status": 200,
+        "bytes": 548
+      },
+      {
+        "path": "/api/elements",
+        "duration_ms": 0.928,
+        "status": 200,
+        "bytes": 33986
+      },
+      {
+        "path": "/api/species",
+        "duration_ms": 0.868,
+        "status": 200,
+        "bytes": 1098
+      },
+      {
+        "path": "/api/orbital",
+        "duration_ms": 5.655,
+        "status": 200,
+        "bytes": 167538
+      },
+      {
+        "path": "/api/chemistry/catalog",
+        "duration_ms": 0.846,
+        "status": 200,
+        "bytes": 1801
+      },
+      {
+        "path": "/api/molecular",
+        "duration_ms": 3.75,
+        "status": 200,
+        "bytes": 165750
+      },
+      {
+        "path": "/api/spectroscopy",
+        "duration_ms": 0.969,
+        "status": 200,
+        "bytes": 4411
+      },
+      {
+        "path": "/api/dynamics/superposition",
+        "duration_ms": 1.358,
+        "status": 200,
+        "bytes": 20765
+      },
+      {
+        "path": "/api/measurement",
+        "duration_ms": 2.069,
+        "status": 200,
+        "bytes": 3767
+      },
+      {
+        "path": "/api/physics",
+        "duration_ms": 2.206,
+        "status": 200,
+        "bytes": 29353
+      },
+      {
+        "path": "/api/computation/hartree-fock",
+        "duration_ms": 3.219,
+        "status": 200,
+        "bytes": 145716
+      },
+      {
+        "path": "/api/molecular/diagram",
+        "duration_ms": 0.755,
+        "status": 200,
+        "bytes": 1530
+      },
+      {
+        "path": "/api/capabilities",
+        "duration_ms": 0.826,
+        "status": 200,
+        "bytes": 548
+      },
+      {
+        "path": "/api/elements",
+        "duration_ms": 1.279,
+        "status": 200,
+        "bytes": 33986
+      },
+      {
+        "path": "/api/molecular/diagram",
+        "duration_ms": 1.212,
+        "status": 200,
+        "bytes": 1530
+      },
+      {
+        "path": "/api/chemistry/catalog",
+        "duration_ms": 0.879,
+        "status": 200,
+        "bytes": 1801
+      },
+      {
+        "path": "/api/molecular",
+        "duration_ms": 3.848,
+        "status": 200,
+        "bytes": 165750
+      },
+      {
+        "path": "/api/species",
+        "duration_ms": 0.957,
+        "status": 200,
+        "bytes": 1098
+      },
+      {
+        "path": "/api/orbital",
+        "duration_ms": 6.712,
+        "status": 200,
+        "bytes": 167538
+      },
+      {
+        "path": "/api/spectroscopy",
+        "duration_ms": 0.967,
+        "status": 200,
+        "bytes": 4411
+      },
+      {
+        "path": "/api/dynamics/superposition",
+        "duration_ms": 1.446,
+        "status": 200,
+        "bytes": 20765
+      },
+      {
+        "path": "/api/measurement",
+        "duration_ms": 2.745,
+        "status": 200,
+        "bytes": 3767
+      },
+      {
+        "path": "/api/physics",
+        "duration_ms": 2.618,
+        "status": 200,
+        "bytes": 29353
+      },
+      {
+        "path": "/api/computation/hartree-fock",
+        "duration_ms": 3.619,
+        "status": 200,
+        "bytes": 145716
+      },
+      {
+        "path": "/api/jobs",
+        "duration_ms": 1.778,
+        "status": 202,
+        "bytes": 427
+      },
+      {
+        "path": "/api/jobs/62993e1c1a1948c78df6c96485d23330",
+        "duration_ms": 0.9,
+        "status": 200,
+        "bytes": 487
+      },
+      {
+        "path": "/api/jobs/62993e1c1a1948c78df6c96485d23330",
+        "duration_ms": 4.23,
+        "status": 200,
+        "bytes": 110812
+      },
+      {
+        "path": "/api/jobs",
+        "duration_ms": 1.552,
+        "status": 202,
+        "bytes": 428
+      },
+      {
+        "path": "/api/jobs/f2521fda987b458aa87dbf62ca4fd852",
+        "duration_ms": 1.106,
+        "status": 200,
+        "bytes": 488
+      },
+      {
+        "path": "/api/jobs/f2521fda987b458aa87dbf62ca4fd852",
+        "duration_ms": 6.469,
+        "status": 200,
+        "bytes": 111296
+      }
+    ],
+    "worker_resources": [
+      {
+        "solve_seconds": 0.08172304194886237,
+        "geometry_seconds": 0.006131957983598113,
+        "wall_seconds": 0.08785787498345599,
+        "cpu_seconds": 0.08608800000000005,
+        "peak_rss_mib": 94.921875,
+        "queue_wait_seconds": 0.0003482499741949141
+      }
+    ],
+    "long_tasks": [],
+    "errors": []
+  }
+}
