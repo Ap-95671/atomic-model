@@ -1,5 +1,32 @@
 # Quantum Atom Lab
 
+## Live website
+
+**[Open Quantum Atom Lab →](https://quantum-atom-lab-ap95671.pages.dev/)**
+
+Explore atoms, molecular bonding and quantum models directly in your browser.
+No installation or sign-in is required for the public browser edition.
+
+- [Atomic Explorer and prepared configurations](https://quantum-atom-lab-ap95671.pages.dev/#lab=atomic)
+- [Periodic table and reference trends](https://quantum-atom-lab-ap95671.pages.dev/#lab=periodic)
+- [Independent 3D orbital comparison](https://quantum-atom-lab-ap95671.pages.dev/#lab=compare)
+- [Molecular Lab](https://quantum-atom-lab-ap95671.pages.dev/#lab=molecular)
+- [Spectroscopy](https://quantum-atom-lab-ap95671.pages.dev/#lab=spectroscopy)
+
+The current deployed application and full local research tools are maintained on
+[the production source branch](https://github.com/Ap-95671/atomic-model/tree/codex/cloudflare-pages-demo).
+See its [current README](https://github.com/Ap-95671/atomic-model/blob/codex/cloudflare-pages-demo/README.md)
+for installation, laboratory availability, scientific limits and validation.
+[Build provenance](https://quantum-atom-lab-ap95671.pages.dev/build-info.json)
+identifies the exact version served by the website.
+
+![Quantum Atom Lab homepage](https://raw.githubusercontent.com/Ap-95671/atomic-model/53b9b9732afaeb285845ef0836f4c26ecea0ae9b/docs/MODERNIZATION_HOME.png)
+
+The sections below describe the preserved original simulator on `main`.
+
+---
+
+
 A local, interactive 3D Schrödinger orbital laboratory built on the original
 `atomic-model` Python project. Python computes the wavefunctions, samples, and
 surfaces; Three.js renders them with a movable 3D camera.
