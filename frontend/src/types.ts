@@ -39,6 +39,7 @@ export interface Species extends ElementData {
   isotope: Isotope;
   isotopes: Isotope[];
   electronic: {
+    electrons?:number;
     text: string;
     status: string;
     configuration: Record<string, number> | null;

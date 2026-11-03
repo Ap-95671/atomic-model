@@ -17,6 +17,14 @@ Laboratories and internal tools now have shareable URL routes that survive
 refresh and Back/Forward navigation. See the [navigation repair report](docs/NAVIGATION_REPAIRS.md)
 for cancellation, renderer-memory fixes and measured regression results.
 
+## Free browser demo · Cloudflare Pages
+
+A separate `build:pages` artifact runs lightweight calculations in browser workers
+and serves labeled, reproducible recorded chemistry datasets. The full Python
+application and Railway Docker option remain separate. Deployment activation is
+in progress; see the [Cloudflare deployment report](docs/CLOUDFLARE_PAGES.md) for
+current status, supported features, model limits and verification.
+
 ## Working laboratories
 
 | Laboratory | Implemented calculation | Scope |

@@ -16,4 +16,4 @@ export function browserApi<T>(url:string,signal?:AbortSignal):Promise<T>{
   worker.postMessage(url);
  });
 }
-export const staticCapabilities={mode:'public' as const,static_demo:true,advanced_computation:false,atomic_max_points:8000,atomic_qualities:['preview'],message:'BROWSER DEMO · ₹0 hosting architecture. Atomic/H₂⁺/measurement/well/circuits calculate on this device; recorded HF examples are explicitly labeled. Advanced Python research remains local.'};
+export const staticCapabilities={mode:'public' as const,static_demo:true,advanced_computation:false,atomic_max_points:8000,atomic_qualities:['preview'],message:'BROWSER DEMO · Calculations run on your device. Atomic/H₂⁺/measurement/well/circuits calculate on this device; recorded HF examples are explicitly labeled. Advanced Python research remains local.'};

@@ -1,3 +1,4 @@
+import {bands} from './materials';
 import {energy,measurement,molecule,number,orbital,species,spectroscopy,transition,twoState,type Reference} from './science';
 import {circuit} from './circuit';
 export function calculate(input:string,data:Reference):unknown{
@@ -7,7 +8,7 @@ export function calculate(input:string,data:Reference):unknown{
   case '/api/elements':return data.elements;
   case '/api/species':return species(p,data);
   case '/api/orbital':return orbital(p,data);
-  case '/api/chemistry/catalog':return data.catalog;
+  case '/api/chemistry/catalog':{const catalog=data.catalog as {systems:{id:string}[]};return{...catalog,systems:catalog.systems.filter(s=>['h2plus','h2','n2','o2','water'].includes(s.id)),bases:['sto-3g'],methods:['hf']};}
   case '/api/molecular':return molecule(p);
   case '/api/molecular/diagram':{const result=data.diagrams[p.get('name')??'o2'];if(!result)throw new Error('Unknown reference diagram');return {...result as object,_provenance:{kind:'reference',note:'Bundled qualitative occupation scheme; no numerical molecular energies.'}};}
   case '/api/molecular/structure':{const result=data.structures[p.get('name')??'water'];if(!result)throw new Error('Unknown source conformer');return {...result as object,_provenance:{kind:'precomputed',note:'Bundled PubChem3D source conformer; no live optimization.'}};}
@@ -15,7 +16,7 @@ export function calculate(input:string,data:Reference):unknown{
   case '/api/spectroscopy':return spectroscopy(p,data);
   case '/api/measurement':return measurement(p,data);
   case '/api/dynamics/superposition':return twoState(p);
-  case '/api/physics':if(p.get('operation')==='circuit')return circuit(JSON.parse(p.get('parameters')??'{}'));break;
+  case '/api/physics':{const parameters=JSON.parse(p.get('parameters')??'{}');if(p.get('operation')==='circuit')return circuit(parameters);if(p.get('operation')==='bands')return bands(parameters);break;}
  }
  throw new Error('Requires the advanced local Python environment. This static demo does not run this solver or fabricate a result. See the browser-demo feature guide for supported experiments and recorded datasets.');
 }

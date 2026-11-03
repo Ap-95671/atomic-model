@@ -14,9 +14,11 @@ export function extract(axis:number[],field:Float64Array,level:number,phase:(p:n
   const cube=[id(i,j,k),id(i+1,j,k),id(i+1,j+1,k),id(i,j+1,k),id(i,j,k+1),id(i+1,j,k+1),id(i+1,j+1,k+1),id(i,j+1,k+1)];
   for(const t of tetra){const inside=t.map(v=>cube[v]).filter(v=>field[v]>level),outside=t.map(v=>cube[v]).filter(v=>field[v]<=level);
    if(!inside.length||!outside.length)continue;
-   if(inside.length===1){faces.push(outside.map(b=>edge(inside[0],b)));}
-   else if(outside.length===1){faces.push(inside.map(a=>edge(a,outside[0])).reverse());}
-   else {const [a,b]=inside,[c,d]=outside,ac=edge(a,c),ad=edge(a,d),bc=edge(b,c),bd=edge(b,d);faces.push([ac,bc,ad],[ad,bc,bd]);}
+   const direction=[0,1,2].map(k=>outside.reduce((sum,id)=>sum+coord(id)[k],0)/outside.length-inside.reduce((sum,id)=>sum+coord(id)[k],0)/inside.length);
+   const addFace=(f:number[])=>{const a=vertices[f[0]],b=vertices[f[1]],c=vertices[f[2]],u=b.map((v,k)=>v-a[k]),v=c.map((x,k)=>x-a[k]),normal=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(normal.reduce((sum,x,k)=>sum+x*direction[k],0)<0)f.reverse();faces.push(f);};
+   if(inside.length===1){addFace(outside.map(b=>edge(inside[0],b)));}
+   else if(outside.length===1){addFace(inside.map(a=>edge(a,outside[0])));}
+   else {const [a,b]=inside,[c,d]=outside,ac=edge(a,c),ad=edge(a,d),bc=edge(b,c),bd=edge(b,d);addFace([ac,bc,ad]);addFace([ad,bc,bd]);}
   }
  }
  return{vertices,faces,phases};

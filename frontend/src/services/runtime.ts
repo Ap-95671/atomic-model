@@ -8,8 +8,8 @@ export async function initializeRuntime(){
  }catch{/* Older local servers preserve their existing behavior. */}
  if(runtime.mode==='public'){
   const banner=document.createElement('aside');banner.className='public-demo-notice';banner.setAttribute('role','note');
-  banner.textContent=runtime.message+' ';
-  if(runtime.static_demo){const link=document.createElement('a');link.href='/demo-guide.html';link.textContent='Models, datasets & local research guide ↗';link.target='_blank';link.rel='noreferrer';banner.append(link);}
+  banner.textContent=runtime.message+(runtime.static_demo?' ':' No paid services or account are needed to use this demo.');
+  if(runtime.static_demo){const footer=document.querySelector('footer > span:last-child');if(footer)footer.textContent='Browser calculations + recorded Python datasets / Three.js · WebGL';const link=document.createElement('a');link.href='/demo-guide.html';link.textContent='Models, datasets & local research guide ↗';link.target='_blank';link.rel='noreferrer';banner.append(link);}
   document.querySelector('.topbar')?.after(banner);
   const status=document.querySelector('.local-status');if(status)status.textContent=runtime.static_demo?'BROWSER DEMO':'PUBLIC DEMO';
   const tagline=document.querySelector('.brand small');if(tagline)tagline.textContent='A BOUNDED SCIENTIFIC DEMO';

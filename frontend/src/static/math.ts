@@ -20,3 +20,13 @@ export function distribution(n:number,l:number){
  return {r,cdf,nodes,normalization,extent:interpolate(cdf,r,.999)};
 }
 export function minimize(fn:(x:number)=>number,a:number,b:number){const g=(Math.sqrt(5)-1)/2;let c=b-g*(b-a),d=a+g*(b-a);for(let i=0;i<60;i++){if(fn(c)<fn(d)){b=d;d=c;c=b-g*(b-a);}else{a=c;c=d;d=a+g*(b-a);}}return(a+b)/2;}
+/** Gauss–Legendre nodes/weights, Newton roots of P_n; bounded n=32 usage. */
+export function gaussLegendre(n=32){
+ const nodes=Array<number>(n).fill(0),weights=Array<number>(n).fill(0);
+ for(let i=0;i<Math.ceil(n/2);i++){
+  let x=Math.cos(Math.PI*(i+.75)/(n+.5)),derivative=0;
+  for(let step=0;step<30;step++){let a=1,b=x;for(let k=2;k<=n;k++){const c=((2*k-1)*x*b-(k-1)*a)/k;a=b;b=c;}derivative=n*(x*b-a)/(x*x-1);const dx=b/derivative;x-=dx;if(Math.abs(dx)<1e-15)break;}
+  const w=2/((1-x*x)*derivative*derivative);nodes[i]=-x;nodes[n-1-i]=x;weights[i]=w;weights[n-1-i]=w;
+ }
+ return{nodes,weights};
+}

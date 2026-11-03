@@ -1,4 +1,4 @@
-import {mountTools} from '../app/route';
+import {mountTools,readRoute,writeRoute} from '../app/route';
 import {runtime} from "../services/runtime";
 import {mountAdaptive} from "./adaptive";
 import {mountAdvancedChemistry} from "./advanced-chemistry";
@@ -30,6 +30,7 @@ function mountHartreeFock(host:HTMLElement){
 }
 
 export function mountComputation(host:HTMLElement){
+  if(import.meta.env.VITE_STATIC_DEMO==='true'){const route=readRoute(),tool=route.get('tool');if(tool&&tool!=='recorded'){host.innerHTML='<div class="lab-heading"><h1>Advanced local chemistry</h1><p>This tool requires the local Python environment. No HF/DFT, correlation or optimization job runs on this static website.</p><p><a href="#lab=computation&tool=recorded">Explore recorded HF datasets</a> · <a href="/demo-guide.html">Supported features and local setup</a></p></div>';return()=>{};}route.set('tool','recorded');writeRoute(route);return mountComputedMolecules(host);}
   host.innerHTML='<nav class="experiment-nav" aria-label="Computational methods"><button data-method="foundation" aria-pressed="true">RHF foundation</button><button data-method="pyscf" aria-pressed="false">Optional HF / DFT</button><button data-method="adaptive" aria-pressed="false">Adaptive baseline</button><button data-method="correlation" aria-pressed="false">Electron correlation</button><button data-method="excitations" aria-pressed="false">Excited states</button><button data-method="bond_scan" aria-pressed="false">Correlated H₂ curve</button><button data-method="spin-aware" aria-pressed="false">Spin-aware / all orbitals</button></nav><div data-computation-host></div>';
   const target=host.querySelector<HTMLElement>('[data-computation-host]')!;
   return mountTools(host,'method',target,key=>key==='foundation'?mountHartreeFock(target):key==='spin-aware'?mountComputedMolecules(target):key==='correlation'||key==='excitations'||key==='bond_scan'?mountAdvancedChemistry(target,key):key==='adaptive'?mountAdaptive(target):mountPySCF(target),runtime.mode==='public'?'adaptive':'foundation');

@@ -1,4 +1,5 @@
-import {mountTools,savedParameters} from '../app/route';
+import {runtime} from '../services/runtime';
+import {mountTools,savedParameters,readRoute} from '../app/route';
 import {mountGeometry} from "./geometry";
 import { mountComputedMolecules } from "./computed-molecules";
 import { chemistryCatalog } from "../services/chemistry";
@@ -24,7 +25,7 @@ function mountLcao(host:HTMLElement,onSystem?:(name:string)=>void){
   void chemistryCatalog().then(catalog=>{
     if(closed)return;
     const select=session.form.querySelector<HTMLSelectElement>('[name="system"]')!;
-    select.innerHTML=catalog.systems.map(s=>`<option value="${s.id}">${esc(s.label)}${s.id==='h2plus'?' · Slater LCAO':' · calculated HF/DFT'}</option>`).join('');
+    select.innerHTML=catalog.systems.map(s=>`<option value="${s.id}">${esc(s.label)}${s.id==='h2plus'?' · Slater LCAO':runtime.static_demo?' · recorded HF/STO-3G':' · calculated HF/DFT'}</option>`).join('');
     select.value='h2plus';
   }).catch(()=>{});
   session.form.addEventListener('change',event=>{
@@ -59,7 +60,7 @@ export function mountMolecular(host:HTMLElement){
   let replaceView:()=>void;
   const switchSystem=(name:string)=>{replaceView();replaceView=mountComputedMolecules(target,name);};
   return mountTools(host,'molecular',target,key=>{
-    const previous=savedParameters('computed-molecules');
+    const previous=runtime.static_demo?(readRoute().get('session')==='molecular'?undefined:savedParameters('recorded-molecules')):savedParameters('computed-molecules');
     replaceView=key==='lcao'&&previous?.system&&previous.system!=='h2plus'?mountComputedMolecules(target,previous.system):key==='lcao'?mountLcao(target,switchSystem):key==='diagrams'?mountDiagrams(target):key==='geometry'?mountGeometry(target):key==='vibrations'?mountGeometry(target,true):mountStructures(target);
     return()=>replaceView();
   },'lcao');

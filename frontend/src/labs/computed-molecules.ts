@@ -7,6 +7,7 @@ import { plot } from '../components/plot';
 import { csv,download,plotPng } from '../services/export';
 
 export function mountComputedMolecules(host:HTMLElement,initialSystem='h2'){
+  if(import.meta.env.VITE_STATIC_DEMO==='true'){let closed=false,cleanup:(()=>void)|undefined;host.innerHTML='<p role="status">Loading recorded molecular examples…</p>';void import('../static/recorded').then(module=>{if(!closed)cleanup=module.mountRecordedMolecules(host,initialSystem);});return()=>{closed=true;cleanup?.();};}
   let disposed=false,session:LabSession|undefined,viewer:OrbitalViewer|undefined;
   let calculationId:string|undefined,current:ChemistryResult|undefined;
   host.innerHTML='<p role="status">Loading supported chemistry methods…</p>';

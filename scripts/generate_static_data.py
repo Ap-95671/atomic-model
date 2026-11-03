@@ -4,8 +4,10 @@ Run from repository root with optional PySCF installed. Never called by Pages.
 import hashlib
 import json
 import platform
+import sys
 from dataclasses import replace
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import numpy as np
 from scipy.constants import m_e, m_p
 from quantum_engine.constants import ATOMIC_MASS, RYDBERG_EV, BOHR_RADIUS, h, c, e

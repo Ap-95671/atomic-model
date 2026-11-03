@@ -77,11 +77,11 @@ export class LabSession {
       const data=await api<T>(path,this.controller.signal);
       if(this.closed || id!==this.revision)return;
       render(data);
-      if(runtime.static_demo){const provenance=(data as {_provenance?:{kind:string;note?:string}})._provenance;const note=document.createElement('p');note.className='execution-note';note.textContent=provenance?.kind?.includes('precomputed')?'PRECOMPUTED / SOURCE DATA · '+(provenance.note??'Recorded parameters and limitations apply.'):provenance?.kind==='reference'?'REFERENCE SCHEME · qualitative, no numerical molecular energies.':provenance?'BROWSER CALCULATION · '+provenance.kind:'BROWSER REFERENCE DATA';this.result.prepend(note);}
+      if(runtime.static_demo){const provenance=(data as {_provenance?:{kind:string;note?:string}})._provenance;const note=document.createElement('p');note.className='execution-note';note.textContent=provenance?.kind==='precomputed'?'PRECOMPUTED / SOURCE DATA · '+(provenance.note??'Recorded parameters and limitations apply.'):provenance?.kind==='reference'?'REFERENCE SCHEME · qualitative, no numerical molecular energies.':provenance?'BROWSER CALCULATION · '+provenance.kind:'BROWSER REFERENCE DATA';this.result.prepend(note);}
       this.result.hidden=false;this.status.textContent=runtime.static_demo?'Browser result ready.':'Calculation complete.';
     } catch(error){
       if(this.closed || id!==this.revision || (error as Error).name==='AbortError')return;
-      this.status.setAttribute('role','alert');this.status.textContent=`Calculation failed: ${(error as Error).message}. Use Calculate to retry.`;
+      if(runtime.static_demo&&/Requires the advanced local/.test((error as Error).message)){this.result.innerHTML='<div class="result-heading"><h2>Local Python engine required</h2><p>This solver is unavailable in the browser demonstration. No calculation was performed.</p><p><a href="/demo-guide.html" target="_blank" rel="noreferrer">Supported experiments and local setup</a></p></div>';this.result.hidden=false;this.status.textContent='Unavailable in browser mode.';}else{this.status.setAttribute('role','alert');this.status.textContent=`Calculation failed: ${(error as Error).message}. Use Calculate to retry.`;}
     } finally {
       if(!this.closed && id===this.revision)this.host.querySelector('.lab-results')?.setAttribute('aria-busy','false');
     }
@@ -111,7 +111,7 @@ export class LabSession {
       render(job.result!,job.calculation_id,job.id);this.result.hidden=false;this.status.textContent='Calculation complete.';
     }catch(error){
       if(this.closed||id!==this.revision||(error as Error).name==='AbortError')return;
-      this.status.setAttribute('role','alert');this.status.textContent=`Calculation failed: ${(error as Error).message}. Use Calculate to retry.`;
+      if(runtime.static_demo&&/Requires the advanced local/.test((error as Error).message)){this.result.innerHTML='<div class="result-heading"><h2>Local Python engine required</h2><p>This solver is unavailable in the browser demonstration. No calculation was performed.</p><p><a href="/demo-guide.html" target="_blank" rel="noreferrer">Supported experiments and local setup</a></p></div>';this.result.hidden=false;this.status.textContent='Unavailable in browser mode.';}else{this.status.setAttribute('role','alert');this.status.textContent=`Calculation failed: ${(error as Error).message}. Use Calculate to retry.`;}
     }finally{
       if(!this.closed&&id===this.revision){this.host.querySelector<HTMLElement>('[data-cancel]')!.hidden=true;this.host.querySelector('.lab-results')?.setAttribute('aria-busy','false');}
     }
