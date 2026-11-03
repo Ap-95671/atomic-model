@@ -1,0 +1,207 @@
+{
+  "base_url": "http://127.0.0.1:8767",
+  "https_verified": false,
+  "health": {
+    "status": "ok",
+    "mode": "public",
+    "elements": 118,
+    "version": "3.0.0a1",
+    "commit": "0547c8899a16b6cd3d464b3b00c2b0d72900a6e7",
+    "frontend_ready": true
+  },
+  "records": [
+    {
+      "path": "/api/health",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.014069416967686266,
+      "response_bytes": 140,
+      "cache": null
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.003855000017210841,
+      "response_bytes": 616,
+      "cache": null
+    },
+    {
+      "path": "/api/elements",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.002802291011903435,
+      "response_bytes": 43900,
+      "cache": null
+    },
+    {
+      "path": "/api/species",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.836287334037479,
+      "response_bytes": 2042,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.9006913749617524,
+      "response_bytes": 319452,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.0022804170148447156,
+      "response_bytes": 319452,
+      "cache": "HIT"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.9441883339895867,
+      "response_bytes": 619191,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.003229541005566716,
+      "response_bytes": 619191,
+      "cache": "HIT"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 1.3623069169698283,
+      "response_bytes": 989238,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.004187625017948449,
+      "response_bytes": 989238,
+      "cache": "HIT"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 1.0059012079727836,
+      "response_bytes": 1176338,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.004842958005610853,
+      "response_bytes": 1176338,
+      "cache": "HIT"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 1.0543919579940848,
+      "response_bytes": 1714716,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.008183667028788477,
+      "response_bytes": 1714716,
+      "cache": "HIT"
+    },
+    {
+      "path": "/api/molecular",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.9254864579997957,
+      "response_bytes": 116151,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/molecular/diagram",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.8069049580371939,
+      "response_bytes": 1530,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/spectroscopy",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.8343469169922173,
+      "response_bytes": 4411,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/measurement",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.8293231250136159,
+      "response_bytes": 3769,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/dynamics/superposition",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.8306161669897847,
+      "response_bytes": 20779,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/physics",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.8445965420105495,
+      "response_bytes": 100207,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/physics",
+      "method": "GET",
+      "status": 200,
+      "wall_seconds": 0.8345374999917112,
+      "response_bytes": 29340,
+      "cache": "MISS"
+    },
+    {
+      "path": "/api/jobs",
+      "method": "POST",
+      "status": 503,
+      "wall_seconds": 0.0012315420317463577,
+      "response_bytes": 234,
+      "cache": null
+    },
+    {
+      "path": "/api/computation/pyscf",
+      "method": "GET",
+      "status": 503,
+      "wall_seconds": 0.0010932500008493662,
+      "response_bytes": 234,
+      "cache": null
+    },
+    {
+      "path": "/api/orbital",
+      "method": "GET",
+      "status": 400,
+      "wall_seconds": 0.8245928329997696,
+      "response_bytes": 89,
+      "cache": "MISS"
+    }
+  ],
+  "scope": "Real HTTP/scientific checks. Browser/WebGL and external reachability require their separate checks; localhost/container success is not a public deployment."
+}

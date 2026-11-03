@@ -1,0 +1,8 @@
+{
+  "base_url": "http://127.0.0.1:8767",
+  "https_verified": false,
+  "mobile_document_width": 390,
+  "viewport_width": 390,
+  "page_errors": [],
+  "scope": "Actual public-mode browser screenshots; localhost is container verification, not Railway deployment."
+}

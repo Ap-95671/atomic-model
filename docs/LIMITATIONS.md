@@ -70,3 +70,10 @@ See `QUANTUM_LAB_3_VALIDATION.md` for actual test/reference evidence.
 - SDK is an experimental local alpha with bundled data, not a stable release or
   published PyPI package. Owner license approval remains pending. No merges,
   force pushes or public production deployment are included in this work.
+
+
+Public-demo mode is now implemented separately and container-tested with stricter
+preview/workload limits; it preserves the full local source. Railway activation
+is blocked by paid-upgrade requirements under the owner's free/trial-only budget.
+No public HTTPS deployment or external-connection validation is claimed. See
+`RAILWAY_DEPLOYMENT.md`; this does not complete the remaining 3.0 scientific roadmap.

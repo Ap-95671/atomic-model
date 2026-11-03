@@ -98,3 +98,18 @@ and charts/tables scroll locally. Browser audit found zero console errors and
 no new GPU buffers during the measured atomic playback interval. Further full
 camera/overlay/device testing, named portable workspaces and code splitting
 remain incomplete.
+
+## Public-mode verification
+
+The bounded public mode has a visible explanatory banner, preview-only atomic
+quality, accurate point/grid limits and advanced-local availability panels.
+Same-origin production requests, WebGL camera motion and data/image exports were
+exercised against the actual Linux container. A production CSP issue for SVG/blob
+exports and a single-worker catalog race were corrected; bounded busy/rate
+backoff preserves loading/cancellation behavior. Static assets are throttled too.
+
+Actual screenshots `railway-public-container-desktop.png` and
+`railway-public-container-mobile.png` were inspected at 1440×1000 and 390×900;
+public workflow checks also cover 320/768/1440 and an axe run. Browser evidence
+records zero page errors and a 390 px document at 390 px viewport. These are
+container previews, not mockups and **not a deployed Railway website**.

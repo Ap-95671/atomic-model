@@ -1,5 +1,15 @@
 # Changelog
 
+## Railway deployment preparation (not publicly deployed)
+
+- Independent Linux Docker build, pinned Node/Python images and production deps.
+- Uvicorn public gateway, strict core-workload limits, cache/rate/time/RSS limits,
+  same-origin assets, health/PORT support, and advanced-local explanations.
+- Preserved all advanced local APIs; added Docker/public-browser CI and real
+  production-mode smoke/export/mobile checks.
+- Authenticated Railway account requires paid upgrade; free/trial-only budget
+  prevents activation. No cloud service/domain was created and no paid plan chosen.
+
 ## 3.0.0a1 — incremental, unmerged development milestones
 
 - Spin-aware RHF/UHF/ROHF/DFT molecule selection, all alpha/beta orbitals and
