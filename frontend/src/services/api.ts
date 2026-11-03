@@ -1,6 +1,7 @@
 import {runtime} from './runtime';
 /** One cancellation/timeout/error contract; bounded public busy/rate backoff. */
 export async function api<T>(url:string,signal?:AbortSignal):Promise<T>{
+ if(import.meta.env.VITE_STATIC_DEMO==='true')return (await import('../static/client')).browserApi<T>(url,signal);
  const timeout=AbortSignal.timeout(30_000),combined=signal?AbortSignal.any([signal,timeout]):timeout;
  const pause=(milliseconds:number)=>new Promise<void>((resolve,reject)=>{
   if(combined.aborted){reject(new DOMException('Aborted','AbortError'));return;}
